@@ -1,0 +1,15 @@
+<head><title>Удаление пользователя</title></head>
+
+<body>
+<h1>Удаление пользователя</h1>
+
+<form action="http://localhost:8000/users/" method="post">
+	<label for="name">Имя пользователя: </label><br>
+	<input id="name" type="text" name="name" placeholder="Обязательно"><br><br>
+	<label for="password">Пароль: </label><br>
+	<input id="password" type="password" name="password" placeholder="Обязательно"><br><br>
+	<input type="reset" value="Очистить">
+	<input type="submit" value="Удалить">
+	<input type="hidden" name="method" value="delete">
+</form>
+</body>

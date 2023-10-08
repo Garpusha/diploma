@@ -4,7 +4,7 @@
 <h1>Обновление данных пользователя</h1>
 <h3>Заполните форму для внесения новых данных пользователя:</h3>
 
-<form action="http://localhost:8000/users/" method="patch">
+<form action="http://localhost:8000/users/" method="post">
 	<label for="name">Имя пользователя: </label><br>
 	<input id="name" type="text" name="name" placeholder="Обязательно"><br><br>
 	<label for="password">Пароль: </label><br>
@@ -27,5 +27,6 @@
 
 	<input type="reset" value="Очистить">
 	<input type="submit" value="Сохранить">
+	<input type="hidden" name="method" value="patch">
 </form>
 </body>
