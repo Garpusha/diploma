@@ -1,0 +1,33 @@
+<head><title>Создание пользователя</title></head>
+
+<body>
+<h1>Создание пользователя</h1>
+<h3>Заполните форму для создания пользователя:</h3>
+
+<form action="http://localhost:8000/users/" method="post">
+	<label for="name">Имя пользователя: </label><br>
+	<input id="name" type="text" name="name" placeholder="Обязательно"><br><br>
+	<label for="password_1">Пароль: </label><br>
+	<input id="password_1" type="password" name="password_1" placeholder="Обязательно"><br><br>
+	<label for="password_2">Повторите пароль: </label><br>
+	<input id="password_2" type="password" name="password_2" placeholder="Обязательно"><br><br>
+	<label for="email">E-mail: </label><br>
+	<input id="email" type="email" name="email" placeholder="Обязательно"><br><br>
+	<label for="role">Ваша роль: </label><br>
+        <input type="radio" id="supplier" value="supplier" name="role"><label for="supplier">Поставщик</label><br>
+        <input type="radio" id="buyer" value="buyer" name="role"><label for="buyer">Покупатель</label><br><br>
+	<label for="address_1">Адрес №1: </label><br>
+	<input id="address_1" type="text" name="address_1" placeholder="Опционально"><br><br>
+	<label for="address_2">Адрес №2: </label><br>
+	<input id="address_2" type="text" name="address_2" placeholder="Опционально"><br><br>
+	<label for="address_3">Адрес №3:</label><br>
+	<input id="address_3" type="text" name="address_3" placeholder="Опционально"><br><br>
+	<label for="address_4">Адрес №4: </label><br>
+	<input id="address_4" type="text" name="address_4" placeholder="Опционально"><br><br>
+	<label for="address_5">Адрес №5: </label><br>
+	<input id="address_5" type="text" name="address_5" placeholder="Опционально"><br><br>
+
+	<input type="reset" value="Очистить">
+	<input type="submit" value="Сохранить">
+</form>
+</body>

@@ -1,4 +1,4 @@
-import hashlib
+from hashlib import md5
 
 def encrypt_password(password):
-    return hashlib.md5(password.encode('utf-8')).hexdigest()
+    return md5(password.encode('utf-8')).hexdigest()
