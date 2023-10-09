@@ -1,9 +1,9 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from.models import User
-from.serializers import UserViewSerializer, UserCreateSerializer
-from.functions import encrypt_password
+from backend.models import User
+from backend.serializers.user_serializers import UserViewSerializer, UserCreateSerializer
+from backend.functions import encrypt_password
 
 class UsersView(APIView):
     def get(self, request, *args, **kwargs):
@@ -35,7 +35,7 @@ class UsersView(APIView):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             case _:
                 return Response('Wrong method', status=status.HTTP_400_BAD_REQUEST)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
     def patch(self, request, *args, **kwargs):
