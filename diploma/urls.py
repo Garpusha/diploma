@@ -17,8 +17,12 @@ from django.contrib import admin
 from django.urls import path
 
 from backend.views.user_views import UsersView
+from backend.views.store_views import StoresView
+from backend.views.product_views import ProductsView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', UsersView.as_view()),
+    path('stores/', StoresView.as_view()),
+    path('products/', ProductsView.as_view()),
 ]

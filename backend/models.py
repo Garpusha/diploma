@@ -25,6 +25,7 @@ class Store(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=50, unique=True, blank=False)
     category_id = models.ForeignKey(Category, on_delete=models.CASCADE)
+    description = models.TextField(blank=True)
 
 
 class Order(models.Model):
@@ -50,4 +51,8 @@ class OrderPosition(models.Model):
     position_id = models.ForeignKey(Position, on_delete=models.CASCADE)
 
 
+class Parameters(models.Model):
+    name = models.CharField(max_length=20, unique=False, blank=False)
+    value = models.CharField(max_length=50, unique=False, blank=False)
+    product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
 
