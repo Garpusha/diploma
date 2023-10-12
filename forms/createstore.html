@@ -1,0 +1,17 @@
+<head><title>Создание магазина</title></head>
+
+<body>
+<h1>Создание магазина</h1>
+<h3>Заполните форму для создания магазина:</h3>
+
+<form accept-charset="UTF-8" action="http://localhost:8000/stores/" method="post">
+	<label for="name">Название магазина: </label><br>
+	<input id="name" type="text" required name="name" placeholder="Обязательно"><br><br>
+	<label for="delivery_cost">Стоимость доставки: </label><br>
+	<input id="delivery_cost" type="number" required name="delivery_cost" placeholder="Обязательно"><br><br>
+
+	<input type="reset" value="Очистить">
+	<input type="submit" value="Сохранить">
+	<input type="hidden" name="method" value="post">
+</form>
+</body>

@@ -16,13 +16,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+# from backend.functions import list_users
 from backend.views.user_views import UsersView
 from backend.views.store_views import StoresView
 from backend.views.product_views import ProductsView
+from backend.views.category_views import CategoriesView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', UsersView.as_view()),
     path('stores/', StoresView.as_view()),
     path('products/', ProductsView.as_view()),
+    path('categories/', CategoriesView.as_view()),
+    # path('list_users/', list_users),
 ]

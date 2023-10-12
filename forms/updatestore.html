@@ -1,0 +1,19 @@
+<head><title>Изменение магазина</title></head>
+
+<body>
+<h1>Изменение магазина</h1>
+<h3>Заполните форму для изменения магазина:</h3>
+
+<form enctype=multipart/form-data accept-charset="UTF-8" action="http://localhost:8000/stores/" method="post">
+	<label for="name">Старое название магазина: </label><br>
+	<input id="name" type="text" name="name" required placeholder="Обязательно"><br><br>
+	<label for="newname">Новое название магазина: </label><br>
+	<input id="newname" type="text" name="newname" placeholder="Опционально"><br><br>
+	<label for="delivery_cost">Стоимость доставки: </label><br>
+	<input id="delivery_cost" type="number" required name="delivery_cost" placeholder="Обязательно"><br><br>
+
+	<input type="reset" value="Очистить">
+	<input type="submit" value="Сохранить">
+	<input type="hidden" name="method" value="patch">
+</form>
+</body>

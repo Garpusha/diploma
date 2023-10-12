@@ -1,0 +1,14 @@
+<head><title>Удаление магазина</title></head>
+
+<body>
+<h1>Удаление магазина</h1>
+
+<form accept-charset="UTF-8" action="http://localhost:8000/stores/" method="post">
+	<label for="name">Название магазина: </label><br>
+	<input id="name" type="text" name="name" placeholder="Обязательно"><br><br>
+
+	<input type="reset" value="Очистить">
+	<input type="submit" value="Удалить">
+	<input type="hidden" name="method" value="delete">
+</form>
+</body>

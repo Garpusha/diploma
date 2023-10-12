@@ -5,6 +5,7 @@ from backend.models import User
 from backend.serializers.user_serializers import UserViewSerializer, UserCreateSerializer
 from backend.functions import encrypt_password
 
+
 class UsersView(APIView):
     def get(self, request, *args, **kwargs):
         users = User.objects.all()

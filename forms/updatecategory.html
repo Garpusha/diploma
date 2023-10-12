@@ -1,0 +1,16 @@
+<head><title>Изменение категории товара</title></head>
+
+<body>
+<h1>Изменение категории товара</h1>
+
+<form accept-charset="UTF-8" action="http://localhost:8000/categories/" method="post">
+	<label for="name">Старое название категории: </label><br>
+	<input id="name" type="text" required name="name" placeholder="Обязательно"><br><br>
+	<label for="newname">Новое название категории: </label><br>
+	<input id="newname" type="text" required name="newname" placeholder="Обязательно"><br><br>
+
+	<input type="reset" value="Очистить">
+	<input type="submit" value="Сохранить">
+	<input type="hidden" name="method" value="patch">
+</form>
+</body>

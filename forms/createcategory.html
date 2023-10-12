@@ -1,0 +1,19 @@
+ <!DOCTYPE html>
+<html>
+<head>
+<title>Создание категории товара</title></head>
+
+<body>
+<h1>Создание категории товара</h1>
+<h3>Заполните форму для создания категории товара:</h3>
+
+<form accept-charset="UTF-8" action="http://localhost:8000/categories/" method="post">
+	<label for="name">Название категории: </label><br>
+	<input id="name" type="text" name="name" placeholder="Обязательно"><br><br>
+
+	<input type="reset" value="Очистить">
+	<input type="submit" value="Сохранить">
+	<input type="hidden" name="method" value="post">
+</form>
+</body>
+</html>

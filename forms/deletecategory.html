@@ -1,0 +1,15 @@
+<head><title>Удаление категории товара</title></head>
+
+<body>
+<h1>Удаление категории товара</h1>
+<h3>Внимание, все товары, принадлежащие к этой категории также будут удалены!</h3>
+
+<form accept-charset="UTF-8" accept-charset="UTF-8" action="http://localhost:8000/categories/" method="post">
+	<label for="name">Название категории: </label><br>
+	<input id="name" type="text" name="name" placeholder="Обязательно"><br><br>
+
+	<input type="reset" value="Очистить">
+	<input type="submit" value="Удалить">
+	<input type="hidden" name="method" value="delete">
+</form>
+</body>
