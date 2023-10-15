@@ -1,0 +1,19 @@
+<head><title>Создание товара</title></head>
+
+<body>
+<h1>Создание товара</h1>
+<h3>Заполните форму для создания товара:</h3>
+
+<form accept-charset="UTF-8" action="http://localhost:8000/products/" method="post">
+	<label for="name">Наименование товара: </label><br>
+	<input id="name" type="text" name="name" placeholder="Обязательно"><br><br>
+	<label for="category">Категория: </label><br>
+	<input id="category" type="text" name="category" placeholder="Обязательно"><br><br>
+	<label for="description">Описание: </label><br>
+	<textarea id="description" name="description" cols=50 rows=10 placeholder="Опционально"></textarea><br><br>
+
+	<input type="reset" value="Очистить">
+	<input type="submit" value="Сохранить">
+	<input type="hidden" name="method" value="post">
+</form>
+</body>

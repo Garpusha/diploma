@@ -3,7 +3,7 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from backend.models import Product
+from backend.models import Product, Category
 from backend.serializers.product_serializers import ProductSerializer
 # from backend.functions import encrypt_password
 
@@ -23,7 +23,14 @@ class ProductsView(APIView):
                 result = self.delete(request, *args, **kwargs)
                 return Response(result.data, status=result.status_code)
             case 'post':
-                serializer = ProductSerializer(data=request)
+                mutable_request = request.data.copy()
+                category = mutable_request.get('category', None)
+                category_id = Category.objects.get(name=category).id
+                if category_id is None:
+                    return Response('Wrong category', status=status.HTTP_400_BAD_REQUEST)
+                mutable_request['category_id'] = category_id
+                del mutable_request['category']
+                serializer = ProductSerializer(data=mutable_request)
                 if serializer.is_valid():
                     serializer.save()
                     return Response(f'Product {serializer.validated_data["name"]} created successfully',
@@ -35,9 +42,16 @@ class ProductsView(APIView):
 
 
     def patch(self, request, *args, **kwargs):
-        productname = request.data.get('name', None)
-        product = Store.objects.get(name=productname)
-        serializer = ProductSerializer(product, data=request)
+        product_id = request.data.get('id', None)
+        mutable_request = request.data.copy()
+        product = Product.objects.get(id=product_id)
+        category = mutable_request.get('category', None)
+        category_id = Category.objects.get(name=category).id
+        if category_id is None:
+            return Response('Wrong category', status=status.HTTP_400_BAD_REQUEST)
+        mutable_request['category_id'] = category_id
+        del mutable_request['category']
+        serializer = ProductSerializer(product, data=mutable_request)
         if serializer.is_valid():
             serializer.save()
             return Response(f'Product {serializer.validated_data["name"]} updated successfully',
@@ -46,8 +60,8 @@ class ProductsView(APIView):
 
 
     def delete(self, request, *args, **kwargs):
-        productname = request.data.get('name', None)
-        product = Store.objects.get(name=productname)
+        product_id = request.data.get('id', None)
+        product = Product.objects.get(id=product_id)
         product.delete()
-        return Response(f'Store {productname} deleted successfully',
+        return Response(f'Product deleted successfully',
                         status=status.HTTP_201_CREATED)

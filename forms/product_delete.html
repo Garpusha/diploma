@@ -1,0 +1,14 @@
+<head><title>Удаление товара</title></head>
+
+<body>
+<h1>Удалить товара</h1>
+
+<form accept-charset="UTF-8" action="http://localhost:8000/products/" method="post">
+	<label for="id">ID товара:</label>
+	<input id="id" type="number" name="id"><br><br>
+
+	<input type="reset" value="Очистить">
+	<input type="submit" value="Удалить">
+	<input type="hidden" name="method" value="delete">
+</form>
+</body>

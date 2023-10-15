@@ -24,35 +24,33 @@ class Store(models.Model):
 
 class Product(models.Model):
     name = models.CharField(max_length=50, unique=True, blank=False)
-    category_id = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True)
     description = models.TextField(blank=True)
+    order = models.ManyToManyField('Order', related_name='products', through='OrderProduct')
 
 
 class Order(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     status = models.CharField(max_length=10, blank=False)
+    product = models.ManyToManyField(Product, related_name='orders', through='OrderProduct')
 
 
-class Position(models.Model):
-    store_id = models.ForeignKey(Store, on_delete=models.CASCADE)
-    product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
+class OrderProduct(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(blank=False)
+    price = models.DecimalField(max_digits=11, decimal_places=2, blank=False)
+    store = models.ForeignKey(Store, on_delete=models.CASCADE)
 
 
 class ProductStore(models.Model):
-    product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
-    store_id = models.ForeignKey(Store, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    store = models.ForeignKey(Store, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(blank=False)
     price = models.DecimalField(max_digits=11, decimal_places=2, blank=False)
 
 
-class OrderPosition(models.Model):
-    order_id = models.ForeignKey(Order, on_delete=models.CASCADE)
-    position_id = models.ForeignKey(Position, on_delete=models.CASCADE)
-
-
-class Parameters(models.Model):
+class Parameter(models.Model):
     name = models.CharField(max_length=20, unique=False, blank=False)
     value = models.CharField(max_length=50, unique=False, blank=False)
-    product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
-
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
