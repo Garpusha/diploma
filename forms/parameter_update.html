@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Изменение параметра товара</title></head>
+
+<body>
+<h1>Изменение параметра товара:</h1>
+
+<form accept-charset="UTF-8" action="http://localhost:8000/parameters/" method="post">
+	<label for="product_id">ID продукта: </label><br>
+	<input id="product_id" type="number" name="product_id" placeholder="Обязательно"><br><br>
+	<label for="name">Название параметра: </label><br>
+	<input id="name" type="text" name="name" placeholder="Обязательно"><br><br>
+	<label for="value">Новое значение: </label><br>
+	<input id="value" type="text" name="value" placeholder="Обязательно"><br><br>
+
+	<input type="reset" value="Очистить">
+	<input type="submit" value="Сохранить">
+	<input type="hidden" name="method" value="patch">
+</form>
+</body>
+</html>

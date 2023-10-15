@@ -28,8 +28,8 @@ class ProductsView(APIView):
                 category_id = Category.objects.get(name=category).id
                 if category_id is None:
                     return Response('Wrong category', status=status.HTTP_400_BAD_REQUEST)
-                mutable_request['category_id'] = category_id
-                del mutable_request['category']
+                mutable_request['category'] = category_id
+                # del mutable_request['category']
                 serializer = ProductSerializer(data=mutable_request)
                 if serializer.is_valid():
                     serializer.save()
