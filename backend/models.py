@@ -26,7 +26,6 @@ class Product(models.Model):
     name = models.CharField(max_length=50, unique=True, blank=False)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True)
     description = models.TextField(blank=False)
-    order = models.ManyToManyField('Order', related_name='products', through='OrderProduct')
 
     def __str__(self):
         return self.name
@@ -34,7 +33,6 @@ class Product(models.Model):
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     status = models.CharField(max_length=10, blank=False)
-    product = models.ManyToManyField(Product, related_name='orders', through='OrderProduct')
 
 
 class OrderProduct(models.Model):

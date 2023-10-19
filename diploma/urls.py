@@ -22,6 +22,7 @@ from backend.views.store_views import StoresView
 from backend.views.product_views import ProductsView
 from backend.views.category_views import CategoriesView
 from backend.views.parameters_views import ParametersView
+from backend.views.product_store_views import ProductStoreView
 
 
 urlpatterns = [
@@ -31,5 +32,7 @@ urlpatterns = [
     path('products/', ProductsView.as_view()),
     path('categories/', CategoriesView.as_view()),
     path('parameters/', ParametersView.as_view()),
+    path('product_in_store/', ProductStoreView.as_view()),
+
     # path('list_users/', list_users),
 ]

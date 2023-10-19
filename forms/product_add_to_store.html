@@ -1,0 +1,20 @@
+<head><title>Добавление товара в магазин</title></head>
+
+<body>
+<h1>Добавление товара в магазин</h1>
+
+<form accept-charset="UTF-8" action="http://localhost:8000/product_in_store/" method="post">
+	<label for="product">Наименование товара: </label><br>
+	<input id="product" type="text" name="product" placeholder="Обязательно"><br><br>
+	<label for="store">Магазин: </label><br>
+	<input id="store" type="text" name="store" placeholder="Обязательно"><br><br>
+	<label for="quantity">Количество: </label><br>
+	<input id="quantity" type="byte" name="quantity" placeholder="Обязательно"><br><br>
+	<label for="price">Цена: </label><br>
+	<input id="price" type="byte" name="price" placeholder="Обязательно"><br><br>
+
+	<input type="reset" value="Очистить">
+	<input type="submit" value="Добавить">
+	<input type="hidden" name="method" value="post">
+</form>
+</body>
