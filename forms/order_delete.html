@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Удаление заказа</title></head>
+
+<body>
+<h1>Удаление заказа</h1>
+
+<form accept-charset="UTF-8" action="http://localhost:8000/orders/" method="post">
+	<label for="order_id">ID заказа: </label><br>
+	<input id="order_id" type="number" name="order_id" placeholder="Обязательно"><br><br>
+	<label><input type="checkbox" name="delete" value="delete">Удалить без возможности восстановления</label><br><br>
+
+	<input type="reset" value="Очистить">
+	<input type="submit" value="Удалить">
+	<input type="hidden" name="method" value="delete_order">
+</form>
+</body>
+</html>
