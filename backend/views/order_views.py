@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from backend.models import Order, OrderProduct, User, Product, Store, ProductStore
-from backend.serializers.order_serializers import OrderSerializer
+from backend.serializers.order_serializers import OrderProductSerializer
 from django.core.exceptions import ObjectDoesNotExist
 
 
@@ -10,8 +10,8 @@ from django.core.exceptions import ObjectDoesNotExist
 
 class OrderView(APIView):
     def get(self, request, *args, **kwargs):
-        queryset = Order.objects.all()
-        serializer = OrderSerializer(queryset, many=True)
+        queryset = OrderProduct.objects.all()
+        serializer = OrderProductSerializer(queryset, many=True)
         return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
@@ -21,8 +21,9 @@ class OrderView(APIView):
                 return Response(result.data, status=result.status_code)
             case 'post':
                 # Проверка на корректный ввод количества товаров
-                if request.data['quantity'] < 1 or not isinstance(request.data['quantity'], int):
-                    return Response('Quantity must be positive integer', status=status.HTTP_400_BAD)
+                quantity = int(request.data['quantity'])
+                if quantity < 1:
+                    return Response('Quantity must be at least 1', status=status.HTTP_400_BAD)
 
                 # проверяю на наличие пользователя
                 username = request.data['username']
@@ -53,7 +54,6 @@ class OrderView(APIView):
                                     status=status.HTTP_400_BAD_REQUEST)
 
                 # Проверяю достаточно ли товара в магазине
-                quantity = int(request.data['quantity'])
                 if quantity > product_in_store.quantity:
                     return Response(f'Not enough {product.name} in store {store.name}',
                                     status=status.HTTP_400_BAD_REQUEST)
@@ -82,6 +82,7 @@ class OrderView(APIView):
                 product_in_order.price = ((current_price * current_quantity + price * quantity) /
                                           (current_quantity + quantity))
                 product_in_order.save(update_fields=['quantity', 'price'])
+                return Response(f'Product {product.name} in store {store.name} was added to order {order.id}',)
 
     #             считать общую стоимость заказа
 
