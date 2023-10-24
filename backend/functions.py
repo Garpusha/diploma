@@ -3,9 +3,13 @@ from hashlib import md5
 # from backend.models import User
 # from django.shortcuts import render
 
+
 def encrypt_password(password):
     return md5(password.encode('utf-8')).hexdigest()
 
+
+def get_id_by_name(model, name):
+    pass
 
 # def list_users(request):
 #     users = list(User.objects.values())
