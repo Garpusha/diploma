@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from models import Category, Shop, User, Product, ProductShop, Basket, OrderedPosition, Parameter, Order
+from backend.models import Category, Store, User, Product, ProductStore, Basket, OrderedPosition, Parameter, Order, \
+    OrderedPositions
 
 
 # Вывод категорий
@@ -13,11 +14,11 @@ class CategorySerializer(serializers.ModelSerializer):
 # Вывод магазинов
 class StoreSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Shop
+        model = Store
         fields = ('id', 'name', 'delivery_cost')
 
 
-# Вывод при создании пользователя (зачем?)
+# Вывод при создании пользователя
 class UserCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -58,19 +59,19 @@ class ProductStoreSerializer(serializers.ModelSerializer):
     store = serializers.CharField(source='store.name')
 
     class Meta:
-        model = ProductShop
+        model = ProductStore
         fields = ('id', 'product', 'store', 'quantity', 'price')
 
 
 # Детали заказа
 class OrderSerializer(serializers.ModelSerializer):
-    # user = serializers.CharField(source='user.name', read_only=True)
+    user = serializers.CharField(source='user.name', read_only=True)
     items_cost = serializers.SerializerMethodField('get_items_cost')
     delivery_cost = serializers.SerializerMethodField('get_delivery_cost')
 
     class Meta:
         model = Order
-        fields = ('id', 'items_cost', 'delivery_cost', 'status', 'created_at')
+        fields = ('id', 'user', 'items_cost', 'delivery_cost', 'status', 'created_at')
 
     def get_items_cost(self, order):
         return 0
@@ -90,18 +91,21 @@ class OrderedPositionSerializer(serializers.ModelSerializer):
 
 
 class OrderedPositionsSerializer(serializers.ModelSerializer):
-    position = OrderedPositionSerializer(many=True, read_only=True)
+    position = OrderedPositionSerializer()
 
     class Meta:
-        model = OrderedPosition
+        model = OrderedPositions
         fields = ('order', 'position')
 
 
 class BasketSerializer(serializers.ModelSerializer):
     user = serializers.CharField(source='user.name', read_only=True)
     order = OrderSerializer(read_only=True)
-    positions = OrderedPositionsSerializer(many=True, read_only=True)
+    positions = OrderedPositionsSerializer()
 
     class Meta:
         model = Basket
-        fields = ('user', 'order', 'positions')
+        fields = ('user',
+                  'order',
+                  'positions'
+                  )

@@ -16,14 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from backend.views.order_views import OrderView
+from backend.views import OrderedPositionView
 # from backend.functions import list_users
-from backend.views.user_views import UsersView
-from backend.views.store_views import StoresView
-from backend.views.product_views import ProductsView
-from backend.views.category_views import CategoriesView
-from backend.views.parameters_views import ParametersView
-from backend.views.product_store_views import ProductStoreView
+from backend.views import UsersView
+from backend.views import StoresView
+from backend.views import ProductsView
+from backend.views import CategoriesView
+from backend.views import ParametersView
+from backend.views import ProductStoreView
 
 
 urlpatterns = [
@@ -34,7 +34,7 @@ urlpatterns = [
     path('categories/', CategoriesView.as_view()),
     path('parameters/', ParametersView.as_view()),
     path('product_in_store/', ProductStoreView.as_view()),
-    path('orders/', OrderView.as_view()),
+    path('orders/', OrderedPositionView.as_view()),
 
     # path('list_users/', list_users),
 ]

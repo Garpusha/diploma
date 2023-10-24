@@ -20,7 +20,7 @@ class Category(models.Model):
 
 
 # Магазин
-class Shop(models.Model):
+class Store(models.Model):
     name = models.CharField(max_length=50, unique=True, blank=False)
     delivery_cost = models.DecimalField(max_digits=11, decimal_places=2, blank=False)
 
@@ -41,6 +41,7 @@ class Order(models.Model):
     items_cost = models.DecimalField(max_digits=14, decimal_places=2, default=0)
     delivery_cost = models.DecimalField(max_digits=14, decimal_places=2, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 # Одно заказанное наименование товара
@@ -48,7 +49,7 @@ class OrderedPosition(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(blank=False)
     price = models.DecimalField(max_digits=11, decimal_places=2, blank=False)
-    shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
+    store = models.ForeignKey(Store, on_delete=models.CASCADE)
 
 
 # Совокупность товаров в одном заказе
@@ -61,13 +62,13 @@ class OrderedPositions(models.Model):
 class Basket(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    positions = models.ForeignKey(OrderedPosition, on_delete=models.CASCADE)
+    positions = models.ForeignKey(OrderedPositions, on_delete=models.CASCADE)
 
 
 # Количество и цена одного товара в одном магазине
-class ProductShop(models.Model):
+class ProductStore(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    store = models.ForeignKey(Shop, on_delete=models.CASCADE)
+    store = models.ForeignKey(Store, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(blank=False)
     price = models.DecimalField(max_digits=11, decimal_places=2, blank=False)
 
