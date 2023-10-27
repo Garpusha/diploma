@@ -22,6 +22,7 @@ class Category(models.Model):
 # Магазин
 class Store(models.Model):
     name = models.CharField(max_length=50, unique=True, blank=False)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, blank=False)
     delivery_cost = models.DecimalField(max_digits=11, decimal_places=2, blank=False)
 
 
@@ -38,31 +39,17 @@ class Product(models.Model):
 # Заказ одного пользователя
 class Order(models.Model):
     status = models.CharField(max_length=10, blank=True)
-    items_cost = models.DecimalField(max_digits=14, decimal_places=2, default=0)
-    delivery_cost = models.DecimalField(max_digits=14, decimal_places=2, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
-# Одно заказанное наименование товара
-class OrderedPosition(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(blank=False)
-    price = models.DecimalField(max_digits=11, decimal_places=2, blank=False)
-    store = models.ForeignKey(Store, on_delete=models.CASCADE)
-
-
-# Совокупность товаров в одном заказе
-class OrderedPositions(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    position = models.ForeignKey(OrderedPosition, on_delete=models.CASCADE)
-
-
 # Корзина товаров одного пользователя
-class Basket(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+class OrderProduct(models.Model):
+    store = models.ForeignKey(Store, on_delete=models.CASCADE)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    positions = models.ForeignKey(OrderedPositions, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=0)
+    price = models.DecimalField(max_digits=11, decimal_places=2, default=0)
 
 
 # Количество и цена одного товара в одном магазине

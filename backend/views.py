@@ -4,11 +4,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from backend.functions import encrypt_password
-from backend.models import Category, Parameter, Store, User, Product, ProductStore, Order, OrderedPosition, \
-    OrderedPositions, Basket
+from backend.models import Category, Parameter, Store, User, Product, ProductStore, Order, OrderProduct
 from backend.serializers import CategorySerializer, ParameterSerializer, StoreSerializer, UserViewSerializer, \
-    UserCreateSerializer, ProductSerializer, ProductStoreSerializer, OrderSerializer, BasketSerializer, \
-    OrderedPositionSerializer, OrderedPositionsSerializer
+    UserCreateSerializer, ProductSerializer, ProductStoreSerializer, OrderSerializer
 
 
 # --------------------------------------------Категории-----------------------------------------
@@ -83,8 +81,6 @@ class ParametersView(APIView):
             case _:
                 return Response('Wrong method', status=status.HTTP_400_BAD_REQUEST)
 
-
-
     def patch(self, request, *args, **kwargs):
         old_category = request.data.get('name', None)
         new_category = request.data.get('newname', None)
@@ -98,7 +94,6 @@ class ParametersView(APIView):
             return Response(f'Parameter updated successfully',
                             status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
     def delete(self, request, *args, **kwargs):
         product = request.data.get('product_id', None)
@@ -125,15 +120,25 @@ class StoresView(APIView):
                 result = self.delete(request, *args, **kwargs)
                 return Response(result.data, status=result.status_code)
             case 'post':
-                serializer = StoreSerializer(data=request.data.copy())
-                if serializer.is_valid():
-                    serializer.save()
-                    return Response(f'Store {serializer.validated_data["name"]} created successfully',
-                                    status=status.HTTP_201_CREATED)
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                try:
+                    owner = User.objects.get(name=request.data['owner'])
+                except ObjectDoesNotExist:
+                    return Response('Please create product first', status=status.HTTP_400_BAD_REQUEST)
+                owner_id = owner.id
+                mutable_request = request.data.copy()
+                mutable_request['owner'] = owner_id
+                store = Store.objects.create(owner=owner, name=request.data['name'], delivery_cost=request.data['delivery_cost'])
+                store.save()
+                # serializer = StoreSerializer(data=mutable_request)
+                # if serializer.is_valid():
+                #     serializer.save()
+                #     return Response(f'Store {serializer.validated_data["name"]} created successfully',
+                #                     status=status.HTTP_201_CREATED)
+                # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             case _:
                 return Response('Wrong method', status=status.HTTP_400_BAD_REQUEST)
-
+        return Response(f'Store {store.name} added successfully',
+                        status=status.HTTP_201_CREATED)
     def patch(self, request, *args, **kwargs):
         oldname = request.data.get('name', None)
         newname = request.data.get('newname', None)
@@ -192,8 +197,6 @@ class UsersView(APIView):
             case _:
                 return Response('Wrong method', status=status.HTTP_400_BAD_REQUEST)
 
-
-
     def patch(self, request, *args, **kwargs):
         password = encrypt_password(request.data.get('password', None))
         username = request.data.get('name', None)
@@ -209,7 +212,6 @@ class UsersView(APIView):
             return Response(f'User {serializer.validated_data["name"]} updated successfully',
                             status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
     def delete(self, request, *args, **kwargs):
         password = encrypt_password(request.data.get('password', None))
@@ -256,8 +258,6 @@ class ProductsView(APIView):
             case _:
                 return Response('Wrong method', status=status.HTTP_400_BAD_REQUEST)
 
-
-
     def patch(self, request, *args, **kwargs):
         product_id = request.data.get('id', None)
         mutable_request = request.data.copy()
@@ -274,7 +274,6 @@ class ProductsView(APIView):
             return Response(f'Product {serializer.validated_data["name"]} updated successfully',
                             status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
     def delete(self, request, *args, **kwargs):
         product_id = request.data.get('id', None)
@@ -363,11 +362,10 @@ class ProductStoreView(APIView):
 
 
 # ---------------------------------------------------Заказы------------------------------------
-class OrderedPositionView(APIView):
+class OrderView(APIView):
     def get(self, request, *args, **kwargs):
-        queryset = Basket.objects.all()
-        # print(queryset.__dict__)
-        serializer = BasketSerializer(queryset, many=True)
+        queryset = Order.objects.all()
+        serializer = OrderSerializer(queryset, many=True)
         return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
@@ -422,22 +420,19 @@ class OrderedPositionView(APIView):
                     order = Order.objects.create(user=user, status='active')
                     order.save()
 
-                # Создаю запись о выбранном товаре
-
-                product_in_order = OrderedPosition.objects.create(product=product, store=store,
-                                                               quantity=quantity, price=price)
-                product_in_order.save()
-
                 # Добавляю выбранный товар в общий заказ
-                ordered_products = OrderedPositions.objects.create(order=order, position=product_in_order)
-                ordered_products.save()
-                # Добавляю весь заказ в корзину, если его там нет
-                try:
-                    basket = Basket.objects.get(user=user, order=order, positions=ordered_products)
-                except ObjectDoesNotExist:
-                    basket = Basket.objects.create(user=user, order=order, positions=ordered_products)
-                    basket.save()
+                # mutable_request = request.data.copy()
+                # mutable_request['price'] = price
+                # serializer = OrderProductSerializer(data=mutable_request)
+                # if serializer.is_valid():
+                #     serializer.save()
+                #     return Response(f'Product {serializer.validated_data["name"]} updated successfully',
+                #                     status=status.HTTP_201_CREATED)
+                # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+                ordered_product = OrderProduct.objects.create(order=order, product=product, store=store,
+                                                              quantity=quantity, price=price)
+                ordered_product.save()
 
                 return Response(f'Product {product.name} in store {store.name} was added to order {order.id}')
 
@@ -458,6 +453,5 @@ class OrderedPositionView(APIView):
     #         return Response(f'Order was marked as deleted',
     #                         status=status.HTTP_201_CREATED)
     #
-
 
     # def partial_delete(self, request, *args, **kwargs):
