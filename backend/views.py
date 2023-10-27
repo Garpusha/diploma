@@ -422,20 +422,13 @@ class OrderedPositionView(APIView):
                     order = Order.objects.create(user=user, status='active')
                     order.save()
 
-                # Создаю запись о заказанном товаре
+                # Создаю запись о выбранном товаре
 
                 product_in_order = OrderedPosition.objects.create(product=product, store=store,
                                                                quantity=quantity, price=price)
                 product_in_order.save()
 
-                # current_price = float(product_in_order.price)
-                # current_quantity = int(product_in_order.quantity)
-                # product_in_order.quantity = current_quantity + quantity
-                # product_in_order.price = ((current_price * current_quantity + price * quantity) /
-                #                           (current_quantity + quantity))
-                # product_in_order.save(update_fields=['quantity', 'price'])
-
-                # Добавляю заказанный товар в общий заказ
+                # Добавляю выбранный товар в общий заказ
                 ordered_products = OrderedPositions.objects.create(order=order, position=product_in_order)
                 ordered_products.save()
                 # Добавляю весь заказ в корзину, если его там нет

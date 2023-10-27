@@ -6,6 +6,7 @@ from backend.models import Category, Store, User, Product, ProductStore, Basket,
 
 # Вывод категорий
 class CategorySerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Category
         fields = ('id', 'name')
@@ -13,11 +14,17 @@ class CategorySerializer(serializers.ModelSerializer):
 
 # Вывод магазинов
 class StoreSerializer(serializers.ModelSerializer):
+    product_field = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = Store
-        fields = ('id', 'name', 'delivery_cost')
+        fields = ('id', 'name', 'delivery_cost', 'product_field')
 
+    def get_product_field(self, obj):
 
+        product_data = ProductStore.objects.filter(store=obj.id).values_list('product', flat=True)
+        required_data = [list(Product.objects.filter(id=product).values()) for product in product_data]
+        return required_data
 # Вывод при создании пользователя
 class UserCreateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -52,14 +59,18 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'category', 'parameters', 'description')
 
 
+
 # Вывод товаров в магазине
 class ProductStoreSerializer(serializers.ModelSerializer):
 
-    product = serializers.CharField(source='product.name')
-    store = serializers.CharField(source='store.name')
+    product = ProductSerializer()
+    # product = serializers.CharField(source='product.name')
+    # store = serializers.CharField(source='store.name')
+    store = StoreSerializer()
 
     class Meta:
-        model = ProductStore
+
+        # model = ProductStore
         fields = ('id', 'product', 'store', 'quantity', 'price')
 
 
@@ -105,7 +116,4 @@ class BasketSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Basket
-        fields = ('user',
-                  'order',
-                  'positions'
-                  )
+        fields = ('user', 'order', 'positions')
