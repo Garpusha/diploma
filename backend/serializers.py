@@ -103,19 +103,21 @@ class OrderSerializer(serializers.ModelSerializer):
         fields = ('id', 'user', 'items_cost', 'delivery_cost', 'status', 'created_at', 'product')
 
     def get_product(self, queryset):
-        product_data = OrderProduct.objects.filter(order=queryset.id).values_list('product', flat=True)
-        
 
-        # required_data = []
-        # temp_list = []
-        # for product in product_data:
-        #     temp_dict = Product.objects.filter(id=product).values()
-        #     temp_dict['quantity'] = OrderProduct.objects.filter()
-        #     temp_list = list()
-            # temp_list.append()
+        # Получаю queryset по id заказа
+        required_data = list(OrderProduct.objects.filter(order=queryset.id).values())
+        result = []
 
-        required_data = [list(Product.objects.filter(id=product).values()) for product in product_data]
-        return required_data
+        # пробегаю по всем товарам в заказе, собираю итоговый queryset добавляя и удаляя поля
+        for count, item in enumerate(required_data):
+            product_id = required_data[count]['product_id']
+            store_id = required_data[count]['store_id']
+            [required_data[count].pop(key) for key in ('id', 'order_id', 'product_id', 'store_id')]
+            product = list(Product.objects.filter(id=product_id).values())
+            required_data[count]['product_name'] = product[0]['name']
+            required_data[count]['store'] = list(Store.objects.filter(id=store_id).values())[0]['name']
+            result.append(required_data[count])
+        return result
 
     def get_items_cost(self, queryset):
         return 0
