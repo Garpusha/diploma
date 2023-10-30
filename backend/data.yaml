@@ -1,0 +1,38 @@
+users:
+  - user_1:
+      id: 1
+      name: svz_shop
+      password: user_1
+      role: seller
+      email: admin@svyaznoy.ru
+      address_1: Svyaznoy adress 1
+      address_2: Svyaznoy adress 1
+      address_3: Svyaznoy adress 1
+      address_4: Svyaznoy adress 1
+      address_5: Svyaznoy adress 1
+
+
+stores:
+  - shop_1:
+      id: 1
+      name: Связной
+      owner: svz_shop
+      delivery_cost: 500
+  - shop_2:
+      id: 2
+      name: DNS
+      owner: dns_shop
+      delivery_cost: 300
+  - shop_3:
+      id: 3
+      name: Ozon
+      owner: ozn_shop
+      delivery_cost: 0
+  - shop_4:
+      id: 4
+      name: OnlineTrade
+      owner: otr_shop
+
+
+
+
