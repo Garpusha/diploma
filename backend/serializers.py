@@ -1,26 +1,27 @@
 from rest_framework import serializers
 
-from backend.models import Category, Store, User, Product, ProductStore, Parameter, Order, OrderProduct
+from backend.models import Category, Store, User, Product, ProductStore, Parameter, Order, OrderProduct, \
+    ProductParameter
 
 
-# Вывод категорий
+#--------------------------------------------------Категории---------------------------------------------
 class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ('id', 'name')
+        fields = '__all__'
 
 
+#--------------------------------------------------Магазины---------------------------------------------
 # Вывод магазинов
-class StoreSerializer(serializers.ModelSerializer):
+class ViewStoreSerializer(serializers.ModelSerializer):
     product_field = serializers.SerializerMethodField(read_only=True)
     # owner = serializers.SerializerMethodField(read_only=True)
     owner = serializers.CharField(source='user.name', read_only=True)
+
     class Meta:
         model = Store
         fields = ('id', 'name', 'owner', 'delivery_cost', 'product_field')
-
-
 
     def get_owner(self, queryset):
         owner_name = User.objects.get(id=queryset.owner_id).name
@@ -33,13 +34,19 @@ class StoreSerializer(serializers.ModelSerializer):
         return required_data
 
 
+class StoreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Store
+        fields = '__all__'
+
+
+
+#--------------------------------------------------Пользователи--------------------------------------------
 # Вывод при создании пользователя
 class UserCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'name', 'password', 'role', 'email',
-                  'address_1', 'address_2', 'address_3',
-                  'address_4', 'address_5', )
+        fields = '__all__'
 
 
 # Вывод пользователей
@@ -50,39 +57,56 @@ class UserViewSerializer(serializers.ModelSerializer):
                   'address_2', 'address_3', 'address_4', 'address_5', )
 
 
-# Вывод параметров
+
+#--------------------------------------------------Параметры---------------------------------------------
 class ParameterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Parameter
-        fields = ('id', 'product', 'name', 'value')
+        fields = ('id', 'name')
 
 
 class ProductParameterSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Parameter
-        fields = ('name', 'value')
+    # product = serializers.CharField(source='product.name')
+    # parameter = serializers.CharField(source='parameter.name')
 
-# Вывод товаров
+    class Meta:
+        model = ProductParameter
+        fields = ('id', 'product', 'parameter', 'value')
+
+class ViewProductParameterSerializer(serializers.ModelSerializer):
+    # product = serializers.CharField(source='product.name')
+    parameter = serializers.CharField(source='parameter.name')
+
+    class Meta:
+        model = ProductParameter
+        fields = ('id', 'parameter', 'value')
+
+#--------------------------------------------------Товары---------------------------------------------
 class ProductSerializer(serializers.ModelSerializer):
 
-    parameters = ProductParameterSerializer(many=True, read_only=True)
+    class Meta:
+        model = Product
+        fields = ('id', 'name', 'category', 'description')
 
+
+class ViewProductSerializer(serializers.ModelSerializer):
+    parameters = ViewProductParameterSerializer(many=True, read_only=True)
+    category = serializers.CharField(source='category.name')
     class Meta:
         model = Product
         fields = ('id', 'name', 'category', 'parameters', 'description')
 
 
+#--------------------------------------------------Товары в заказе---------------------------------------------
+class OrderProductSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = OrderProduct
+        fields = '__all__'
+
 
 # Вывод товаров в магазине
 class ProductStoreSerializer(serializers.ModelSerializer):
-
-
-    # делать нормальный вывод по магазинам
-
-    # product = ProductSerializer()
-    product = serializers.CharField(source='product.name')
-    store = serializers.CharField(source='store.name')
-    # store = StoreSerializer()
 
     class Meta:
 
@@ -90,8 +114,25 @@ class ProductStoreSerializer(serializers.ModelSerializer):
         fields = ('id', 'product', 'store', 'quantity', 'price')
 
 
-# Детали заказа
+class ViewProductStoreSerializer(serializers.ModelSerializer):
+
+    product = serializers.CharField(source='product.name')
+    store = serializers.CharField(source='store.name')
+
+    class Meta:
+
+        model = ProductStore
+        fields = ('id', 'product', 'store', 'quantity', 'price')
+
+
 class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = ('id', 'user', 'status')
+
+
+# Детали заказа
+class ViewOrderSerializer(serializers.ModelSerializer):
     user = serializers.CharField(source='user.name', read_only=True)
     items_cost = serializers.SerializerMethodField(read_only=True)
     delivery_cost = serializers.SerializerMethodField(read_only=True)

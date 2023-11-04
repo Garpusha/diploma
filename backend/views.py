@@ -1,12 +1,12 @@
+from backend.functions import read_yaml, import_data, encrypt_password
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from backend.functions import encrypt_password
 from backend.models import Category, Parameter, Store, User, Product, ProductStore, Order, OrderProduct
 from backend.serializers import CategorySerializer, ParameterSerializer, StoreSerializer, UserViewSerializer, \
-    UserCreateSerializer, ProductSerializer, ProductStoreSerializer, OrderSerializer
+    UserCreateSerializer, ProductSerializer, ProductStoreSerializer, OrderSerializer, ProductParameterSerializer,\
+    OrderProductSerializer, ViewStoreSerializer, ViewOrderSerializer, ViewProductStoreSerializer, ViewProductSerializer
 
 
 # --------------------------------------------Категории-----------------------------------------
@@ -59,7 +59,7 @@ class CategoriesView(APIView):
 # ---------------------------------------------Параметры----------------------------------------
 class ParametersView(APIView):
     def get(self, request, *args, **kwargs):
-        parameters = Parameter.objects.all().select_related('product').order_by('name')
+        parameters = Parameter.objects.all()
         serializer = ParameterSerializer(parameters, many=True)
         return Response(serializer.data)
 
@@ -108,7 +108,7 @@ class ParametersView(APIView):
 class StoresView(APIView):
     def get(self, request, *args, **kwargs):
         stores = Store.objects.all()
-        serializer = StoreSerializer(stores, many=True)
+        serializer = ViewStoreSerializer(stores, many=True, )
         return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
@@ -150,7 +150,7 @@ class StoresView(APIView):
         if delivery_cost is not None:
             mutable_request['delivery_cost'] = delivery_cost
         store = Store.objects.get(name=oldname)
-        serializer = StoreSerializer(store, data=mutable_request)
+        serializer = ViewStoreSerializer(store, data=mutable_request)
         if serializer.is_valid():
             serializer.save()
             return Response(f'Store {serializer.validated_data["name"]} updated successfully',
@@ -230,7 +230,7 @@ class ProductsView(APIView):
 
     def get(self, request, *args, **kwargs):
         products = Product.objects.all()
-        serializer = ProductSerializer(products, many=True)
+        serializer = ViewProductSerializer(products, many=True)
         return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
@@ -287,7 +287,7 @@ class ProductsView(APIView):
 class ProductStoreView(APIView):
     def get(self, request, *args, **kwargs):
         queryset = ProductStore.objects.all()
-        serializer = ProductStoreSerializer(queryset, many=True)
+        serializer = ViewProductStoreSerializer(queryset, many=True)
         return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
@@ -365,7 +365,7 @@ class ProductStoreView(APIView):
 class OrderView(APIView):
     def get(self, request, *args, **kwargs):
         queryset = Order.objects.all()
-        serializer = OrderSerializer(queryset, many=True)
+        serializer = ViewOrderSerializer(queryset, many=True)
         return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
@@ -445,3 +445,32 @@ class OrderView(APIView):
     #
 
     # def partial_delete(self, request, *args, **kwargs):
+
+
+class ImportData(APIView):
+    def post(self, request):
+        filename = request.FILES['filename']
+        loaded_data = read_yaml(filename)
+        # шифрую пароли
+        for user in loaded_data['users']:
+            for key, value in user.items():
+                value['password'] = encrypt_password(value['password'])
+
+        dataset = {'users': UserCreateSerializer,
+                   'categories': CategorySerializer,
+                   'stores': StoreSerializer,
+                   'products': ProductSerializer,
+                   'parameters': ParameterSerializer,
+                   'orders': OrderSerializer,
+                   'product_parameters': ProductParameterSerializer,
+                   'products_in_store': ProductStoreSerializer,
+                   'products_in_order': OrderProductSerializer,
+                   }
+        for key, value in dataset.items():
+            try:
+                my_response = import_data(loaded_data[key], value)
+            except KeyError:
+                continue
+            if my_response != 'ok':
+                return my_response
+        return Response(f'All data from {filename} uploaded successfully ', status=status.HTTP_201_CREATED)

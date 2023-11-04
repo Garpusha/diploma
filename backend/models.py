@@ -64,6 +64,7 @@ class ProductStore(models.Model):
 class Parameter(models.Model):
     name = models.CharField(max_length=40, unique=True, blank=False)
 
+
 class ProductParameter(models.Model):
     parameter = models.ForeignKey(Parameter, on_delete=models.CASCADE)
     value = models.CharField(max_length=50, unique=False, blank=False)

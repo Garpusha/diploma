@@ -61,22 +61,22 @@ stores:
   - shop_1:
       id: 1
       name: Связной
-      owner: 1
+      owner: svz_shop
       delivery_cost: 500
   - shop_2:
       id: 2
       name: DNS
-      owner: 2
+      owner: dns_shop
       delivery_cost: 300
   - shop_3:
       id: 3
       name: Ozon
-      owner: 3
+      owner: ozn_shop
       delivery_cost: 0
   - shop_4:
       id: 4
       name: OnlineTrade
-      owner: 4
+      owner: otd_shop
       delivery_cost: 700
 categories:
   - category_1:
@@ -158,7 +158,7 @@ product_parameters:
       id: 5
       product: 4
       parameter: 3
-      value: 1
+      value: Yes
   - pp_6:
       id: 6
       product: 3
@@ -224,7 +224,7 @@ product_parameters:
       product: 5
       parameter: 5
       value: 100
-products_in_store:
+product_in_store:
   - ps_1:
       id: 1
       product: 1

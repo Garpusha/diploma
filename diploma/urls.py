@@ -17,14 +17,8 @@ from django.contrib import admin
 from django.urls import path
 
 # from backend.functions import list_users
-from backend.views import UsersView
-from backend.views import StoresView
-from backend.views import ProductsView
-from backend.views import CategoriesView
-from backend.views import ParametersView
-from backend.views import ProductStoreView
-from backend.views import OrderView
-
+from backend.views import UsersView, ImportData, StoresView, ProductsView, CategoriesView, ParametersView, \
+    ProductStoreView, OrderView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -35,7 +29,7 @@ urlpatterns = [
     path('parameters/', ParametersView.as_view()),
     path('product_in_store/', ProductStoreView.as_view()),
     path('orders/', OrderView.as_view()),
-
+    path('import/', ImportData.as_view())
 
     # path('list_users/', list_users),
 ]

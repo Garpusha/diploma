@@ -4,10 +4,8 @@
 <title>Загрузка файла</title></head>
 <body>
 <h1>Загрузка файла с данными</h1>
-
-
-<form accept-charset="UTF-8" action="http://localhost:8000/load/" method="post">
-<label for="name">Имя файла: </label><input type="file" name="filename"><br><br>
+<form accept-charset="UTF-8" action="http://localhost:8000/import/" method="post" enctype="multipart/form-data">
+<label for="filename">Имя файла: </label><input type="file" name="filename"><br><br>
 <input type="reset" value="Очистить">
 <input type="submit" value="Сохранить">
 </form>
