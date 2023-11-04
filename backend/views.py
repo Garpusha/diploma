@@ -421,19 +421,9 @@ class OrderView(APIView):
                     order.save()
 
                 # Добавляю выбранный товар в общий заказ
-                # mutable_request = request.data.copy()
-                # mutable_request['price'] = price
-                # serializer = OrderProductSerializer(data=mutable_request)
-                # if serializer.is_valid():
-                #     serializer.save()
-                #     return Response(f'Product {serializer.validated_data["name"]} updated successfully',
-                #                     status=status.HTTP_201_CREATED)
-                # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
                 ordered_product = OrderProduct.objects.create(order=order, product=product, store=store,
                                                               quantity=quantity, price=price)
                 ordered_product.save()
-
                 return Response(f'Product {product.name} in store {store.name} was added to order {order.id}')
 
     #             считать общую стоимость заказа

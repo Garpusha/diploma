@@ -36,5 +36,6 @@ urlpatterns = [
     path('product_in_store/', ProductStoreView.as_view()),
     path('orders/', OrderView.as_view()),
 
+
     # path('list_users/', list_users),
 ]

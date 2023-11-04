@@ -62,6 +62,9 @@ class ProductStore(models.Model):
 
 # Параметр товара (размер, вес, количество памяти и т.п.)
 class Parameter(models.Model):
-    name = models.CharField(max_length=20, unique=False, blank=False)
+    name = models.CharField(max_length=40, unique=True, blank=False)
+
+class ProductParameter(models.Model):
+    parameter = models.ForeignKey(Parameter, on_delete=models.CASCADE)
     value = models.CharField(max_length=50, unique=False, blank=False)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='parameters')
