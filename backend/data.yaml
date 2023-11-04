@@ -279,32 +279,32 @@ products_in_order:
       store: 1
       product: 1
       quantity: 1
-      price: 0
+      price: 20000
   - po_2:
       id: 2
       order: 1
       store: 2
       product: 2
       quantity: 1
-      price: 0
+      price: 75000
   - po_3:
       id: 3
       order: 1
       store: 1
       product: 3
       quantity: 1
-      price: 0
+      price: 85000
   - po_4:
       id: 4
       order: 1
       store: 4
       product: 4
       quantity: 3
-      price: 0
+      price: 3000
   - po_1:
       id: 1
       order: 1
       store: 2
       product: 5
       quantity: 1
-      price: 0
+      price: 25000

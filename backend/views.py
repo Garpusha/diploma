@@ -3,9 +3,10 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from backend.models import Category, Parameter, Store, User, Product, ProductStore, Order, OrderProduct
+from backend.models import Category, Parameter, Store, User, Product, ProductStore, Order, OrderProduct, \
+    ProductParameter
 from backend.serializers import CategorySerializer, ParameterSerializer, StoreSerializer, UserViewSerializer, \
-    UserCreateSerializer, ProductSerializer, ProductStoreSerializer, OrderSerializer, ProductParameterSerializer,\
+    UserCreateSerializer, ProductSerializer, ProductStoreSerializer, OrderSerializer, ProductParameterSerializer, \
     OrderProductSerializer, ViewStoreSerializer, ViewOrderSerializer, ViewProductStoreSerializer, ViewProductSerializer
 
 
@@ -129,12 +130,6 @@ class StoresView(APIView):
                 mutable_request['owner'] = owner_id
                 store = Store.objects.create(owner=owner, name=request.data['name'], delivery_cost=request.data['delivery_cost'])
                 store.save()
-                # serializer = StoreSerializer(data=mutable_request)
-                # if serializer.is_valid():
-                #     serializer.save()
-                #     return Response(f'Store {serializer.validated_data["name"]} created successfully',
-                #                     status=status.HTTP_201_CREATED)
-                # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             case _:
                 return Response('Wrong method', status=status.HTTP_400_BAD_REQUEST)
         return Response(f'Store {store.name} added successfully',
@@ -248,7 +243,6 @@ class ProductsView(APIView):
                 if category_id is None:
                     return Response('Wrong category', status=status.HTTP_400_BAD_REQUEST)
                 mutable_request['category'] = category_id
-                # del mutable_request['category']
                 serializer = ProductSerializer(data=mutable_request)
                 if serializer.is_valid():
                     serializer.save()
@@ -446,6 +440,17 @@ class OrderView(APIView):
 
     # def partial_delete(self, request, *args, **kwargs):
 
+class CartView(APIView):
+
+    def get(self, request):
+        user = request.GET.get('user')
+        # status = request.GET.get('status')
+        try:
+            active_order = Order.objects.get(user=user, status='active')
+        except ObjectDoesNotExist:
+            return Response(f'No active orders for user {user}.', status=status.HTTP_400_BAD_REQUEST)
+        serializer = ViewOrderSerializer(active_order)
+        return Response(serializer.data)
 
 class ImportData(APIView):
     def post(self, request):
@@ -473,4 +478,5 @@ class ImportData(APIView):
                 continue
             if my_response != 'ok':
                 return my_response
+
         return Response(f'All data from {filename} uploaded successfully ', status=status.HTTP_201_CREATED)

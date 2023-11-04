@@ -21,6 +21,7 @@ def read_yaml(filename):
     uploaded_file = basedir + fs.url(filename)
     with open(uploaded_file) as yaml_file:
         loaded_data = yaml.load(yaml_file, Loader=yaml.FullLoader)
+    fs.delete(uploaded_file)
     return loaded_data
 
 

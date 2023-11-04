@@ -73,6 +73,7 @@ class ProductParameterSerializer(serializers.ModelSerializer):
         model = ProductParameter
         fields = ('id', 'product', 'parameter', 'value')
 
+
 class ViewProductParameterSerializer(serializers.ModelSerializer):
     # product = serializers.CharField(source='product.name')
     parameter = serializers.CharField(source='parameter.name')
@@ -80,6 +81,7 @@ class ViewProductParameterSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductParameter
         fields = ('id', 'parameter', 'value')
+
 
 #--------------------------------------------------Товары---------------------------------------------
 class ProductSerializer(serializers.ModelSerializer):
@@ -161,9 +163,20 @@ class ViewOrderSerializer(serializers.ModelSerializer):
         return result
 
     def get_items_cost(self, queryset):
-        return 0
+        required_data = list(OrderProduct.objects.filter(order=queryset.id).values())
+        total_cost = 0
+        # Считаю общую стоимость товаров, входящих в заказ
+        for product in required_data:
+            total_cost += product['price'] * product['quantity']
+        return total_cost
 
     def get_delivery_cost(self, queryset):
-        return 0
+        required_data = list(OrderProduct.objects.filter(order=queryset.id).values())
+        delivery_cost = 0
+        stores = set()
+        [stores.add(product['store_id']) for product in required_data]
+        for store in stores:
+            delivery_cost += Store.objects.get(id=store).delivery_cost
+        return delivery_cost
 
 
