@@ -57,7 +57,6 @@ class UserViewSerializer(serializers.ModelSerializer):
                   'address_2', 'address_3', 'address_4', 'address_5', )
 
 
-
 #--------------------------------------------------Параметры---------------------------------------------
 class ParameterSerializer(serializers.ModelSerializer):
     class Meta:

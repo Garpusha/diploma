@@ -1,3 +1,5 @@
+# from rest_framework.viewsets import ModelViewSet
+
 from backend.functions import read_yaml, import_data, encrypt_password, generate_token
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
@@ -128,12 +130,14 @@ class StoresView(APIView):
                 owner_id = owner.id
                 mutable_request = request.data.copy()
                 mutable_request['owner'] = owner_id
-                store = Store.objects.create(owner=owner, name=request.data['name'], delivery_cost=request.data['delivery_cost'])
+                store = Store.objects.create(owner=owner, name=request.data['name'],
+                                             delivery_cost=request.data['delivery_cost'])
                 store.save()
             case _:
                 return Response('Wrong method', status=status.HTTP_400_BAD_REQUEST)
         return Response(f'Store {store.name} added successfully',
                         status=status.HTTP_201_CREATED)
+
     def patch(self, request, *args, **kwargs):
         oldname = request.data.get('name', None)
         newname = request.data.get('newname', None)
@@ -187,9 +191,26 @@ class UsersView(APIView):
                 serializer = UserCreateSerializer(data=mutable_request)
                 if serializer.is_valid():
                     serializer.save()
-                    return Response(f'User {serializer.validated_data["name"]} created successfully, token is \
-                        {mutable_request["token"]}', status=status.HTTP_201_CREATED)
+                    return Response(
+                        f'User {serializer.validated_data["name"]} created successfully, token is {mutable_request["token"]}',
+                        status=status.HTTP_201_CREATED)
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            case 'token':
+                password = encrypt_password(request.data.get('password', None))
+                username = request.data.get('name', None)
+                try:
+                    user = User.objects.get(name=username)
+                except ObjectDoesNotExist:
+                    return Response('User not found', status=status.HTTP_400_BAD_REQUEST)
+                if password != user.password:
+                    return Response('Password mismatch', status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    user.token = generate_token()
+                    user.save(update_fields=['token'])
+                    return Response(
+                        f'User {username} new token is {user.token}',
+                        status=status.HTTP_201_CREATED)
+
             case _:
                 return Response('Wrong method', status=status.HTTP_400_BAD_REQUEST)
 
@@ -421,7 +442,6 @@ class OrderView(APIView):
                 ordered_product.save()
                 return Response(f'Product {product.name} in store {store.name} was added to order {order.id}')
 
-    #             считать общую стоимость заказа
 
     # def delete_order(self, request, *args, **kwargs):
     #     try:
@@ -441,6 +461,7 @@ class OrderView(APIView):
 
     # def partial_delete(self, request, *args, **kwargs):
 
+
 class CartView(APIView):
 
     def get(self, request):
@@ -453,6 +474,7 @@ class CartView(APIView):
         serializer = ViewOrderSerializer(active_order)
         return Response(serializer.data)
 
+
 class ImportData(APIView):
     def post(self, request):
         filename = request.FILES['filename']
@@ -461,7 +483,7 @@ class ImportData(APIView):
         for user in loaded_data['users']:
             for key, value in user.items():
                 value['password'] = encrypt_password(value['password'])
-            user['token'] = generate_token()
+                value['token'] = generate_token()
 
         dataset = {'users': UserCreateSerializer,
                    'categories': CategorySerializer,
