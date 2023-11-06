@@ -1,0 +1,34 @@
+# Категории-----------------------------------------------------------------------
+# Добавлять, удалять и переименовывать категории может только 
+# пользователь с ролью admin
+
+GET http://localhost:8000/categories/
+###
+
+
+POST http://localhost:8000/categories/
+Content-Type: application/json
+Authorization: Token c69b72525a6d23bda089af712dd5677c
+
+{
+    "name": "Видеокарты"
+}
+###
+
+DELETE http://localhost:8000/categories/
+Content-Type: application/json
+Authorization: Token c69b72525a6d23bda089af712dd5677c
+
+{
+    "id": 13
+}
+###
+
+PATCH http://localhost:8000/categories/
+Content-Type: application/json
+Authorization: Token c69b72525a6d23bda089af712dd5677c
+
+{
+    "id": 6,
+    "newname": "Мыши"
+}

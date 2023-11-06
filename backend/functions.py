@@ -1,10 +1,14 @@
 from hashlib import md5
 import yaml
 import random, string
+
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 from rest_framework import status
 from rest_framework.response import Response
+
+from backend.models import User
 
 
 # from backend.models import User
@@ -39,6 +43,17 @@ def import_data(data_to_import, import_serializer):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             serializer.save()
     return 'ok'
+
+
+def is_admin(request):
+    token = request.headers['Authorization'][6:]
+    try:
+        user = User.objects.get(token=token)
+    except ObjectDoesNotExist:
+        return False
+    if user.role != 'admin':
+        return False
+    return True
 
 # def list_users(request):
 #     users = list(User.objects.values())

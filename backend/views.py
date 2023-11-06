@@ -1,6 +1,6 @@
-# from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet
 
-from backend.functions import read_yaml, import_data, encrypt_password, generate_token
+from backend.functions import read_yaml, import_data, encrypt_password, generate_token, is_admin
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
 from rest_framework.response import Response
@@ -14,49 +14,43 @@ from backend.serializers import CategorySerializer, ParameterSerializer, StoreSe
 
 # --------------------------------------------Категории-----------------------------------------
 class CategoriesView(APIView):
-    def get(self, request, *args, **kwargs):
+
+    def get(self, request):
         categories = Category.objects.all()
         serializer = CategorySerializer(categories, many=True)
         return Response(serializer.data)
 
-    def post(self, request, *args, **kwargs):
-        match request.data['method']:
-            case 'patch':
-                result = self.patch(request, *args, **kwargs)
-                return Response(result.data, status=result.status_code)
-            case 'delete':
-                result = self.delete(request, *args, **kwargs)
-                return Response(result.data, status=result.status_code)
-            case 'post':
-                serializer = CategorySerializer(data=request.data.copy())
-                if serializer.is_valid():
-                    serializer.save()
-                    return Response(f'Category {serializer.validated_data["name"]} created successfully',
-                                    status=status.HTTP_201_CREATED)
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            case _:
-                return Response('Wrong method', status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request):
+        if is_admin(request):
+            serializer = CategorySerializer(data=request.data.copy())
+            if serializer.is_valid():
+                serializer.save()
+            return Response(serializer.errors)
+        return Response('Authorization failed', status=status.HTTP_400_BAD_REQUEST)
 
-    def patch(self, request, *args, **kwargs):
-        old_category = request.data.get('name', None)
-        new_category = request.data.get('newname', None)
-        category = Category.objects.get(name=old_category)
-        mutable_request = request.data.copy()
-        mutable_request['name'] = new_category
-        del mutable_request['newname']
-        serializer = CategorySerializer(category, data=mutable_request)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(f'Category {serializer.validated_data["name"]} updated successfully',
-                            status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def delete(self, request):
+        if is_admin(request):
+            category_id = request.data.get('id', None)
+            try:
+                category = Category.objects.get(id=category_id)
+            except ObjectDoesNotExist:
+                return Response('Category not found', status=status.HTTP_400_BAD_REQUEST)
+            category.delete()
+            return Response(f'Category deleted successfully', status=status.HTTP_201_CREATED)
+        return Response('Authorization failed', status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, *args, **kwargs):
-        categoryname = request.data.get('name', None)
-        category = Category.objects.get(name=categoryname)
-        category.delete()
-        return Response(f'Category {categoryname} deleted successfully',
-                        status=status.HTTP_201_CREATED)
+    def patch(self, request):
+        if is_admin(request):
+            old_category_id = request.data.get('id', None)
+            new_category = request.data.get('newname', None)
+            try:
+                category = Category.objects.get(id=old_category_id)
+            except ObjectDoesNotExist:
+                return Response('Category not found', status=status.HTTP_400_BAD_REQUEST)
+            category.name = new_category
+            category.save(update_fields=['name'])
+            return Response(f'Category updated successfully', status=status.HTTP_201_CREATED)
+        return Response('Authorization failed', status=status.HTTP_400_BAD_REQUEST)
 
 
 # ---------------------------------------------Параметры----------------------------------------

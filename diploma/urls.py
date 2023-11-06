@@ -15,11 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from rest_framework.routers import DefaultRouter
 
 # from backend.functions import list_users
 from backend.views import UsersView, ImportData, StoresView, ProductsView, CategoriesView, ParametersView, \
     ProductStoreView, OrderView, CartView
-
+#
+# r = DefaultRouter()
+# r.register('categories', CategoriesView)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', UsersView.as_view()),
