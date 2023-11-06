@@ -1,4 +1,4 @@
-from backend.functions import read_yaml, import_data, encrypt_password
+from backend.functions import read_yaml, import_data, encrypt_password, generate_token
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
 from rest_framework.response import Response
@@ -183,11 +183,12 @@ class UsersView(APIView):
                     del mutable_request['password_2']
                 else:
                     return Response('Passwords do not match', status=status.HTTP_400_BAD_REQUEST)
+                mutable_request['token'] = generate_token()
                 serializer = UserCreateSerializer(data=mutable_request)
                 if serializer.is_valid():
                     serializer.save()
-                    return Response(f'User {serializer.validated_data["name"]} created successfully',
-                                    status=status.HTTP_201_CREATED)
+                    return Response(f'User {serializer.validated_data["name"]} created successfully, token is \
+                        {mutable_request["token"]}', status=status.HTTP_201_CREATED)
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             case _:
                 return Response('Wrong method', status=status.HTTP_400_BAD_REQUEST)
@@ -456,10 +457,11 @@ class ImportData(APIView):
     def post(self, request):
         filename = request.FILES['filename']
         loaded_data = read_yaml(filename)
-        # шифрую пароли
+        # шифрую пароли, создаю токены
         for user in loaded_data['users']:
             for key, value in user.items():
                 value['password'] = encrypt_password(value['password'])
+            user['token'] = generate_token()
 
         dataset = {'users': UserCreateSerializer,
                    'categories': CategorySerializer,
