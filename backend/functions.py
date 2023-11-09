@@ -11,10 +11,6 @@ from rest_framework.response import Response
 from backend.models import User
 
 
-# from backend.models import User
-# from django.shortcuts import render
-
-
 def encrypt_password(password):
     return md5(password.encode('utf-8')).hexdigest()
 
@@ -45,15 +41,40 @@ def import_data(data_to_import, import_serializer):
     return 'ok'
 
 
-def is_admin(request):
-    token = request.headers['Authorization'][6:]
+def is_token_exists(token):
     try:
-        user = User.objects.get(token=token)
+        User.objects.get(token=token)
     except ObjectDoesNotExist:
         return False
-    if user.role != 'admin':
-        return False
     return True
+
+
+def is_admin(request):
+    token = request.headers['Authorization'][6:]
+    if not is_token_exists(token):
+        return Response('Wrong token', status=status.HTTP_400_BAD_REQUEST)
+    user = User.objects.get(token=token)
+    if user.role != 'admin':
+        return Response('Admin rights required', status=status.HTTP_400_BAD_REQUEST)
+    return 'ok'
+
+def is_seller(request):
+    token = request.headers['Authorization'][6:]
+    if not is_token_exists(token):
+        return Response('Wrong token', status=status.HTTP_400_BAD_REQUEST)
+    user = User.objects.get(token=token)
+    if user.role != 'seller':
+        return Response('Owner should have seller role', status=status.HTTP_400_BAD_REQUEST)
+    return 'ok'
+
+def is_seller_or_admin(request):
+    token = request.headers['Authorization'][6:]
+    if not is_token_exists(token):
+        return Response('Wrong token', status=status.HTTP_400_BAD_REQUEST)
+    user = User.objects.get(token=token)
+    if user.role == 'seller' or user.role == 'admin':
+        return 'ok'
+    return Response('Admin or seller rights required', status=status.HTTP_400_BAD_REQUEST)
 
 # def list_users(request):
 #     users = list(User.objects.values())

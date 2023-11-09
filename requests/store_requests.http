@@ -1,0 +1,39 @@
+# Магазины-----------------------------------------------------------------------
+# Удалять, создавать и переименовывать магазины может только пользователь с ролью admin
+# Хозяин магазина должен иметь роль seller 
+# Токен обычного пользователя: a4d0d70644badae2dae57a737e852c84
+# Токен администратора: c69b72525a6d23bda089af712dd5677c
+
+
+GET http://localhost:8000/stores/
+###
+POST http://localhost:8000/stores/
+Content-Type: application/json
+Authorization: Token c69b72525a6d23bda089af712dd5677c
+
+{
+    "id": 6,
+    "name": "New Shop",
+    "owner": 8,
+    "delivery_cost": 100
+}
+###
+DELETE http://localhost:8000/stores/
+Content-Type: application/json
+Authorization: Token c69b72525a6d23bda089af712dd5677c
+
+{
+    "id": 6
+}
+###
+PATCH http://localhost:8000/stores/
+Content-Type: application/json
+Authorization: Token c69b72525a6d23bda089af712dd5677c
+
+{
+    "id": 6,
+    "name": "New shop_2",
+    "owner": 8,
+    "delivery_cost": 200
+
+}

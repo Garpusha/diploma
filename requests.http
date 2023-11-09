@@ -1,11 +1,13 @@
 # Категории-----------------------------------------------------------------------
 # Добавлять, удалять и переименовывать категории может только 
 # пользователь с ролью admin
+#Токен обычного пользователя
+# Authorization: Token a4d0d70644badae2dae57a737e852c84
+#Токен администратора
+# Authorization: Token c69b72525a6d23bda089af712dd5677c
 
 GET http://localhost:8000/categories/
 ###
-
-
 POST http://localhost:8000/categories/
 Content-Type: application/json
 Authorization: Token c69b72525a6d23bda089af712dd5677c
@@ -14,7 +16,6 @@ Authorization: Token c69b72525a6d23bda089af712dd5677c
     "name": "Видеокарты"
 }
 ###
-
 DELETE http://localhost:8000/categories/
 Content-Type: application/json
 Authorization: Token c69b72525a6d23bda089af712dd5677c
@@ -23,7 +24,6 @@ Authorization: Token c69b72525a6d23bda089af712dd5677c
     "id": 13
 }
 ###
-
 PATCH http://localhost:8000/categories/
 Content-Type: application/json
 Authorization: Token c69b72525a6d23bda089af712dd5677c

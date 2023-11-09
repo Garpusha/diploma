@@ -1,0 +1,46 @@
+# Прользователи-----------------------------------------------------------------------
+# Удалять, создавать и изменять пользователей может только admin
+# Токен обычного пользователя: a4d0d70644badae2dae57a737e852c84
+# Токен администратора: c69b72525a6d23bda089af712dd5677c
+# Токен продавца: a601a8858a447b7cbaabc29b71927772
+
+
+GET http://localhost:8000/users/
+###
+
+POST http://localhost:8000/users/
+Content-Type: application/json
+Authorization: Token c69b72525a6d23bda089af712dd5677c
+
+{
+    "id": 8,
+    "name": "Test seller",
+    "password": "12345",
+    "role": "seller",
+    "email": "test_seller@test.com",
+    "address_1": "address_1_test_seler",
+    "token": ""
+
+}
+###
+DELETE http://localhost:8000/users/
+Content-Type: application/json
+Authorization: Token c69b72525a6d23bda089af712dd5677c
+
+{
+    "id": 8
+}
+###
+PATCH http://localhost:8000/users/
+Content-Type: application/json
+Authorization: Token c69b72525a6d23bda089af712dd5677c
+
+{
+    "id": 8,
+    "name": "Test seller_2",
+    "password": "12345",
+    "role": "seller",
+    "email": "test2_seller@test.com",
+    "address_1": "address_1_test_seler_2",
+    "token": ""
+}

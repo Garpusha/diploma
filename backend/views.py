@@ -1,6 +1,4 @@
-from rest_framework.viewsets import ModelViewSet
-
-from backend.functions import read_yaml, import_data, encrypt_password, generate_token, is_admin
+from backend.functions import read_yaml, import_data, encrypt_password, generate_token, is_admin, is_seller_or_admin
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
 from rest_framework.response import Response
@@ -21,220 +19,196 @@ class CategoriesView(APIView):
         return Response(serializer.data)
 
     def post(self, request):
-        if is_admin(request):
-            serializer = CategorySerializer(data=request.data.copy())
-            if serializer.is_valid():
-                serializer.save()
-            return Response(serializer.errors)
-        return Response('Authorization failed', status=status.HTTP_400_BAD_REQUEST)
+        result = is_admin(request)
+        if result != 'ok':
+            return result
+        serializer = CategorySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            if serializer.errors == {}:
+                return Response(f'Category {serializer.validated_data["name"]} created successfully',
+                                status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request):
-        if is_admin(request):
-            category_id = request.data.get('id', None)
-            try:
-                category = Category.objects.get(id=category_id)
-            except ObjectDoesNotExist:
-                return Response('Category not found', status=status.HTTP_400_BAD_REQUEST)
-            category.delete()
-            return Response(f'Category deleted successfully', status=status.HTTP_201_CREATED)
-        return Response('Authorization failed', status=status.HTTP_400_BAD_REQUEST)
+        result = is_admin(request)
+        if result != 'ok':
+            return result
+        try:
+            category = Category.objects.get(id=request.data['id'])
+        except ObjectDoesNotExist:
+            return Response(f'Category not found', status=status.HTTP_400_BAD_REQUEST)
+        category.delete()
+        return Response(f'Category deleted successfully', status=status.HTTP_200_OK)
+
 
     def patch(self, request):
-        if is_admin(request):
-            old_category_id = request.data.get('id', None)
-            new_category = request.data.get('newname', None)
-            try:
-                category = Category.objects.get(id=old_category_id)
-            except ObjectDoesNotExist:
-                return Response('Category not found', status=status.HTTP_400_BAD_REQUEST)
-            category.name = new_category
-            category.save(update_fields=['name'])
-            return Response(f'Category updated successfully', status=status.HTTP_201_CREATED)
-        return Response('Authorization failed', status=status.HTTP_400_BAD_REQUEST)
-
+        result = is_admin(request)
+        if result != 'ok':
+            return result
+        serializer = CategorySerializer(data=request.data)
+        try:
+            category = Category.objects.get(id=request.data['id'])
+        except ObjectDoesNotExist:
+            return Response(f'Category {request.data["name"]} not found', status=status.HTTP_400_BAD_REQUEST)
+        if serializer.is_valid():
+            serializer.update(category, request.data)
+            if serializer.errors == {}:
+                return Response(f'Category updated successfully', status=status.HTTP_202_ACCEPTED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # ---------------------------------------------Параметры----------------------------------------
 class ParametersView(APIView):
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         parameters = Parameter.objects.all()
         serializer = ParameterSerializer(parameters, many=True)
         return Response(serializer.data)
 
-    def post(self, request, *args, **kwargs):
-        match request.data['method']:
-            case 'patch':
-                result = self.patch(request, *args, **kwargs)
-                return Response(result.data, status=result.status_code)
-            case 'delete':
-                result = self.delete(request, *args, **kwargs)
-                return Response(result.data, status=result.status_code)
-            case 'post':
-                serializer = ParameterSerializer(data=request.data.copy())
-                if serializer.is_valid():
-                    serializer.save()
-                    return Response(f'Parameter created successfully',
-                                    status=status.HTTP_201_CREATED)
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            case _:
-                return Response('Wrong method', status=status.HTTP_400_BAD_REQUEST)
-
-    def patch(self, request, *args, **kwargs):
-        old_category = request.data.get('name', None)
-        new_category = request.data.get('newname', None)
-        parameter = Parameter.objects.get(name=old_category)
-        mutable_request = request.data.copy()
-        mutable_request['name'] = new_category
-        del mutable_request['newname']
-        serializer = ParameterSerializer(parameter, data=mutable_request)
+    def post(self, request):
+        result = is_seller_or_admin(request)
+        if result != 'ok':
+            return result
+        serializer = ParameterSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(f'Parameter updated successfully',
-                            status=status.HTTP_201_CREATED)
+            if serializer.errors == {}:
+                return Response(f'Parameter {serializer.validated_data["name"]} created successfully',
+                                status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, *args, **kwargs):
-        product = request.data.get('product_id', None)
-        parametername = request.data.get('name', None)
-        parameter = Parameter.objects.get(name=parametername, id=product)
+    def delete(self, request):
+        result = is_admin(request)
+        if result != 'ok':
+            return result
+        parameter_id = request.data['id']
+        try:
+            parameter = Parameter.objects.get(id=parameter_id)
+        except ObjectDoesNotExist:
+            return Response('Parameter not found', status=status.HTTP_400_BAD_REQUEST)
         parameter.delete()
-        return Response(f'Parameter deleted successfully',
-                        status=status.HTTP_201_CREATED)
+        return Response(f'Parameter deleted successfully', status=status.HTTP_200_OK)
+
+    def patch(self, request):
+        result = is_admin(request)
+        if result != 'ok':
+            return result
+        serializer = ParameterSerializer(data=request.data)
+        try:
+            parameter = Parameter.objects.get(id=request.data['id'])
+        except ObjectDoesNotExist:
+            return Response(f'Parameter {request.data["name"]} not found', status=status.HTTP_400_BAD_REQUEST)
+        if serializer.is_valid():
+            serializer.update(parameter, request.data)
+            if serializer.errors == {}:
+                return Response(f'Parameter updated successfully', status=status.HTTP_202_ACCEPTED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # ----------------------------------------------Магазины----------------------------------------
 class StoresView(APIView):
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         stores = Store.objects.all()
-        serializer = ViewStoreSerializer(stores, many=True, )
+        serializer = StoreSerializer(stores, many=True, )
         return Response(serializer.data)
 
-    def post(self, request, *args, **kwargs):
-        match request.data['method']:
-            case 'patch':
-                result = self.patch(request, *args, **kwargs)
-                return Response(result.data, status=result.status_code)
-            case 'delete':
-                result = self.delete(request, *args, **kwargs)
-                return Response(result.data, status=result.status_code)
-            case 'post':
-                try:
-                    owner = User.objects.get(name=request.data['owner'])
-                except ObjectDoesNotExist:
-                    return Response('Please create product first', status=status.HTTP_400_BAD_REQUEST)
-                owner_id = owner.id
-                mutable_request = request.data.copy()
-                mutable_request['owner'] = owner_id
-                store = Store.objects.create(owner=owner, name=request.data['name'],
-                                             delivery_cost=request.data['delivery_cost'])
-                store.save()
-            case _:
-                return Response('Wrong method', status=status.HTTP_400_BAD_REQUEST)
-        return Response(f'Store {store.name} added successfully',
-                        status=status.HTTP_201_CREATED)
-
-    def patch(self, request, *args, **kwargs):
-        oldname = request.data.get('name', None)
-        newname = request.data.get('newname', None)
-        delivery_cost = request.data.get('delivery_cost', None)
-        mutable_request = request.data.copy()
-        if newname is not None:
-            mutable_request['name'] = newname
-        del mutable_request['newname']
-        if delivery_cost is not None:
-            mutable_request['delivery_cost'] = delivery_cost
-        store = Store.objects.get(name=oldname)
-        serializer = ViewStoreSerializer(store, data=mutable_request)
+    def post(self, request):
+        result = is_admin(request)
+        if result != 'ok':
+            return result
+        try:
+            User.objects.get(id=request.data['owner'])
+        except ObjectDoesNotExist:
+            return Response(f'Please create user {request.data["owner"]} first', status=status.HTTP_400_BAD_REQUEST)
+        serializer = StoreSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(f'Store {serializer.validated_data["name"]} updated successfully',
+            if serializer.errors == {}:
+                return Response(f'Store {serializer.validated_data["name"]} created successfully',
                             status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, *args, **kwargs):
-        storename = request.data.get('name', None)
-        store = Store.objects.get(name=storename)
+    def patch(self, request):
+        result = is_admin(request)
+        if result != 'ok':
+            return result
+        try:
+            user = User.objects.get(id=request.data['owner'])
+        except ObjectDoesNotExist:
+            return Response(f'Please create user first', status=status.HTTP_400_BAD_REQUEST)
+        try:
+            store = Store.objects.get(id=request.data['id'])
+        except ObjectDoesNotExist:
+            return Response(f'Store {request.data["name"]} not found', status=status.HTTP_400_BAD_REQUEST)
+        mutable_request = request.data.copy()
+        mutable_request['owner'] = user.id
+        serializer = StoreSerializer(store, data=mutable_request)
+        if serializer.is_valid():
+            serializer.update(store, request.data)
+            if serializer.errors == {}:
+                return Response(f'Store updated successfully', status=status.HTTP_202_ACCEPTED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request):
+        result = is_admin(request)
+        if result != 'ok':
+            return result
+        try:
+            store = Store.objects.get(id=request.data['id'])
+        except ObjectDoesNotExist:
+            return Response('Store not found', status=status.HTTP_400_BAD_REQUEST)
         store.delete()
-        return Response(f'Store {storename} deleted successfully',
-                        status=status.HTTP_201_CREATED)
+        return Response(f'Store deleted successfully', status=status.HTTP_200_OK)
 
 
 # ---------------------------------------------Пользователи-------------------------------------
 class UsersView(APIView):
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         users = User.objects.all()
         serializer = UserViewSerializer(users, many=True)
         return Response(serializer.data)
 
-    def post(self, request, *args, **kwargs):
-        match request.data['method']:
-            case 'patch':
-                result = self.patch(request, *args, **kwargs)
-                return Response(result.data, status=result.status_code)
-            case 'delete':
-                result = self.delete(request, *args, **kwargs)
-                return Response(result.data, status=result.status_code)
-            case 'post':
-                mutable_request = request.data.copy()
-                if mutable_request['password_1'] == mutable_request['password_2']:
-                    mutable_request['password'] = encrypt_password(mutable_request['password_1'])
-                    del mutable_request['password_1']
-                    del mutable_request['password_2']
-                else:
-                    return Response('Passwords do not match', status=status.HTTP_400_BAD_REQUEST)
-                mutable_request['token'] = generate_token()
-                serializer = UserCreateSerializer(data=mutable_request)
-                if serializer.is_valid():
-                    serializer.save()
-                    return Response(
-                        f'User {serializer.validated_data["name"]} created successfully, token is {mutable_request["token"]}',
-                        status=status.HTTP_201_CREATED)
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            case 'token':
-                password = encrypt_password(request.data.get('password', None))
-                username = request.data.get('name', None)
-                try:
-                    user = User.objects.get(name=username)
-                except ObjectDoesNotExist:
-                    return Response('User not found', status=status.HTTP_400_BAD_REQUEST)
-                if password != user.password:
-                    return Response('Password mismatch', status=status.HTTP_400_BAD_REQUEST)
-                else:
-                    user.token = generate_token()
-                    user.save(update_fields=['token'])
-                    return Response(
-                        f'User {username} new token is {user.token}',
-                        status=status.HTTP_201_CREATED)
-
-            case _:
-                return Response('Wrong method', status=status.HTTP_400_BAD_REQUEST)
-
-    def patch(self, request, *args, **kwargs):
-        password = encrypt_password(request.data.get('password', None))
-        username = request.data.get('name', None)
-        user = User.objects.get(name=username)
-        stored_password = user.password
-        if password != stored_password:
-            return Response('Wrong password', status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request):
+        result = is_admin(request)
+        if result != 'ok':
+            return result
         mutable_request = request.data.copy()
-        mutable_request['password'] = password
-        serializer = UserCreateSerializer(user, data=mutable_request)
+        mutable_request['password'] = encrypt_password(mutable_request['password'])
+        mutable_request['token'] = generate_token()
+        serializer = UserCreateSerializer(data=mutable_request)
         if serializer.is_valid():
             serializer.save()
-            return Response(f'User {serializer.validated_data["name"]} updated successfully',
-                            status=status.HTTP_201_CREATED)
+            if serializer.errors == {}:
+                return Response(f'User created successfully', status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, *args, **kwargs):
-        password = encrypt_password(request.data.get('password', None))
-        username = request.data.get('name', None)
-        user = User.objects.get(name=username)
-        stored_password = user.password
-        if password != stored_password:
-            return Response('Wrong password', status=status.HTTP_400_BAD_REQUEST)
-        user.delete()
-        return Response(f'User {username} deleted successfully',
-                        status=status.HTTP_201_CREATED)
+    def patch(self, request):
+        result = is_admin(request)
+        if result != 'ok':
+            return result
+        mutable_request = request.data.copy()
+        mutable_request['password'] = encrypt_password(mutable_request['password'])
+        mutable_request['token'] = generate_token()
+        try:
+            user = User.objects.get(id=mutable_request['owner'])
+        except ObjectDoesNotExist:
+            return Response('User not found', status=status.HTTP_400_BAD_REQUEST)
+        serializer = UserCreateSerializer(user, data=mutable_request)
+        if serializer.is_valid():
+            serializer.update(user, mutable_request)
+            if serializer.errors == {}:
+                return Response(f'User updated successfully', status=status.HTTP_202_ACCEPTED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def delete(self, request):
+        result = is_admin(request)
+        if result != 'ok':
+            return result
+        try:
+            user = User.objects.get(id=request.data['id'])
+        except ObjectDoesNotExist:
+            return Response('User not found', status=status.HTTP_400_BAD_REQUEST)
+        user.delete()
+        return Response(f'User deleted successfully', status=status.HTTP_200_OK)
 
 # ----------------------------------------------Товары------------------------------------------
 class ProductsView(APIView):
@@ -244,53 +218,54 @@ class ProductsView(APIView):
         serializer = ViewProductSerializer(products, many=True)
         return Response(serializer.data)
 
-    def post(self, request, *args, **kwargs):
-        match request.data['method']:
-            case 'patch':
-                result = self.patch(request, *args, **kwargs)
-                return Response(result.data, status=result.status_code)
-            case 'delete':
-                result = self.delete(request, *args, **kwargs)
-                return Response(result.data, status=result.status_code)
-            case 'post':
-                mutable_request = request.data.copy()
-                category = mutable_request.get('category', None)
-                category_id = Category.objects.get(name=category).id
-                if category_id is None:
-                    return Response('Wrong category', status=status.HTTP_400_BAD_REQUEST)
-                mutable_request['category'] = category_id
-                serializer = ProductSerializer(data=mutable_request)
-                if serializer.is_valid():
-                    serializer.save()
-                    return Response(f'Product {serializer.validated_data["name"]} created successfully',
-                                    status=status.HTTP_201_CREATED)
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            case _:
-                return Response('Wrong method', status=status.HTTP_400_BAD_REQUEST)
-
-    def patch(self, request, *args, **kwargs):
-        product_id = request.data.get('id', None)
-        mutable_request = request.data.copy()
-        product = Product.objects.get(id=product_id)
-        category = mutable_request.get('category', None)
-        category_id = Category.objects.get(name=category).id
-        if category_id is None:
-            return Response('Wrong category', status=status.HTTP_400_BAD_REQUEST)
-        mutable_request['category_id'] = category_id
-        del mutable_request['category']
-        serializer = ProductSerializer(product, data=mutable_request)
+    def post(self, request):
+        result = is_seller_or_admin(request)
+        if result != 'ok':
+            return result
+        category_id = request.data['category']
+        try:
+            Category.objects.get(id=category_id)
+        except ObjectDoesNotExist:
+            return Response('Category not found', status=status.HTTP_400_BAD_REQUEST)
+        serializer = ProductSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(f'Product {serializer.validated_data["name"]} updated successfully',
+            return Response(f'Product {serializer.validated_data["name"]} created successfully',
                             status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def patch(self, request):
+        result = is_admin(request)
+        if result != 'ok':
+            return result
+        category_id = request.data['category']
+        try:
+            Category.objects.get(id=category_id)
+        except ObjectDoesNotExist:
+            return Response('Category not found', status=status.HTTP_400_BAD_REQUEST)
+        product_id = request.data['id']
+        try:
+            product = Product.objects.get(id=product_id)
+        except ObjectDoesNotExist:
+            return Response('Product not found', status=status.HTTP_400_BAD_REQUEST)
+        serializer = ProductSerializer(product, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            if serializer.errors == {}:
+                return Response(f'Product updated successfully', status=status.HTTP_202_ACCEPTED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def delete(self, request, *args, **kwargs):
-        product_id = request.data.get('id', None)
-        product = Product.objects.get(id=product_id)
+        result = is_admin(request)
+        if result != 'ok':
+            return result
+        product_id = request.data['id']
+        try:
+            product = Product.objects.get(id=product_id)
+        except ObjectDoesNotExist:
+            return Response('Product not found', status=status.HTTP_400_BAD_REQUEST)
         product.delete()
-        return Response(f'Product deleted successfully',
-                        status=status.HTTP_201_CREATED)
+        return Response(f'Product deleted successfully', status=status.HTTP_200_OK)
 
 
 # ----------------------------------------------Товары в магазине------------------------------

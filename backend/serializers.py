@@ -35,9 +35,19 @@ class ViewStoreSerializer(serializers.ModelSerializer):
 
 
 class StoreSerializer(serializers.ModelSerializer):
+
+    def update(self, instance, validated_data):
+        instance.id = validated_data.get("id", instance.id)
+        instance.name = validated_data.get("name", instance.name)
+        instance.owner = instance.owner
+        instance.delivery_cost = validated_data.get("delivery_cost", instance.delivery_cost)
+        instance.save()
+        return instance
+
     class Meta:
         model = Store
         fields = '__all__'
+
 
 
 
