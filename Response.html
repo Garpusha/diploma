@@ -1,9 +1,9 @@
 HTTP/1.1 500 Internal Server Error
-Date: Sat, 11 Nov 2023 13:43:05 GMT
+Date: Sat, 11 Nov 2023 16:48:24 GMT
 Server: WSGIServer/0.2 CPython/3.10.12
 Content-Type: text/html; charset=utf-8
 X-Frame-Options: DENY
-Content-Length: 103431
+Content-Length: 95853
 Vary: Cookie
 X-Content-Type-Options: nosniff
 Referrer-Policy: same-origin
@@ -14,7 +14,7 @@ Cross-Origin-Opener-Policy: same-origin
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta name="robots" content="NONE,NOARCHIVE">
-  <title>TypeError
+  <title>ValueError
           at /product_in_store/</title>
   <style type="text/css">
     html * { padding:0; margin:0; }
@@ -109,14 +109,14 @@ Cross-Origin-Opener-Policy: same-origin
 </head>
 <body>
 <div id="summary">
-  <h1>TypeError
+  <h1>ValueError
        at /product_in_store/</h1>
-  <pre class="exception_value">&#x27;&gt;&#x27; not supported between instances of &#x27;int&#x27; and &#x27;ProductStore&#x27;</pre>
+  <pre class="exception_value">Cannot assign &quot;9&quot;: &quot;ProductStore.product&quot; must be a &quot;Product&quot; instance.</pre>
   <table class="meta">
 
     <tr>
       <th>Request Method:</th>
-      <td>DELETE</td>
+      <td>PATCH</td>
     </tr>
     <tr>
       <th>Request URL:</th>
@@ -130,19 +130,19 @@ Cross-Origin-Opener-Policy: same-origin
 
     <tr>
       <th>Exception Type:</th>
-      <td>TypeError</td>
+      <td>ValueError</td>
     </tr>
 
 
     <tr>
       <th>Exception Value:</th>
-      <td><pre>&#x27;&gt;&#x27; not supported between instances of &#x27;int&#x27; and &#x27;ProductStore&#x27;</pre></td>
+      <td><pre>Cannot assign &quot;9&quot;: &quot;ProductStore.product&quot; must be a &quot;Product&quot; instance.</pre></td>
     </tr>
 
 
     <tr>
       <th>Exception Location:</th>
-      <td><span class="fname">/home/flash/PycharmProjects/diploma/backend/views.py</span>, line 419, in delete</td>
+      <td><span class="fname">/home/flash/PycharmProjects/diploma/venv/lib/python3.10/site-packages/django/db/models/fields/related_descriptors.py</span>, line 266, in __set__</td>
     </tr>
 
 
@@ -162,11 +162,7 @@ Cross-Origin-Opener-Policy: same-origin
     <tr>
       <th>Python Path:</th>
       <td><pre>[&#x27;/home/flash/PycharmProjects/diploma&#x27;,
- &#x27;/snap/pycharm-community/352/plugins/python-ce/helpers/pydev&#x27;,
- &#x27;/snap/pycharm-community/352/plugins/python-ce/helpers/third_party/thriftpy&#x27;,
- &#x27;/snap/pycharm-community/352/plugins/python-ce/helpers/pydev&#x27;,
  &#x27;/home/flash/PycharmProjects/diploma&#x27;,
- &#x27;/home/flash/.cache/JetBrains/PyCharmCE2023.2/cythonExtensions&#x27;,
  &#x27;/usr/lib/python310.zip&#x27;,
  &#x27;/usr/lib/python3.10&#x27;,
  &#x27;/usr/lib/python3.10/lib-dynload&#x27;,
@@ -174,7 +170,7 @@ Cross-Origin-Opener-Policy: same-origin
     </tr>
     <tr>
       <th>Server time:</th>
-      <td>Sat, 11 Nov 2023 13:43:05 +0000</td>
+      <td>Sat, 11 Nov 2023 16:48:24 +0000</td>
     </tr>
   </table>
 </div>
@@ -196,43 +192,43 @@ Cross-Origin-Opener-Policy: same-origin
 
 
 
-            <div class="context" id="c139901260607872">
+            <div class="context" id="c140311515970176">
 
-                <ol start="48" class="pre-context" id="pre139901260607872">
+                <ol start="48" class="pre-context" id="pre140311515970176">
 
-                  <li onclick="toggle('pre139901260607872', 'post139901260607872')"><pre></pre></li>
+                  <li onclick="toggle('pre140311515970176', 'post140311515970176')"><pre></pre></li>
 
-                  <li onclick="toggle('pre139901260607872', 'post139901260607872')"><pre>        return inner</pre></li>
+                  <li onclick="toggle('pre140311515970176', 'post140311515970176')"><pre>        return inner</pre></li>
 
-                  <li onclick="toggle('pre139901260607872', 'post139901260607872')"><pre>    else:</pre></li>
+                  <li onclick="toggle('pre140311515970176', 'post140311515970176')"><pre>    else:</pre></li>
 
-                  <li onclick="toggle('pre139901260607872', 'post139901260607872')"><pre></pre></li>
+                  <li onclick="toggle('pre140311515970176', 'post140311515970176')"><pre></pre></li>
 
-                  <li onclick="toggle('pre139901260607872', 'post139901260607872')"><pre>        @wraps(get_response)</pre></li>
+                  <li onclick="toggle('pre140311515970176', 'post140311515970176')"><pre>        @wraps(get_response)</pre></li>
 
-                  <li onclick="toggle('pre139901260607872', 'post139901260607872')"><pre>        def inner(request):</pre></li>
+                  <li onclick="toggle('pre140311515970176', 'post140311515970176')"><pre>        def inner(request):</pre></li>
 
-                  <li onclick="toggle('pre139901260607872', 'post139901260607872')"><pre>            try:</pre></li>
+                  <li onclick="toggle('pre140311515970176', 'post140311515970176')"><pre>            try:</pre></li>
 
                 </ol>
 
               <ol start="55" class="context-line">
-                <li onclick="toggle('pre139901260607872', 'post139901260607872')"><pre>                response = get_response(request)</pre> <span>…</span></li>
+                <li onclick="toggle('pre140311515970176', 'post140311515970176')"><pre>                response = get_response(request)</pre> <span>…</span></li>
               </ol>
 
-                <ol start='56' class="post-context" id="post139901260607872">
+                <ol start='56' class="post-context" id="post140311515970176">
 
-                  <li onclick="toggle('pre139901260607872', 'post139901260607872')"><pre>            except Exception as exc:</pre></li>
+                  <li onclick="toggle('pre140311515970176', 'post140311515970176')"><pre>            except Exception as exc:</pre></li>
 
-                  <li onclick="toggle('pre139901260607872', 'post139901260607872')"><pre>                response = response_for_exception(request, exc)</pre></li>
+                  <li onclick="toggle('pre140311515970176', 'post140311515970176')"><pre>                response = response_for_exception(request, exc)</pre></li>
 
-                  <li onclick="toggle('pre139901260607872', 'post139901260607872')"><pre>            return response</pre></li>
+                  <li onclick="toggle('pre140311515970176', 'post140311515970176')"><pre>            return response</pre></li>
 
-                  <li onclick="toggle('pre139901260607872', 'post139901260607872')"><pre></pre></li>
+                  <li onclick="toggle('pre140311515970176', 'post140311515970176')"><pre></pre></li>
 
-                  <li onclick="toggle('pre139901260607872', 'post139901260607872')"><pre>        return inner</pre></li>
+                  <li onclick="toggle('pre140311515970176', 'post140311515970176')"><pre>        return inner</pre></li>
 
-                  <li onclick="toggle('pre139901260607872', 'post139901260607872')"><pre></pre></li>
+                  <li onclick="toggle('pre140311515970176', 'post140311515970176')"><pre></pre></li>
 
               </ol>
 
@@ -244,7 +240,7 @@ Cross-Origin-Opener-Policy: same-origin
               <details>
                 <summary class="commands">Local vars</summary>
 
-            <table class="vars" id="v139901260607872">
+            <table class="vars" id="v140311515970176">
               <thead>
                 <tr>
                   <th>Variable</th>
@@ -255,17 +251,17 @@ Cross-Origin-Opener-Policy: same-origin
 
                   <tr>
                     <td>exc</td>
-                    <td class="code"><pre>TypeError(&quot;&#x27;&gt;&#x27; not supported between instances of &#x27;int&#x27; and &#x27;ProductStore&#x27;&quot;)</pre></td>
+                    <td class="code"><pre>ValueError(&#x27;Cannot assign &quot;9&quot;: &quot;ProductStore.product&quot; must be a &quot;Product&quot; instance.&#x27;)</pre></td>
                   </tr>
 
                   <tr>
                     <td>get_response</td>
-                    <td class="code"><pre>&lt;bound method BaseHandler._get_response of &lt;django.core.handlers.wsgi.WSGIHandler object at 0x7f3d4ef7e140&gt;&gt;</pre></td>
+                    <td class="code"><pre>&lt;bound method BaseHandler._get_response of &lt;django.core.handlers.wsgi.WSGIHandler object at 0x7f9cd4744f40&gt;&gt;</pre></td>
                   </tr>
 
                   <tr>
                     <td>request</td>
-                    <td class="code"><pre>&lt;WSGIRequest: DELETE &#x27;/product_in_store/&#x27;&gt;</pre></td>
+                    <td class="code"><pre>&lt;WSGIRequest: PATCH &#x27;/product_in_store/&#x27;&gt;</pre></td>
                   </tr>
 
               </tbody>
@@ -281,43 +277,43 @@ Cross-Origin-Opener-Policy: same-origin
 
 
 
-            <div class="context" id="c139901260607936">
+            <div class="context" id="c140311515969664">
 
-                <ol start="190" class="pre-context" id="pre139901260607936">
+                <ol start="190" class="pre-context" id="pre140311515969664">
 
-                  <li onclick="toggle('pre139901260607936', 'post139901260607936')"><pre></pre></li>
+                  <li onclick="toggle('pre140311515969664', 'post140311515969664')"><pre></pre></li>
 
-                  <li onclick="toggle('pre139901260607936', 'post139901260607936')"><pre>        if response is None:</pre></li>
+                  <li onclick="toggle('pre140311515969664', 'post140311515969664')"><pre>        if response is None:</pre></li>
 
-                  <li onclick="toggle('pre139901260607936', 'post139901260607936')"><pre>            wrapped_callback = self.make_view_atomic(callback)</pre></li>
+                  <li onclick="toggle('pre140311515969664', 'post140311515969664')"><pre>            wrapped_callback = self.make_view_atomic(callback)</pre></li>
 
-                  <li onclick="toggle('pre139901260607936', 'post139901260607936')"><pre>            # If it is an asynchronous view, run it in a subthread.</pre></li>
+                  <li onclick="toggle('pre140311515969664', 'post140311515969664')"><pre>            # If it is an asynchronous view, run it in a subthread.</pre></li>
 
-                  <li onclick="toggle('pre139901260607936', 'post139901260607936')"><pre>            if iscoroutinefunction(wrapped_callback):</pre></li>
+                  <li onclick="toggle('pre140311515969664', 'post140311515969664')"><pre>            if iscoroutinefunction(wrapped_callback):</pre></li>
 
-                  <li onclick="toggle('pre139901260607936', 'post139901260607936')"><pre>                wrapped_callback = async_to_sync(wrapped_callback)</pre></li>
+                  <li onclick="toggle('pre140311515969664', 'post140311515969664')"><pre>                wrapped_callback = async_to_sync(wrapped_callback)</pre></li>
 
-                  <li onclick="toggle('pre139901260607936', 'post139901260607936')"><pre>            try:</pre></li>
+                  <li onclick="toggle('pre140311515969664', 'post140311515969664')"><pre>            try:</pre></li>
 
                 </ol>
 
               <ol start="197" class="context-line">
-                <li onclick="toggle('pre139901260607936', 'post139901260607936')"><pre>                response = wrapped_callback(request, *callback_args, **callback_kwargs)</pre> <span>…</span></li>
+                <li onclick="toggle('pre140311515969664', 'post140311515969664')"><pre>                response = wrapped_callback(request, *callback_args, **callback_kwargs)</pre> <span>…</span></li>
               </ol>
 
-                <ol start='198' class="post-context" id="post139901260607936">
+                <ol start='198' class="post-context" id="post140311515969664">
 
-                  <li onclick="toggle('pre139901260607936', 'post139901260607936')"><pre>            except Exception as e:</pre></li>
+                  <li onclick="toggle('pre140311515969664', 'post140311515969664')"><pre>            except Exception as e:</pre></li>
 
-                  <li onclick="toggle('pre139901260607936', 'post139901260607936')"><pre>                response = self.process_exception_by_middleware(e, request)</pre></li>
+                  <li onclick="toggle('pre140311515969664', 'post140311515969664')"><pre>                response = self.process_exception_by_middleware(e, request)</pre></li>
 
-                  <li onclick="toggle('pre139901260607936', 'post139901260607936')"><pre>                if response is None:</pre></li>
+                  <li onclick="toggle('pre140311515969664', 'post140311515969664')"><pre>                if response is None:</pre></li>
 
-                  <li onclick="toggle('pre139901260607936', 'post139901260607936')"><pre>                    raise</pre></li>
+                  <li onclick="toggle('pre140311515969664', 'post140311515969664')"><pre>                    raise</pre></li>
 
-                  <li onclick="toggle('pre139901260607936', 'post139901260607936')"><pre></pre></li>
+                  <li onclick="toggle('pre140311515969664', 'post140311515969664')"><pre></pre></li>
 
-                  <li onclick="toggle('pre139901260607936', 'post139901260607936')"><pre>        # Complain if the view returned None (a common error).</pre></li>
+                  <li onclick="toggle('pre140311515969664', 'post140311515969664')"><pre>        # Complain if the view returned None (a common error).</pre></li>
 
               </ol>
 
@@ -329,7 +325,7 @@ Cross-Origin-Opener-Policy: same-origin
               <details>
                 <summary class="commands">Local vars</summary>
 
-            <table class="vars" id="v139901260607936">
+            <table class="vars" id="v140311515969664">
               <thead>
                 <tr>
                   <th>Variable</th>
@@ -340,7 +336,7 @@ Cross-Origin-Opener-Policy: same-origin
 
                   <tr>
                     <td>callback</td>
-                    <td class="code"><pre>&lt;function View.as_view.&lt;locals&gt;.view at 0x7f3d4d7c84c0&gt;</pre></td>
+                    <td class="code"><pre>&lt;function View.as_view.&lt;locals&gt;.view at 0x7f9cd2d4d870&gt;</pre></td>
                   </tr>
 
                   <tr>
@@ -360,7 +356,7 @@ Cross-Origin-Opener-Policy: same-origin
 
                   <tr>
                     <td>request</td>
-                    <td class="code"><pre>&lt;WSGIRequest: DELETE &#x27;/product_in_store/&#x27;&gt;</pre></td>
+                    <td class="code"><pre>&lt;WSGIRequest: PATCH &#x27;/product_in_store/&#x27;&gt;</pre></td>
                   </tr>
 
                   <tr>
@@ -370,12 +366,12 @@ Cross-Origin-Opener-Policy: same-origin
 
                   <tr>
                     <td>self</td>
-                    <td class="code"><pre>&lt;django.core.handlers.wsgi.WSGIHandler object at 0x7f3d4ef7e140&gt;</pre></td>
+                    <td class="code"><pre>&lt;django.core.handlers.wsgi.WSGIHandler object at 0x7f9cd4744f40&gt;</pre></td>
                   </tr>
 
                   <tr>
                     <td>wrapped_callback</td>
-                    <td class="code"><pre>&lt;function View.as_view.&lt;locals&gt;.view at 0x7f3d4d7c84c0&gt;</pre></td>
+                    <td class="code"><pre>&lt;function View.as_view.&lt;locals&gt;.view at 0x7f9cd2d4d870&gt;</pre></td>
                   </tr>
 
               </tbody>
@@ -391,37 +387,37 @@ Cross-Origin-Opener-Policy: same-origin
 
 
 
-            <div class="context" id="c139901256450752">
+            <div class="context" id="c140311516192256">
 
-                <ol start="49" class="pre-context" id="pre139901256450752">
+                <ol start="49" class="pre-context" id="pre140311516192256">
 
-                  <li onclick="toggle('pre139901256450752', 'post139901256450752')"><pre>def csrf_exempt(view_func):</pre></li>
+                  <li onclick="toggle('pre140311516192256', 'post140311516192256')"><pre>def csrf_exempt(view_func):</pre></li>
 
-                  <li onclick="toggle('pre139901256450752', 'post139901256450752')"><pre>    &quot;&quot;&quot;Mark a view function as being exempt from the CSRF view protection.&quot;&quot;&quot;</pre></li>
+                  <li onclick="toggle('pre140311516192256', 'post140311516192256')"><pre>    &quot;&quot;&quot;Mark a view function as being exempt from the CSRF view protection.&quot;&quot;&quot;</pre></li>
 
-                  <li onclick="toggle('pre139901256450752', 'post139901256450752')"><pre></pre></li>
+                  <li onclick="toggle('pre140311516192256', 'post140311516192256')"><pre></pre></li>
 
-                  <li onclick="toggle('pre139901256450752', 'post139901256450752')"><pre>    # view_func.csrf_exempt = True would also work, but decorators are nicer</pre></li>
+                  <li onclick="toggle('pre140311516192256', 'post140311516192256')"><pre>    # view_func.csrf_exempt = True would also work, but decorators are nicer</pre></li>
 
-                  <li onclick="toggle('pre139901256450752', 'post139901256450752')"><pre>    # if they don&#x27;t have side effects, so return a new function.</pre></li>
+                  <li onclick="toggle('pre140311516192256', 'post140311516192256')"><pre>    # if they don&#x27;t have side effects, so return a new function.</pre></li>
 
-                  <li onclick="toggle('pre139901256450752', 'post139901256450752')"><pre>    @wraps(view_func)</pre></li>
+                  <li onclick="toggle('pre140311516192256', 'post140311516192256')"><pre>    @wraps(view_func)</pre></li>
 
-                  <li onclick="toggle('pre139901256450752', 'post139901256450752')"><pre>    def wrapper_view(*args, **kwargs):</pre></li>
+                  <li onclick="toggle('pre140311516192256', 'post140311516192256')"><pre>    def wrapper_view(*args, **kwargs):</pre></li>
 
                 </ol>
 
               <ol start="56" class="context-line">
-                <li onclick="toggle('pre139901256450752', 'post139901256450752')"><pre>        return view_func(*args, **kwargs)</pre> <span>…</span></li>
+                <li onclick="toggle('pre140311516192256', 'post140311516192256')"><pre>        return view_func(*args, **kwargs)</pre> <span>…</span></li>
               </ol>
 
-                <ol start='57' class="post-context" id="post139901256450752">
+                <ol start='57' class="post-context" id="post140311516192256">
 
-                  <li onclick="toggle('pre139901256450752', 'post139901256450752')"><pre></pre></li>
+                  <li onclick="toggle('pre140311516192256', 'post140311516192256')"><pre></pre></li>
 
-                  <li onclick="toggle('pre139901256450752', 'post139901256450752')"><pre>    wrapper_view.csrf_exempt = True</pre></li>
+                  <li onclick="toggle('pre140311516192256', 'post140311516192256')"><pre>    wrapper_view.csrf_exempt = True</pre></li>
 
-                  <li onclick="toggle('pre139901256450752', 'post139901256450752')"><pre>    return wrapper_view</pre></li>
+                  <li onclick="toggle('pre140311516192256', 'post140311516192256')"><pre>    return wrapper_view</pre></li>
 
               </ol>
 
@@ -433,7 +429,7 @@ Cross-Origin-Opener-Policy: same-origin
               <details>
                 <summary class="commands">Local vars</summary>
 
-            <table class="vars" id="v139901256450752">
+            <table class="vars" id="v140311516192256">
               <thead>
                 <tr>
                   <th>Variable</th>
@@ -444,7 +440,7 @@ Cross-Origin-Opener-Policy: same-origin
 
                   <tr>
                     <td>args</td>
-                    <td class="code"><pre>(&lt;WSGIRequest: DELETE &#x27;/product_in_store/&#x27;&gt;,)</pre></td>
+                    <td class="code"><pre>(&lt;WSGIRequest: PATCH &#x27;/product_in_store/&#x27;&gt;,)</pre></td>
                   </tr>
 
                   <tr>
@@ -454,7 +450,7 @@ Cross-Origin-Opener-Policy: same-origin
 
                   <tr>
                     <td>view_func</td>
-                    <td class="code"><pre>&lt;function View.as_view.&lt;locals&gt;.view at 0x7f3d4d7c8430&gt;</pre></td>
+                    <td class="code"><pre>&lt;function View.as_view.&lt;locals&gt;.view at 0x7f9cd2d4d7e0&gt;</pre></td>
                   </tr>
 
               </tbody>
@@ -470,43 +466,43 @@ Cross-Origin-Opener-Policy: same-origin
 
 
 
-            <div class="context" id="c139901256455680">
+            <div class="context" id="c140311524840128">
 
-                <ol start="97" class="pre-context" id="pre139901256455680">
+                <ol start="97" class="pre-context" id="pre140311524840128">
 
-                  <li onclick="toggle('pre139901256455680', 'post139901256455680')"><pre>            self = cls(**initkwargs)</pre></li>
+                  <li onclick="toggle('pre140311524840128', 'post140311524840128')"><pre>            self = cls(**initkwargs)</pre></li>
 
-                  <li onclick="toggle('pre139901256455680', 'post139901256455680')"><pre>            self.setup(request, *args, **kwargs)</pre></li>
+                  <li onclick="toggle('pre140311524840128', 'post140311524840128')"><pre>            self.setup(request, *args, **kwargs)</pre></li>
 
-                  <li onclick="toggle('pre139901256455680', 'post139901256455680')"><pre>            if not hasattr(self, &quot;request&quot;):</pre></li>
+                  <li onclick="toggle('pre140311524840128', 'post140311524840128')"><pre>            if not hasattr(self, &quot;request&quot;):</pre></li>
 
-                  <li onclick="toggle('pre139901256455680', 'post139901256455680')"><pre>                raise AttributeError(</pre></li>
+                  <li onclick="toggle('pre140311524840128', 'post140311524840128')"><pre>                raise AttributeError(</pre></li>
 
-                  <li onclick="toggle('pre139901256455680', 'post139901256455680')"><pre>                    &quot;%s instance has no &#x27;request&#x27; attribute. Did you override &quot;</pre></li>
+                  <li onclick="toggle('pre140311524840128', 'post140311524840128')"><pre>                    &quot;%s instance has no &#x27;request&#x27; attribute. Did you override &quot;</pre></li>
 
-                  <li onclick="toggle('pre139901256455680', 'post139901256455680')"><pre>                    &quot;setup() and forget to call super()?&quot; % cls.__name__</pre></li>
+                  <li onclick="toggle('pre140311524840128', 'post140311524840128')"><pre>                    &quot;setup() and forget to call super()?&quot; % cls.__name__</pre></li>
 
-                  <li onclick="toggle('pre139901256455680', 'post139901256455680')"><pre>                )</pre></li>
+                  <li onclick="toggle('pre140311524840128', 'post140311524840128')"><pre>                )</pre></li>
 
                 </ol>
 
               <ol start="104" class="context-line">
-                <li onclick="toggle('pre139901256455680', 'post139901256455680')"><pre>            return self.dispatch(request, *args, **kwargs)</pre> <span>…</span></li>
+                <li onclick="toggle('pre140311524840128', 'post140311524840128')"><pre>            return self.dispatch(request, *args, **kwargs)</pre> <span>…</span></li>
               </ol>
 
-                <ol start='105' class="post-context" id="post139901256455680">
+                <ol start='105' class="post-context" id="post140311524840128">
 
-                  <li onclick="toggle('pre139901256455680', 'post139901256455680')"><pre></pre></li>
+                  <li onclick="toggle('pre140311524840128', 'post140311524840128')"><pre></pre></li>
 
-                  <li onclick="toggle('pre139901256455680', 'post139901256455680')"><pre>        view.view_class = cls</pre></li>
+                  <li onclick="toggle('pre140311524840128', 'post140311524840128')"><pre>        view.view_class = cls</pre></li>
 
-                  <li onclick="toggle('pre139901256455680', 'post139901256455680')"><pre>        view.view_initkwargs = initkwargs</pre></li>
+                  <li onclick="toggle('pre140311524840128', 'post140311524840128')"><pre>        view.view_initkwargs = initkwargs</pre></li>
 
-                  <li onclick="toggle('pre139901256455680', 'post139901256455680')"><pre></pre></li>
+                  <li onclick="toggle('pre140311524840128', 'post140311524840128')"><pre></pre></li>
 
-                  <li onclick="toggle('pre139901256455680', 'post139901256455680')"><pre>        # __name__ and __qualname__ are intentionally left unchanged as</pre></li>
+                  <li onclick="toggle('pre140311524840128', 'post140311524840128')"><pre>        # __name__ and __qualname__ are intentionally left unchanged as</pre></li>
 
-                  <li onclick="toggle('pre139901256455680', 'post139901256455680')"><pre>        # view_class should be used to robustly determine the name of the view</pre></li>
+                  <li onclick="toggle('pre140311524840128', 'post140311524840128')"><pre>        # view_class should be used to robustly determine the name of the view</pre></li>
 
               </ol>
 
@@ -518,7 +514,7 @@ Cross-Origin-Opener-Policy: same-origin
               <details>
                 <summary class="commands">Local vars</summary>
 
-            <table class="vars" id="v139901256455680">
+            <table class="vars" id="v140311524840128">
               <thead>
                 <tr>
                   <th>Variable</th>
@@ -549,12 +545,12 @@ Cross-Origin-Opener-Policy: same-origin
 
                   <tr>
                     <td>request</td>
-                    <td class="code"><pre>&lt;WSGIRequest: DELETE &#x27;/product_in_store/&#x27;&gt;</pre></td>
+                    <td class="code"><pre>&lt;WSGIRequest: PATCH &#x27;/product_in_store/&#x27;&gt;</pre></td>
                   </tr>
 
                   <tr>
                     <td>self</td>
-                    <td class="code"><pre>&lt;backend.views.ProductStoreView object at 0x7f3d4cf9ad70&gt;</pre></td>
+                    <td class="code"><pre>&lt;backend.views.ProductStoreView object at 0x7f9cd250d5d0&gt;</pre></td>
                   </tr>
 
               </tbody>
@@ -570,43 +566,43 @@ Cross-Origin-Opener-Policy: same-origin
 
 
 
-            <div class="context" id="c139901256455232">
+            <div class="context" id="c140311516184704">
 
-                <ol start="502" class="pre-context" id="pre139901256455232">
+                <ol start="502" class="pre-context" id="pre140311516184704">
 
-                  <li onclick="toggle('pre139901256455232', 'post139901256455232')"><pre>                                  self.http_method_not_allowed)</pre></li>
+                  <li onclick="toggle('pre140311516184704', 'post140311516184704')"><pre>                                  self.http_method_not_allowed)</pre></li>
 
-                  <li onclick="toggle('pre139901256455232', 'post139901256455232')"><pre>            else:</pre></li>
+                  <li onclick="toggle('pre140311516184704', 'post140311516184704')"><pre>            else:</pre></li>
 
-                  <li onclick="toggle('pre139901256455232', 'post139901256455232')"><pre>                handler = self.http_method_not_allowed</pre></li>
+                  <li onclick="toggle('pre140311516184704', 'post140311516184704')"><pre>                handler = self.http_method_not_allowed</pre></li>
 
-                  <li onclick="toggle('pre139901256455232', 'post139901256455232')"><pre></pre></li>
+                  <li onclick="toggle('pre140311516184704', 'post140311516184704')"><pre></pre></li>
 
-                  <li onclick="toggle('pre139901256455232', 'post139901256455232')"><pre>            response = handler(request, *args, **kwargs)</pre></li>
+                  <li onclick="toggle('pre140311516184704', 'post140311516184704')"><pre>            response = handler(request, *args, **kwargs)</pre></li>
 
-                  <li onclick="toggle('pre139901256455232', 'post139901256455232')"><pre></pre></li>
+                  <li onclick="toggle('pre140311516184704', 'post140311516184704')"><pre></pre></li>
 
-                  <li onclick="toggle('pre139901256455232', 'post139901256455232')"><pre>        except Exception as exc:</pre></li>
+                  <li onclick="toggle('pre140311516184704', 'post140311516184704')"><pre>        except Exception as exc:</pre></li>
 
                 </ol>
 
               <ol start="509" class="context-line">
-                <li onclick="toggle('pre139901256455232', 'post139901256455232')"><pre>            response = self.handle_exception(exc)</pre> <span>…</span></li>
+                <li onclick="toggle('pre140311516184704', 'post140311516184704')"><pre>            response = self.handle_exception(exc)</pre> <span>…</span></li>
               </ol>
 
-                <ol start='510' class="post-context" id="post139901256455232">
+                <ol start='510' class="post-context" id="post140311516184704">
 
-                  <li onclick="toggle('pre139901256455232', 'post139901256455232')"><pre></pre></li>
+                  <li onclick="toggle('pre140311516184704', 'post140311516184704')"><pre></pre></li>
 
-                  <li onclick="toggle('pre139901256455232', 'post139901256455232')"><pre>        self.response = self.finalize_response(request, response, *args, **kwargs)</pre></li>
+                  <li onclick="toggle('pre140311516184704', 'post140311516184704')"><pre>        self.response = self.finalize_response(request, response, *args, **kwargs)</pre></li>
 
-                  <li onclick="toggle('pre139901256455232', 'post139901256455232')"><pre>        return self.response</pre></li>
+                  <li onclick="toggle('pre140311516184704', 'post140311516184704')"><pre>        return self.response</pre></li>
 
-                  <li onclick="toggle('pre139901256455232', 'post139901256455232')"><pre></pre></li>
+                  <li onclick="toggle('pre140311516184704', 'post140311516184704')"><pre></pre></li>
 
-                  <li onclick="toggle('pre139901256455232', 'post139901256455232')"><pre>    def options(self, request, *args, **kwargs):</pre></li>
+                  <li onclick="toggle('pre140311516184704', 'post140311516184704')"><pre>    def options(self, request, *args, **kwargs):</pre></li>
 
-                  <li onclick="toggle('pre139901256455232', 'post139901256455232')"><pre>        &quot;&quot;&quot;</pre></li>
+                  <li onclick="toggle('pre140311516184704', 'post140311516184704')"><pre>        &quot;&quot;&quot;</pre></li>
 
               </ol>
 
@@ -618,7 +614,7 @@ Cross-Origin-Opener-Policy: same-origin
               <details>
                 <summary class="commands">Local vars</summary>
 
-            <table class="vars" id="v139901256455232">
+            <table class="vars" id="v140311516184704">
               <thead>
                 <tr>
                   <th>Variable</th>
@@ -634,7 +630,7 @@ Cross-Origin-Opener-Policy: same-origin
 
                   <tr>
                     <td>handler</td>
-                    <td class="code"><pre>&lt;bound method ProductStoreView.delete of &lt;backend.views.ProductStoreView object at 0x7f3d4cf9ad70&gt;&gt;</pre></td>
+                    <td class="code"><pre>&lt;bound method ProductStoreView.patch of &lt;backend.views.ProductStoreView object at 0x7f9cd250d5d0&gt;&gt;</pre></td>
                   </tr>
 
                   <tr>
@@ -644,12 +640,12 @@ Cross-Origin-Opener-Policy: same-origin
 
                   <tr>
                     <td>request</td>
-                    <td class="code"><pre>&lt;rest_framework.request.Request: DELETE &#x27;/product_in_store/&#x27;&gt;</pre></td>
+                    <td class="code"><pre>&lt;rest_framework.request.Request: PATCH &#x27;/product_in_store/&#x27;&gt;</pre></td>
                   </tr>
 
                   <tr>
                     <td>self</td>
-                    <td class="code"><pre>&lt;backend.views.ProductStoreView object at 0x7f3d4cf9ad70&gt;</pre></td>
+                    <td class="code"><pre>&lt;backend.views.ProductStoreView object at 0x7f9cd250d5d0&gt;</pre></td>
                   </tr>
 
               </tbody>
@@ -665,43 +661,43 @@ Cross-Origin-Opener-Policy: same-origin
 
 
 
-            <div class="context" id="c139901256450176">
+            <div class="context" id="c140311516197056">
 
-                <ol start="462" class="pre-context" id="pre139901256450176">
+                <ol start="462" class="pre-context" id="pre140311516197056">
 
-                  <li onclick="toggle('pre139901256450176', 'post139901256450176')"><pre></pre></li>
+                  <li onclick="toggle('pre140311516197056', 'post140311516197056')"><pre></pre></li>
 
-                  <li onclick="toggle('pre139901256450176', 'post139901256450176')"><pre>        exception_handler = self.get_exception_handler()</pre></li>
+                  <li onclick="toggle('pre140311516197056', 'post140311516197056')"><pre>        exception_handler = self.get_exception_handler()</pre></li>
 
-                  <li onclick="toggle('pre139901256450176', 'post139901256450176')"><pre></pre></li>
+                  <li onclick="toggle('pre140311516197056', 'post140311516197056')"><pre></pre></li>
 
-                  <li onclick="toggle('pre139901256450176', 'post139901256450176')"><pre>        context = self.get_exception_handler_context()</pre></li>
+                  <li onclick="toggle('pre140311516197056', 'post140311516197056')"><pre>        context = self.get_exception_handler_context()</pre></li>
 
-                  <li onclick="toggle('pre139901256450176', 'post139901256450176')"><pre>        response = exception_handler(exc, context)</pre></li>
+                  <li onclick="toggle('pre140311516197056', 'post140311516197056')"><pre>        response = exception_handler(exc, context)</pre></li>
 
-                  <li onclick="toggle('pre139901256450176', 'post139901256450176')"><pre></pre></li>
+                  <li onclick="toggle('pre140311516197056', 'post140311516197056')"><pre></pre></li>
 
-                  <li onclick="toggle('pre139901256450176', 'post139901256450176')"><pre>        if response is None:</pre></li>
+                  <li onclick="toggle('pre140311516197056', 'post140311516197056')"><pre>        if response is None:</pre></li>
 
                 </ol>
 
               <ol start="469" class="context-line">
-                <li onclick="toggle('pre139901256450176', 'post139901256450176')"><pre>            self.raise_uncaught_exception(exc)</pre> <span>…</span></li>
+                <li onclick="toggle('pre140311516197056', 'post140311516197056')"><pre>            self.raise_uncaught_exception(exc)</pre> <span>…</span></li>
               </ol>
 
-                <ol start='470' class="post-context" id="post139901256450176">
+                <ol start='470' class="post-context" id="post140311516197056">
 
-                  <li onclick="toggle('pre139901256450176', 'post139901256450176')"><pre></pre></li>
+                  <li onclick="toggle('pre140311516197056', 'post140311516197056')"><pre></pre></li>
 
-                  <li onclick="toggle('pre139901256450176', 'post139901256450176')"><pre>        response.exception = True</pre></li>
+                  <li onclick="toggle('pre140311516197056', 'post140311516197056')"><pre>        response.exception = True</pre></li>
 
-                  <li onclick="toggle('pre139901256450176', 'post139901256450176')"><pre>        return response</pre></li>
+                  <li onclick="toggle('pre140311516197056', 'post140311516197056')"><pre>        return response</pre></li>
 
-                  <li onclick="toggle('pre139901256450176', 'post139901256450176')"><pre></pre></li>
+                  <li onclick="toggle('pre140311516197056', 'post140311516197056')"><pre></pre></li>
 
-                  <li onclick="toggle('pre139901256450176', 'post139901256450176')"><pre>    def raise_uncaught_exception(self, exc):</pre></li>
+                  <li onclick="toggle('pre140311516197056', 'post140311516197056')"><pre>    def raise_uncaught_exception(self, exc):</pre></li>
 
-                  <li onclick="toggle('pre139901256450176', 'post139901256450176')"><pre>        if settings.DEBUG:</pre></li>
+                  <li onclick="toggle('pre140311516197056', 'post140311516197056')"><pre>        if settings.DEBUG:</pre></li>
 
               </ol>
 
@@ -713,7 +709,7 @@ Cross-Origin-Opener-Policy: same-origin
               <details>
                 <summary class="commands">Local vars</summary>
 
-            <table class="vars" id="v139901256450176">
+            <table class="vars" id="v140311516197056">
               <thead>
                 <tr>
                   <th>Variable</th>
@@ -726,18 +722,18 @@ Cross-Origin-Opener-Policy: same-origin
                     <td>context</td>
                     <td class="code"><pre>{&#x27;args&#x27;: (),
  &#x27;kwargs&#x27;: {},
- &#x27;request&#x27;: &lt;rest_framework.request.Request: DELETE &#x27;/product_in_store/&#x27;&gt;,
- &#x27;view&#x27;: &lt;backend.views.ProductStoreView object at 0x7f3d4cf9ad70&gt;}</pre></td>
+ &#x27;request&#x27;: &lt;rest_framework.request.Request: PATCH &#x27;/product_in_store/&#x27;&gt;,
+ &#x27;view&#x27;: &lt;backend.views.ProductStoreView object at 0x7f9cd250d5d0&gt;}</pre></td>
                   </tr>
 
                   <tr>
                     <td>exc</td>
-                    <td class="code"><pre>TypeError(&quot;&#x27;&gt;&#x27; not supported between instances of &#x27;int&#x27; and &#x27;ProductStore&#x27;&quot;)</pre></td>
+                    <td class="code"><pre>ValueError(&#x27;Cannot assign &quot;9&quot;: &quot;ProductStore.product&quot; must be a &quot;Product&quot; instance.&#x27;)</pre></td>
                   </tr>
 
                   <tr>
                     <td>exception_handler</td>
-                    <td class="code"><pre>&lt;function exception_handler at 0x7f3d4d78c1f0&gt;</pre></td>
+                    <td class="code"><pre>&lt;function exception_handler at 0x7f9cd31fb2e0&gt;</pre></td>
                   </tr>
 
                   <tr>
@@ -747,7 +743,7 @@ Cross-Origin-Opener-Policy: same-origin
 
                   <tr>
                     <td>self</td>
-                    <td class="code"><pre>&lt;backend.views.ProductStoreView object at 0x7f3d4cf9ad70&gt;</pre></td>
+                    <td class="code"><pre>&lt;backend.views.ProductStoreView object at 0x7f9cd250d5d0&gt;</pre></td>
                   </tr>
 
               </tbody>
@@ -763,43 +759,43 @@ Cross-Origin-Opener-Policy: same-origin
 
 
 
-            <div class="context" id="c139901265107840">
+            <div class="context" id="c140311528872896">
 
-                <ol start="473" class="pre-context" id="pre139901265107840">
+                <ol start="473" class="pre-context" id="pre140311528872896">
 
-                  <li onclick="toggle('pre139901265107840', 'post139901265107840')"><pre></pre></li>
+                  <li onclick="toggle('pre140311528872896', 'post140311528872896')"><pre></pre></li>
 
-                  <li onclick="toggle('pre139901265107840', 'post139901265107840')"><pre>    def raise_uncaught_exception(self, exc):</pre></li>
+                  <li onclick="toggle('pre140311528872896', 'post140311528872896')"><pre>    def raise_uncaught_exception(self, exc):</pre></li>
 
-                  <li onclick="toggle('pre139901265107840', 'post139901265107840')"><pre>        if settings.DEBUG:</pre></li>
+                  <li onclick="toggle('pre140311528872896', 'post140311528872896')"><pre>        if settings.DEBUG:</pre></li>
 
-                  <li onclick="toggle('pre139901265107840', 'post139901265107840')"><pre>            request = self.request</pre></li>
+                  <li onclick="toggle('pre140311528872896', 'post140311528872896')"><pre>            request = self.request</pre></li>
 
-                  <li onclick="toggle('pre139901265107840', 'post139901265107840')"><pre>            renderer_format = getattr(request.accepted_renderer, &#x27;format&#x27;)</pre></li>
+                  <li onclick="toggle('pre140311528872896', 'post140311528872896')"><pre>            renderer_format = getattr(request.accepted_renderer, &#x27;format&#x27;)</pre></li>
 
-                  <li onclick="toggle('pre139901265107840', 'post139901265107840')"><pre>            use_plaintext_traceback = renderer_format not in (&#x27;html&#x27;, &#x27;api&#x27;, &#x27;admin&#x27;)</pre></li>
+                  <li onclick="toggle('pre140311528872896', 'post140311528872896')"><pre>            use_plaintext_traceback = renderer_format not in (&#x27;html&#x27;, &#x27;api&#x27;, &#x27;admin&#x27;)</pre></li>
 
-                  <li onclick="toggle('pre139901265107840', 'post139901265107840')"><pre>            request.force_plaintext_errors(use_plaintext_traceback)</pre></li>
+                  <li onclick="toggle('pre140311528872896', 'post140311528872896')"><pre>            request.force_plaintext_errors(use_plaintext_traceback)</pre></li>
 
                 </ol>
 
               <ol start="480" class="context-line">
-                <li onclick="toggle('pre139901265107840', 'post139901265107840')"><pre>        raise exc</pre> <span>…</span></li>
+                <li onclick="toggle('pre140311528872896', 'post140311528872896')"><pre>        raise exc</pre> <span>…</span></li>
               </ol>
 
-                <ol start='481' class="post-context" id="post139901265107840">
+                <ol start='481' class="post-context" id="post140311528872896">
 
-                  <li onclick="toggle('pre139901265107840', 'post139901265107840')"><pre></pre></li>
+                  <li onclick="toggle('pre140311528872896', 'post140311528872896')"><pre></pre></li>
 
-                  <li onclick="toggle('pre139901265107840', 'post139901265107840')"><pre>    # Note: Views are made CSRF exempt from within `as_view` as to prevent</pre></li>
+                  <li onclick="toggle('pre140311528872896', 'post140311528872896')"><pre>    # Note: Views are made CSRF exempt from within `as_view` as to prevent</pre></li>
 
-                  <li onclick="toggle('pre139901265107840', 'post139901265107840')"><pre>    # accidental removal of this exemption in cases where `dispatch` needs to</pre></li>
+                  <li onclick="toggle('pre140311528872896', 'post140311528872896')"><pre>    # accidental removal of this exemption in cases where `dispatch` needs to</pre></li>
 
-                  <li onclick="toggle('pre139901265107840', 'post139901265107840')"><pre>    # be overridden.</pre></li>
+                  <li onclick="toggle('pre140311528872896', 'post140311528872896')"><pre>    # be overridden.</pre></li>
 
-                  <li onclick="toggle('pre139901265107840', 'post139901265107840')"><pre>    def dispatch(self, request, *args, **kwargs):</pre></li>
+                  <li onclick="toggle('pre140311528872896', 'post140311528872896')"><pre>    def dispatch(self, request, *args, **kwargs):</pre></li>
 
-                  <li onclick="toggle('pre139901265107840', 'post139901265107840')"><pre>        &quot;&quot;&quot;</pre></li>
+                  <li onclick="toggle('pre140311528872896', 'post140311528872896')"><pre>        &quot;&quot;&quot;</pre></li>
 
               </ol>
 
@@ -811,7 +807,7 @@ Cross-Origin-Opener-Policy: same-origin
               <details>
                 <summary class="commands">Local vars</summary>
 
-            <table class="vars" id="v139901265107840">
+            <table class="vars" id="v140311528872896">
               <thead>
                 <tr>
                   <th>Variable</th>
@@ -822,7 +818,7 @@ Cross-Origin-Opener-Policy: same-origin
 
                   <tr>
                     <td>exc</td>
-                    <td class="code"><pre>TypeError(&quot;&#x27;&gt;&#x27; not supported between instances of &#x27;int&#x27; and &#x27;ProductStore&#x27;&quot;)</pre></td>
+                    <td class="code"><pre>ValueError(&#x27;Cannot assign &quot;9&quot;: &quot;ProductStore.product&quot; must be a &quot;Product&quot; instance.&#x27;)</pre></td>
                   </tr>
 
                   <tr>
@@ -832,12 +828,12 @@ Cross-Origin-Opener-Policy: same-origin
 
                   <tr>
                     <td>request</td>
-                    <td class="code"><pre>&lt;rest_framework.request.Request: DELETE &#x27;/product_in_store/&#x27;&gt;</pre></td>
+                    <td class="code"><pre>&lt;rest_framework.request.Request: PATCH &#x27;/product_in_store/&#x27;&gt;</pre></td>
                   </tr>
 
                   <tr>
                     <td>self</td>
-                    <td class="code"><pre>&lt;backend.views.ProductStoreView object at 0x7f3d4cf9ad70&gt;</pre></td>
+                    <td class="code"><pre>&lt;backend.views.ProductStoreView object at 0x7f9cd250d5d0&gt;</pre></td>
                   </tr>
 
                   <tr>
@@ -858,43 +854,43 @@ Cross-Origin-Opener-Policy: same-origin
 
 
 
-            <div class="context" id="c139901264869824">
+            <div class="context" id="c140311528872768">
 
-                <ol start="499" class="pre-context" id="pre139901264869824">
+                <ol start="499" class="pre-context" id="pre140311528872768">
 
-                  <li onclick="toggle('pre139901264869824', 'post139901264869824')"><pre>            # Get the appropriate handler method</pre></li>
+                  <li onclick="toggle('pre140311528872768', 'post140311528872768')"><pre>            # Get the appropriate handler method</pre></li>
 
-                  <li onclick="toggle('pre139901264869824', 'post139901264869824')"><pre>            if request.method.lower() in self.http_method_names:</pre></li>
+                  <li onclick="toggle('pre140311528872768', 'post140311528872768')"><pre>            if request.method.lower() in self.http_method_names:</pre></li>
 
-                  <li onclick="toggle('pre139901264869824', 'post139901264869824')"><pre>                handler = getattr(self, request.method.lower(),</pre></li>
+                  <li onclick="toggle('pre140311528872768', 'post140311528872768')"><pre>                handler = getattr(self, request.method.lower(),</pre></li>
 
-                  <li onclick="toggle('pre139901264869824', 'post139901264869824')"><pre>                                  self.http_method_not_allowed)</pre></li>
+                  <li onclick="toggle('pre140311528872768', 'post140311528872768')"><pre>                                  self.http_method_not_allowed)</pre></li>
 
-                  <li onclick="toggle('pre139901264869824', 'post139901264869824')"><pre>            else:</pre></li>
+                  <li onclick="toggle('pre140311528872768', 'post140311528872768')"><pre>            else:</pre></li>
 
-                  <li onclick="toggle('pre139901264869824', 'post139901264869824')"><pre>                handler = self.http_method_not_allowed</pre></li>
+                  <li onclick="toggle('pre140311528872768', 'post140311528872768')"><pre>                handler = self.http_method_not_allowed</pre></li>
 
-                  <li onclick="toggle('pre139901264869824', 'post139901264869824')"><pre></pre></li>
+                  <li onclick="toggle('pre140311528872768', 'post140311528872768')"><pre></pre></li>
 
                 </ol>
 
               <ol start="506" class="context-line">
-                <li onclick="toggle('pre139901264869824', 'post139901264869824')"><pre>            response = handler(request, *args, **kwargs)</pre> <span>…</span></li>
+                <li onclick="toggle('pre140311528872768', 'post140311528872768')"><pre>            response = handler(request, *args, **kwargs)</pre> <span>…</span></li>
               </ol>
 
-                <ol start='507' class="post-context" id="post139901264869824">
+                <ol start='507' class="post-context" id="post140311528872768">
 
-                  <li onclick="toggle('pre139901264869824', 'post139901264869824')"><pre></pre></li>
+                  <li onclick="toggle('pre140311528872768', 'post140311528872768')"><pre></pre></li>
 
-                  <li onclick="toggle('pre139901264869824', 'post139901264869824')"><pre>        except Exception as exc:</pre></li>
+                  <li onclick="toggle('pre140311528872768', 'post140311528872768')"><pre>        except Exception as exc:</pre></li>
 
-                  <li onclick="toggle('pre139901264869824', 'post139901264869824')"><pre>            response = self.handle_exception(exc)</pre></li>
+                  <li onclick="toggle('pre140311528872768', 'post140311528872768')"><pre>            response = self.handle_exception(exc)</pre></li>
 
-                  <li onclick="toggle('pre139901264869824', 'post139901264869824')"><pre></pre></li>
+                  <li onclick="toggle('pre140311528872768', 'post140311528872768')"><pre></pre></li>
 
-                  <li onclick="toggle('pre139901264869824', 'post139901264869824')"><pre>        self.response = self.finalize_response(request, response, *args, **kwargs)</pre></li>
+                  <li onclick="toggle('pre140311528872768', 'post140311528872768')"><pre>        self.response = self.finalize_response(request, response, *args, **kwargs)</pre></li>
 
-                  <li onclick="toggle('pre139901264869824', 'post139901264869824')"><pre>        return self.response</pre></li>
+                  <li onclick="toggle('pre140311528872768', 'post140311528872768')"><pre>        return self.response</pre></li>
 
               </ol>
 
@@ -906,7 +902,7 @@ Cross-Origin-Opener-Policy: same-origin
               <details>
                 <summary class="commands">Local vars</summary>
 
-            <table class="vars" id="v139901264869824">
+            <table class="vars" id="v140311528872768">
               <thead>
                 <tr>
                   <th>Variable</th>
@@ -922,7 +918,7 @@ Cross-Origin-Opener-Policy: same-origin
 
                   <tr>
                     <td>handler</td>
-                    <td class="code"><pre>&lt;bound method ProductStoreView.delete of &lt;backend.views.ProductStoreView object at 0x7f3d4cf9ad70&gt;&gt;</pre></td>
+                    <td class="code"><pre>&lt;bound method ProductStoreView.patch of &lt;backend.views.ProductStoreView object at 0x7f9cd250d5d0&gt;&gt;</pre></td>
                   </tr>
 
                   <tr>
@@ -932,12 +928,12 @@ Cross-Origin-Opener-Policy: same-origin
 
                   <tr>
                     <td>request</td>
-                    <td class="code"><pre>&lt;rest_framework.request.Request: DELETE &#x27;/product_in_store/&#x27;&gt;</pre></td>
+                    <td class="code"><pre>&lt;rest_framework.request.Request: PATCH &#x27;/product_in_store/&#x27;&gt;</pre></td>
                   </tr>
 
                   <tr>
                     <td>self</td>
-                    <td class="code"><pre>&lt;backend.views.ProductStoreView object at 0x7f3d4cf9ad70&gt;</pre></td>
+                    <td class="code"><pre>&lt;backend.views.ProductStoreView object at 0x7f9cd250d5d0&gt;</pre></td>
                   </tr>
 
               </tbody>
@@ -949,47 +945,47 @@ Cross-Origin-Opener-Policy: same-origin
 
         <li class="frame user">
 
-            <code class="fname">/home/flash/PycharmProjects/diploma/backend/views.py</code>, line 419, in delete
+            <code class="fname">/home/flash/PycharmProjects/diploma/backend/views.py</code>, line 456, in patch
 
 
 
-            <div class="context" id="c139901264858304">
+            <div class="context" id="c140311521051200">
 
-                <ol start="412" class="pre-context" id="pre139901264858304">
+                <ol start="449" class="pre-context" id="pre140311521051200">
 
-                  <li onclick="toggle('pre139901264858304', 'post139901264858304')"><pre>        if request.data[&#x27;delete_product&#x27;].upper() == &#x27;YES&#x27;:</pre></li>
+                  <li onclick="toggle('pre140311521051200', 'post140311521051200')"><pre>        try:</pre></li>
 
-                  <li onclick="toggle('pre139901264858304', 'post139901264858304')"><pre>            product_in_store.delete()</pre></li>
+                  <li onclick="toggle('pre140311521051200', 'post140311521051200')"><pre>            product_in_store = ProductStore.objects.get(product=product, store=store)</pre></li>
 
-                  <li onclick="toggle('pre139901264858304', 'post139901264858304')"><pre>            return Response(f&#x27;Product deleted from store successfully&#x27;,</pre></li>
+                  <li onclick="toggle('pre140311521051200', 'post140311521051200')"><pre>        except ObjectDoesNotExist:</pre></li>
 
-                  <li onclick="toggle('pre139901264858304', 'post139901264858304')"><pre>                            status=status.HTTP_200_OK)</pre></li>
+                  <li onclick="toggle('pre140311521051200', 'post140311521051200')"><pre>            return Response(f&#x27;No product in store&#x27;, status=status.HTTP_400_BAD_REQUEST)</pre></li>
 
-                  <li onclick="toggle('pre139901264858304', 'post139901264858304')"><pre>        else:</pre></li>
+                  <li onclick="toggle('pre140311521051200', 'post140311521051200')"><pre></pre></li>
 
-                  <li onclick="toggle('pre139901264858304', 'post139901264858304')"><pre>            quantity = request.data[&#x27;quantity&#x27;]</pre></li>
+                  <li onclick="toggle('pre140311521051200', 'post140311521051200')"><pre>        product_in_store.quantity = request.data[&#x27;quantity&#x27;]</pre></li>
 
-                  <li onclick="toggle('pre139901264858304', 'post139901264858304')"><pre>            in_store = ProductStore.objects.get(product=product_id, store=store_id)</pre></li>
+                  <li onclick="toggle('pre140311521051200', 'post140311521051200')"><pre>        product_in_store.price = request.data[&#x27;price&#x27;]</pre></li>
 
                 </ol>
 
-              <ol start="419" class="context-line">
-                <li onclick="toggle('pre139901264858304', 'post139901264858304')"><pre>            if quantity &gt; in_store:</pre> <span>…</span></li>
+              <ol start="456" class="context-line">
+                <li onclick="toggle('pre140311521051200', 'post140311521051200')"><pre>        product_in_store.product = request.data[&#x27;product&#x27;]</pre> <span>…</span></li>
               </ol>
 
-                <ol start='420' class="post-context" id="post139901264858304">
+                <ol start='457' class="post-context" id="post140311521051200">
 
-                  <li onclick="toggle('pre139901264858304', 'post139901264858304')"><pre>                return Response(f&#x27;Cannot delete {quantity} items as only {in_store} is present&#x27;,</pre></li>
+                  <li onclick="toggle('pre140311521051200', 'post140311521051200')"><pre>        product_in_store.store = request.data[&#x27;store&#x27;]</pre></li>
 
-                  <li onclick="toggle('pre139901264858304', 'post139901264858304')"><pre>                                status=status.HTTP_400_BAD_REQUEST)</pre></li>
+                  <li onclick="toggle('pre140311521051200', 'post140311521051200')"><pre>        product_in_store.save(update_fields=[&#x27;quantity&#x27;, &#x27;price&#x27;, &#x27;product&#x27;, &#x27;store&#x27;])</pre></li>
 
-                  <li onclick="toggle('pre139901264858304', 'post139901264858304')"><pre>            else:</pre></li>
+                  <li onclick="toggle('pre140311521051200', 'post140311521051200')"><pre>        return Response(f&#x27;Product updated&#x27;, status=status.HTTP_202_ACCEPTED)</pre></li>
 
-                  <li onclick="toggle('pre139901264858304', 'post139901264858304')"><pre>                product_in_store.quantity = in_store - quantity</pre></li>
+                  <li onclick="toggle('pre140311521051200', 'post140311521051200')"><pre></pre></li>
 
-                  <li onclick="toggle('pre139901264858304', 'post139901264858304')"><pre>                product_in_store.save(update_fields=[&#x27;quantity&#x27;])</pre></li>
+                  <li onclick="toggle('pre140311521051200', 'post140311521051200')"><pre></pre></li>
 
-                  <li onclick="toggle('pre139901264858304', 'post139901264858304')"><pre>        return Response(f&#x27;Product deleted from store successfully&#x27;, status=status.HTTP_200_OK)</pre></li>
+                  <li onclick="toggle('pre140311521051200', 'post140311521051200')"><pre># ---------------------------------------------------Заказы------------------------------------</pre></li>
 
               </ol>
 
@@ -1001,7 +997,7 @@ Cross-Origin-Opener-Policy: same-origin
               <details>
                 <summary class="commands">Local vars</summary>
 
-            <table class="vars" id="v139901264858304">
+            <table class="vars" id="v140311521051200">
               <thead>
                 <tr>
                   <th>Variable</th>
@@ -1009,11 +1005,6 @@ Cross-Origin-Opener-Policy: same-origin
                 </tr>
               </thead>
               <tbody>
-
-                  <tr>
-                    <td>in_store</td>
-                    <td class="code"><pre>&lt;ProductStore: ProductStore object (8)&gt;</pre></td>
-                  </tr>
 
                   <tr>
                     <td>product</td>
@@ -1027,22 +1018,17 @@ Cross-Origin-Opener-Policy: same-origin
 
                   <tr>
                     <td>product_in_store</td>
-                    <td class="code"><pre>&lt;ProductStore: ProductStore object (8)&gt;</pre></td>
-                  </tr>
-
-                  <tr>
-                    <td>quantity</td>
-                    <td class="code"><pre>5</pre></td>
+                    <td class="code"><pre>&lt;ProductStore: ProductStore object (14)&gt;</pre></td>
                   </tr>
 
                   <tr>
                     <td>request</td>
-                    <td class="code"><pre>&lt;rest_framework.request.Request: DELETE &#x27;/product_in_store/&#x27;&gt;</pre></td>
+                    <td class="code"><pre>&lt;rest_framework.request.Request: PATCH &#x27;/product_in_store/&#x27;&gt;</pre></td>
                   </tr>
 
                   <tr>
                     <td>self</td>
-                    <td class="code"><pre>&lt;backend.views.ProductStoreView object at 0x7f3d4cf9ad70&gt;</pre></td>
+                    <td class="code"><pre>&lt;backend.views.ProductStoreView object at 0x7f9cd250d5d0&gt;</pre></td>
                   </tr>
 
                   <tr>
@@ -1061,6 +1047,91 @@ Cross-Origin-Opener-Policy: same-origin
 
         </li>
 
+
+        <li class="frame django">
+
+            <code class="fname">/home/flash/PycharmProjects/diploma/venv/lib/python3.10/site-packages/django/db/models/fields/related_descriptors.py</code>, line 266, in __set__
+
+
+
+            <div class="context" id="c140311524840384">
+
+                <ol start="259" class="pre-context" id="pre140311524840384">
+
+                  <li onclick="toggle('pre140311524840384', 'post140311524840384')"><pre>        - ``instance`` is the ``child`` instance</pre></li>
+
+                  <li onclick="toggle('pre140311524840384', 'post140311524840384')"><pre>        - ``value`` is the ``parent`` instance on the right of the equal sign</pre></li>
+
+                  <li onclick="toggle('pre140311524840384', 'post140311524840384')"><pre>        &quot;&quot;&quot;</pre></li>
+
+                  <li onclick="toggle('pre140311524840384', 'post140311524840384')"><pre>        # An object must be an instance of the related class.</pre></li>
+
+                  <li onclick="toggle('pre140311524840384', 'post140311524840384')"><pre>        if value is not None and not isinstance(</pre></li>
+
+                  <li onclick="toggle('pre140311524840384', 'post140311524840384')"><pre>            value, self.field.remote_field.model._meta.concrete_model</pre></li>
+
+                  <li onclick="toggle('pre140311524840384', 'post140311524840384')"><pre>        ):</pre></li>
+
+                </ol>
+
+              <ol start="266" class="context-line">
+                <li onclick="toggle('pre140311524840384', 'post140311524840384')"><pre>            raise ValueError(</pre> <span>…</span></li>
+              </ol>
+
+                <ol start='267' class="post-context" id="post140311524840384">
+
+                  <li onclick="toggle('pre140311524840384', 'post140311524840384')"><pre>                &#x27;Cannot assign &quot;%r&quot;: &quot;%s.%s&quot; must be a &quot;%s&quot; instance.&#x27;</pre></li>
+
+                  <li onclick="toggle('pre140311524840384', 'post140311524840384')"><pre>                % (</pre></li>
+
+                  <li onclick="toggle('pre140311524840384', 'post140311524840384')"><pre>                    value,</pre></li>
+
+                  <li onclick="toggle('pre140311524840384', 'post140311524840384')"><pre>                    instance._meta.object_name,</pre></li>
+
+                  <li onclick="toggle('pre140311524840384', 'post140311524840384')"><pre>                    self.field.name,</pre></li>
+
+                  <li onclick="toggle('pre140311524840384', 'post140311524840384')"><pre>                    self.field.remote_field.model._meta.object_name,</pre></li>
+
+              </ol>
+
+            </div>
+
+
+
+
+              <details>
+                <summary class="commands">Local vars</summary>
+
+            <table class="vars" id="v140311524840384">
+              <thead>
+                <tr>
+                  <th>Variable</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                  <tr>
+                    <td>instance</td>
+                    <td class="code"><pre>&lt;ProductStore: ProductStore object (14)&gt;</pre></td>
+                  </tr>
+
+                  <tr>
+                    <td>self</td>
+                    <td class="code"><pre>&lt;django.db.models.fields.related_descriptors.ForwardManyToOneDescriptor object at 0x7f9cd3d42fb0&gt;</pre></td>
+                  </tr>
+
+                  <tr>
+                    <td>value</td>
+                    <td class="code"><pre>9</pre></td>
+                  </tr>
+
+              </tbody>
+            </table>
+            </details>
+
+        </li>
+
     </ul>
   </div>
 
@@ -1068,14 +1139,14 @@ Cross-Origin-Opener-Policy: same-origin
   <div id="pastebinTraceback" class="pastebin">
     <input type="hidden" name="language" value="PythonConsole">
     <input type="hidden" name="title"
-      value="TypeError at /product_in_store/">
+      value="ValueError at /product_in_store/">
     <input type="hidden" name="source" value="Django Dpaste Agent">
     <input type="hidden" name="poster" value="Django">
     <textarea name="content" id="traceback_area" cols="140" rows="25">
 Environment:
 
 
-Request Method: DELETE
+Request Method: PATCH
 Request URL: http://localhost:8000/product_in_store/
 
 Django Version: 4.2.1
@@ -1117,11 +1188,13 @@ Traceback (most recent call last):
     raise exc
   File "/home/flash/PycharmProjects/diploma/venv/lib/python3.10/site-packages/rest_framework/views.py", line 506, in dispatch
     response = handler(request, *args, **kwargs)
-  File "/home/flash/PycharmProjects/diploma/backend/views.py", line 419, in delete
-    if quantity &gt; in_store:
+  File "/home/flash/PycharmProjects/diploma/backend/views.py", line 456, in patch
+    product_in_store.product = request.data[&#x27;product&#x27;]
+  File "/home/flash/PycharmProjects/diploma/venv/lib/python3.10/site-packages/django/db/models/fields/related_descriptors.py", line 266, in __set__
+    raise ValueError(
 
-Exception Type: TypeError at /product_in_store/
-Exception Value: &#x27;&gt;&#x27; not supported between instances of &#x27;int&#x27; and &#x27;ProductStore&#x27;
+Exception Type: ValueError at /product_in_store/
+Exception Value: Cannot assign &quot;9&quot;: &quot;ProductStore.product&quot; must be a &quot;Product&quot; instance.
 </textarea>
   <br><br>
   <input type="submit" value="Share this traceback on a public website">
@@ -1177,7 +1250,7 @@ Exception Value: &#x27;&gt;&#x27; not supported between instances of &#x27;int&#
 
         <tr>
           <td>CONTENT_LENGTH</td>
-          <td class="code"><pre>&#x27;84&#x27;</pre></td>
+          <td class="code"><pre>&#x27;74&#x27;</pre></td>
         </tr>
 
         <tr>
@@ -1237,7 +1310,7 @@ Exception Value: &#x27;&gt;&#x27; not supported between instances of &#x27;int&#
 
         <tr>
           <td>HTTP_AUTHORIZATION</td>
-          <td class="code"><pre>&#x27;Token 0dfc217cf96b1a22d637f6b6531ffad2&#x27;</pre></td>
+          <td class="code"><pre>&#x27;Token c69b72525a6d23bda089af712dd5677c&#x27;</pre></td>
         </tr>
 
         <tr>
@@ -1256,18 +1329,8 @@ Exception Value: &#x27;&gt;&#x27; not supported between instances of &#x27;int&#
         </tr>
 
         <tr>
-          <td>IDE_PROJECT_ROOTS</td>
-          <td class="code"><pre>&#x27;/home/flash/PycharmProjects/diploma&#x27;</pre></td>
-        </tr>
-
-        <tr>
           <td>IM_CONFIG_PHASE</td>
           <td class="code"><pre>&#x27;1&#x27;</pre></td>
-        </tr>
-
-        <tr>
-          <td>IPYTHONENABLE</td>
-          <td class="code"><pre>&#x27;True&#x27;</pre></td>
         </tr>
 
         <tr>
@@ -1301,11 +1364,6 @@ Exception Value: &#x27;&gt;&#x27; not supported between instances of &#x27;int&#
         </tr>
 
         <tr>
-          <td>LIBRARY_ROOTS</td>
-          <td class="code"><pre>&#x27;/usr/lib/python3.10:/usr/lib/python3.10/lib-dynload:/home/flash/PycharmProjects/diploma/venv/lib/python3.10/site-packages:/home/flash/.cache/JetBrains/PyCharmCE2023.2/python_stubs/1975424904:/snap/pycharm-community/352/plugins/python-ce/helpers/python-skeletons:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stdlib:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/gdb:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/six:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/boto:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/cffi:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/mock:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/pytz:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/toml:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/tqdm:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/annoy:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/babel:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/emoji:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/first:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/fpdf2:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/ldap3:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/polib:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/redis:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/regex:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/retry:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/ujson:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/Pillow:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/PyYAML:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/bleach:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/caldav:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/docopt:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/hdbcli:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/invoke:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/passpy:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/psutil:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/pycurl:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/pynput:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/pysftp:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/stripe:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/xxhash:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/zxcvbn:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/D3DShot:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/PyMySQL:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/appdirs:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/certifi:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/chardet:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/chevron:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/passlib:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/pyaudio:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/pyvmomi:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/slumber:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/tzlocal:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/urllib3:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/vobject:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/Markdown:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/Pygments:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/aiofiles:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/colorama:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/croniter:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/docutils:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/html5lib:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/httplib2:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/jmespath:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/keyboard:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/oauthlib:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/openpyxl:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/paramiko:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/psycopg2:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/pyflakes:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/requests:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/tabulate:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/toposort:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/waitress:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/PyAutoGUI:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/braintree:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/decorator:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/freezegun:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/playsound:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/pyOpenSSL:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/pyRFC3339:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/termcolor:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/ttkthemes:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/typed-ast:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/xmltodict:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/Deprecated:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/Flask-Cors:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/SQLAlchemy:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/Send2Trash:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/cachetools:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/commonmark:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/dateparser:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/jsonschema:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/pyfarmhash:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/setuptools:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/simplejson:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/JACK-Client:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/contextvars:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/entrypoints:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/flake8-2020:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/mysqlclient:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/opentracing:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/pep8-naming:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/prettytable:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/pyinstaller:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/python-jose:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/python-nmap:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/stdlib-list:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/tree-sitter:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/atomicwrites:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/aws-xray-sdk:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/cryptography:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/editdistance:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/parsimonious:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/whatthepatch:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/DateTimeRange:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/click-spinner:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/humanfriendly:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/python-gflags:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/beautifulsoup4:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/flake8-bugbear:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/python-slugify:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/singledispatch:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/dj-database-url:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/flake8-builtins:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/flake8-simplify:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/mypy-extensions:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/python-dateutil:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/Flask-SQLAlchemy:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/flake8-docstrings:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/flake8-plugin-utils:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/pytest-lazy-fixture:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/flake8-rst-docstrings:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/flake8-typing-imports:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/tree-sitter-languages:/snap/pycharm-community/352/plugins/python-ce/helpers/typeshed/stubs/backports.ssl_match_hostname&#x27;</pre></td>
-        </tr>
-
-        <tr>
           <td>LOGNAME</td>
           <td class="code"><pre>&#x27;flash&#x27;</pre></td>
         </tr>
@@ -1336,18 +1394,13 @@ Exception Value: &#x27;&gt;&#x27; not supported between instances of &#x27;int&#
         </tr>
 
         <tr>
-          <td>PYDEVD_LOAD_VALUES_ASYNC</td>
-          <td class="code"><pre>&#x27;True&#x27;</pre></td>
-        </tr>
-
-        <tr>
           <td>PYTHONIOENCODING</td>
           <td class="code"><pre>&#x27;UTF-8&#x27;</pre></td>
         </tr>
 
         <tr>
           <td>PYTHONPATH</td>
-          <td class="code"><pre>&#x27;/snap/pycharm-community/352/plugins/python-ce/helpers/third_party/thriftpy:/snap/pycharm-community/352/plugins/python-ce/helpers/pydev:/home/flash/PycharmProjects/diploma:/home/flash/.cache/JetBrains/PyCharmCE2023.2/cythonExtensions:/home/flash/PycharmProjects/diploma&#x27;</pre></td>
+          <td class="code"><pre>&#x27;/home/flash/PycharmProjects/diploma&#x27;</pre></td>
         </tr>
 
         <tr>
@@ -1382,7 +1435,7 @@ Exception Value: &#x27;&gt;&#x27; not supported between instances of &#x27;int&#
 
         <tr>
           <td>REQUEST_METHOD</td>
-          <td class="code"><pre>&#x27;DELETE&#x27;</pre></td>
+          <td class="code"><pre>&#x27;PATCH&#x27;</pre></td>
         </tr>
 
         <tr>
@@ -1637,7 +1690,7 @@ Exception Value: &#x27;&gt;&#x27; not supported between instances of &#x27;int&#
 
         <tr>
           <td>wsgi.input</td>
-          <td class="code"><pre>&lt;django.core.handlers.wsgi.LimitedStream object at 0x7f3d4cf98c10&gt;</pre></td>
+          <td class="code"><pre>&lt;django.core.handlers.wsgi.LimitedStream object at 0x7f9cd250f760&gt;</pre></td>
         </tr>
 
         <tr>

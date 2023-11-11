@@ -119,6 +119,9 @@ class OrderProductSerializer(serializers.ModelSerializer):
 # Вывод товаров в магазине
 class ProductStoreSerializer(serializers.ModelSerializer):
 
+    product = serializers.CharField(source='product.name')
+    store = serializers.CharField(source='store.name')
+
     class Meta:
 
         model = ProductStore

@@ -1,7 +1,9 @@
+from django.db.models import Q
+
 from backend.functions import read_yaml, import_data, encrypt_password, generate_token, \
     is_exists, is_token_exists, is_role, is_store_owner, get_id_by_name
 from django.core.exceptions import ObjectDoesNotExist
-from rest_framework import status
+from rest_framework import status, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from backend.models import Category, Parameter, Store, User, Product, ProductStore, Order, OrderProduct, \
@@ -313,32 +315,59 @@ class ProductsView(APIView):
 
 
 # ----------------------------------------------Товары в магазине------------------------------
+# class ProductStoreViewSet(viewsets.ModelViewSet):
+#     queryset = ProductStore.objects.all()
+#     serializer_class = ProductStoreSerializer
+#
+#     def get_queryset(self, request):
+#         store = request.query_params.get('store')
+#         product = request.query_params.get('product')
+#         if store is not None:
+#             return ProductStore.objects.filter(store=store)
+#         if product is not None:
+#             return ProductStore.objects.filter(product=product)
+#         return super().get_queryset()
 class ProductStoreView(APIView):
     def get(self, request):
-        store = request.data['store']
-        product = request.data['product']
-        if not (isinstance(store, str) or isinstance(product, str)):
-            return Response('Wrong request', status=status.HTTP_400_BAD_REQUEST)
-        if store == '' and product == '':
+        # store = request.query_params.get('store')
+        # product = request.query_params.get('product')
+        # arg_1, arg_2 = None, None
+        # if store is None and product is None:
+        #     queryset = ProductStore.objects.all()
+        #     serializer = ViewProductStoreSerializer(queryset, many=True)
+        #     return Response(serializer.data)
+        # if store is not None:
+        #     store = get_id_by_name(store, Store)
+        #     arg_1 = str(store)
+        # if product is not None:
+        #     product = get_id_by_name(product, Product)
+        #     arg_2 = str(product)
+        # queryset = ProductStore.objects.filter(Q(store=arg_1) & Q(product=arg_2))
+        # serializer = ViewProductStoreSerializer(queryset, many=True)
+        # return Response(serializer.data)
+
+        store = request.query_params.get('store')
+        product = request.query_params.get('product')
+        if store is None and product is None:
             queryset = ProductStore.objects.all()
-        elif store == '':
-            product_id = get_id_by_name(product, Product)
-            if not product_id:
-                return Response('Product not found', status=status.HTTP_400_BAD_REQUEST)
-            queryset = ProductStore.objects.filter(product=product_id)
-        elif product == '':
-            store_id = get_id_by_name(store, Store)
-            if not store_id:
-                return Response('Store not found', status=status.HTTP_400_BAD_REQUEST)
-            queryset = ProductStore.objects.filter(store=store_id)
-        else:
-            product_id = get_id_by_name(product, Product)
-            if not product_id:
-                return Response('Product not found', status=status.HTTP_400_BAD_REQUEST)
-            store_id = get_id_by_name(store, Store)
-            if not store_id:
-                return Response('Store not found', status=status.HTTP_400_BAD_REQUEST)
-            queryset = ProductStore.objects.filter(store=store_id, product=product_id)
+            serializer = ViewProductStoreSerializer(queryset, many=True)
+            return Response(serializer.data)
+
+        if store is not None and product is not None:
+            store = get_id_by_name(store, Store)
+            product = get_id_by_name(product, Product)
+            queryset = ProductStore.objects.filter(store=store, product=product)
+            serializer = ViewProductStoreSerializer(queryset, many=True)
+            return Response(serializer.data)
+
+        if product is None:
+            store = get_id_by_name(store, Store)
+            queryset = ProductStore.objects.filter(store=store)
+            serializer = ViewProductStoreSerializer(queryset, many=True)
+            return Response(serializer.data)
+
+        product = get_id_by_name(product, Product)
+        queryset = ProductStore.objects.filter(product=product)
         serializer = ViewProductStoreSerializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -449,19 +478,44 @@ class ProductStoreView(APIView):
 
         product_in_store.quantity = request.data['quantity']
         product_in_store.price = request.data['price']
-        product_in_store.product = request.data['product']
-        product_in_store.store = request.data['store']
+        product_in_store.product = product
+        product_in_store.store = store
         product_in_store.save(update_fields=['quantity', 'price', 'product', 'store'])
         return Response(f'Product updated', status=status.HTTP_202_ACCEPTED)
 
 
 # ---------------------------------------------------Заказы------------------------------------
-class OrderView(APIView):
-    def get(self, request):
-        queryset = Order.objects.all()
-        serializer = ViewOrderSerializer(queryset, many=True)
-        return Response(serializer.data)
+# class OrderViewSet(viewsets.ModelViewSet):
+#     queryset = Order.objects.all()
+#     serializer_class = ViewOrderSerializer
 
+
+class OrdersView(APIView):
+
+    def get(self, request):
+        user = request.query_params.get('user')
+        status = request.query_params.get('product')
+        if user is None and status is None:
+            queryset = Order.objects.all()
+            serializer = OrderSerializer(queryset, many=True)
+            return Response(serializer.data)
+
+        if user is not None and status is not None:
+            store = get_id_by_name(user, User)
+            queryset = Order.objects.filter(user=user, status=status)
+            serializer = OrderSerializer(queryset, many=True)
+            return Response(serializer.data)
+
+        if user is None:
+            queryset = Order.objects.filter(status=status)
+            serializer = OrderSerializer(queryset, many=True)
+            return Response(serializer.data)
+
+        user = get_id_by_name(user, User)
+        queryset = Order.objects.filter(user=user)
+        serializer = OrderSerializer(queryset, many=True)
+        return Response(serializer.data)
+#
     def post(self, request):
 
         # Проверка на корректный ввод количества товаров
@@ -516,23 +570,6 @@ class OrderView(APIView):
         ordered_product.save()
         return Response(f'Product {product.name} in store {store.name} was added to order {order.id}')
 
-    # def delete_order(self, request, *args, **kwargs):
-    #     try:
-    #         order = Order.objects.get(id=request.data['id'])
-    #     except ObjectDoesNotExist:
-    #         return Response('Order not found', status=status.HTTP_400_BAD_REQUEST)
-    #     if request.data['delete']:
-    #         order.delete()
-    #         return Response(f'Order was permanently deleted',
-    #                         status=status.HTTP_201_CREATED)
-    #     else:
-    #         order.status = 'deleted'
-    #         order.save(update_fields=['status'])
-    #         return Response(f'Order was marked as deleted',
-    #                         status=status.HTTP_201_CREATED)
-    #
-
-    # def partial_delete(self, request, *args, **kwargs):
 
 
 class CartView(APIView):

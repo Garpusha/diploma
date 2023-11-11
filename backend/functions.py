@@ -78,6 +78,7 @@ def get_id_by_name(name, instance):
         return False
     return result
 
+
 # def list_users(request):
 #     users = list(User.objects.values())
 #     context = {'my_context': users}
