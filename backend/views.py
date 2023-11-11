@@ -1,4 +1,5 @@
-from backend.functions import read_yaml, import_data, encrypt_password, generate_token, is_admin, is_seller_or_admin
+from backend.functions import read_yaml, import_data, encrypt_password, generate_token, \
+    is_exists, is_token_exists, is_role, is_store_owner, get_id_by_name
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
 from rest_framework.response import Response
@@ -14,14 +15,17 @@ from backend.serializers import CategorySerializer, ParameterSerializer, StoreSe
 class CategoriesView(APIView):
 
     def get(self, request):
-        categories = Category.objects.all()
-        serializer = CategorySerializer(categories, many=True)
+        queryset = Category.objects.all()
+        serializer = CategorySerializer(queryset, many=True)
         return Response(serializer.data)
 
     def post(self, request):
-        result = is_admin(request)
-        if result != 'ok':
-            return result
+        # Проверка прав
+        if not is_token_exists(request):
+            return Response(f'Wrong token', status=status.HTTP_404_NOT_FOUND)
+        if not is_role(request, ['admin']):
+            return Response('Admin rights required', status=status.HTTP_400_BAD_REQUEST)
+
         serializer = CategorySerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -31,43 +35,52 @@ class CategoriesView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request):
-        result = is_admin(request)
-        if result != 'ok':
-            return result
-        try:
-            category = Category.objects.get(id=request.data['id'])
-        except ObjectDoesNotExist:
-            return Response(f'Category not found', status=status.HTTP_400_BAD_REQUEST)
-        category.delete()
-        return Response(f'Category deleted successfully', status=status.HTTP_200_OK)
+        # Проверка прав
+        if not is_token_exists(request):
+            return Response(f'Wrong token', status=status.HTTP_404_NOT_FOUND)
+        if not is_role(request, ['admin']):
+            return Response('Admin rights required', status=status.HTTP_400_BAD_REQUEST)
 
+        category_id = request.data['id']
+        result = is_exists(category_id, Category)
+        if result:
+            result.delete()
+            return Response(f'Category deleted successfully', status=status.HTTP_200_OK)
+        return Response(f'Category not found', status=status.HTTP_404_NOT_FOUND)
 
     def patch(self, request):
-        result = is_admin(request)
-        if result != 'ok':
-            return result
+        # Проверка прав
+        if not is_token_exists(request):
+            return Response(f'Wrong token', status=status.HTTP_404_NOT_FOUND)
+        if not is_role(request, ['admin']):
+            return Response('Admin rights required', status=status.HTTP_400_BAD_REQUEST)
+
         serializer = CategorySerializer(data=request.data)
-        try:
-            category = Category.objects.get(id=request.data['id'])
-        except ObjectDoesNotExist:
-            return Response(f'Category {request.data["name"]} not found', status=status.HTTP_400_BAD_REQUEST)
+        category_id = request.data['id']
+        result = is_exists(category_id, Category)
+        if not result:
+            return Response(f'Category not found', status=status.HTTP_404_NOT_FOUND)
         if serializer.is_valid():
-            serializer.update(category, request.data)
+            serializer.update(result, request.data)
             if serializer.errors == {}:
                 return Response(f'Category updated successfully', status=status.HTTP_202_ACCEPTED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 # ---------------------------------------------Параметры----------------------------------------
 class ParametersView(APIView):
     def get(self, request):
-        parameters = Parameter.objects.all()
-        serializer = ParameterSerializer(parameters, many=True)
+        queryset = Parameter.objects.all()
+        serializer = ParameterSerializer(queryset, many=True)
         return Response(serializer.data)
 
     def post(self, request):
-        result = is_seller_or_admin(request)
-        if result != 'ok':
-            return result
+        # Проверка прав
+        if not is_token_exists(request):
+            return Response(f'Wrong token', status=status.HTTP_404_NOT_FOUND)
+        if not is_role(request, ['admin', 'seller']):
+            return Response('Admin or seller rights required', status=status.HTTP_400_BAD_REQUEST)
+
         serializer = ParameterSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -77,28 +90,33 @@ class ParametersView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request):
-        result = is_admin(request)
-        if result != 'ok':
-            return result
+        # Проверка прав
+        if not is_token_exists(request):
+            return Response(f'Wrong token', status=status.HTTP_404_NOT_FOUND)
+        if not is_role(request, ['admin']):
+            return Response('Admin rights required', status=status.HTTP_400_BAD_REQUEST)
+
         parameter_id = request.data['id']
-        try:
-            parameter = Parameter.objects.get(id=parameter_id)
-        except ObjectDoesNotExist:
-            return Response('Parameter not found', status=status.HTTP_400_BAD_REQUEST)
-        parameter.delete()
-        return Response(f'Parameter deleted successfully', status=status.HTTP_200_OK)
+        result = is_exists(parameter_id, Parameter)
+        if result:
+            result.delete()
+            return Response(f'Parameter deleted successfully', status=status.HTTP_200_OK)
+        return Response(f'Parameter not found', status=status.HTTP_404_NOT_FOUND)
 
     def patch(self, request):
-        result = is_admin(request)
-        if result != 'ok':
-            return result
+        # Проверка прав
+        if not is_token_exists(request):
+            return Response(f'Wrong token', status=status.HTTP_404_NOT_FOUND)
+        if not is_role(request, ['admin']):
+            return Response('Admin rights required', status=status.HTTP_400_BAD_REQUEST)
+
         serializer = ParameterSerializer(data=request.data)
-        try:
-            parameter = Parameter.objects.get(id=request.data['id'])
-        except ObjectDoesNotExist:
-            return Response(f'Parameter {request.data["name"]} not found', status=status.HTTP_400_BAD_REQUEST)
+        parameter_id = request.data['id']
+        result = is_exists(parameter_id, Parameter)
+        if not result:
+            return Response(f'Parameter not found', status=status.HTTP_404_NOT_FOUND)
         if serializer.is_valid():
-            serializer.update(parameter, request.data)
+            serializer.update(result, request.data)
             if serializer.errors == {}:
                 return Response(f'Parameter updated successfully', status=status.HTTP_202_ACCEPTED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -107,70 +125,84 @@ class ParametersView(APIView):
 # ----------------------------------------------Магазины----------------------------------------
 class StoresView(APIView):
     def get(self, request):
-        stores = Store.objects.all()
-        serializer = StoreSerializer(stores, many=True, )
+        queryset = Store.objects.all()
+        serializer = StoreSerializer(queryset, many=True)
         return Response(serializer.data)
 
     def post(self, request):
-        result = is_admin(request)
-        if result != 'ok':
-            return result
-        try:
-            User.objects.get(id=request.data['owner'])
-        except ObjectDoesNotExist:
-            return Response(f'Please create user {request.data["owner"]} first', status=status.HTTP_400_BAD_REQUEST)
+        # Проверка прав
+        if not is_token_exists(request):
+            return Response(f'Wrong token', status=status.HTTP_404_NOT_FOUND)
+        if not is_role(request, ['admin']):
+            return Response('Admin rights required', status=status.HTTP_400_BAD_REQUEST)
+
+        # Проверяю есть ли в базе пользователь, назначенный хозяином магазина
+        owner_id = request.data['owner']
+        result = is_exists(owner_id, User)
+        if not result:
+            return Response(f'Please create user first', status=status.HTTP_400_BAD_REQUEST)
         serializer = StoreSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             if serializer.errors == {}:
                 return Response(f'Store {serializer.validated_data["name"]} created successfully',
-                            status=status.HTTP_201_CREATED)
+                                status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self, request):
-        result = is_admin(request)
-        if result != 'ok':
-            return result
-        try:
-            user = User.objects.get(id=request.data['owner'])
-        except ObjectDoesNotExist:
+        # Проверка прав
+
+        if not is_token_exists(request):
+            return Response(f'Wrong token', status=status.HTTP_404_NOT_FOUND)
+        if not is_role(request, ['admin']):
+            return Response('Admin rights required', status=status.HTTP_400_BAD_REQUEST)
+
+        # Проверяю есть ли в базе пользователь, назначенный хозяином магазина
+        owner_id = request.data['owner']
+        result = is_exists(owner_id, User)
+        if not result:
             return Response(f'Please create user first', status=status.HTTP_400_BAD_REQUEST)
-        try:
-            store = Store.objects.get(id=request.data['id'])
-        except ObjectDoesNotExist:
-            return Response(f'Store {request.data["name"]} not found', status=status.HTTP_400_BAD_REQUEST)
-        mutable_request = request.data.copy()
-        mutable_request['owner'] = user.id
-        serializer = StoreSerializer(store, data=mutable_request)
+        # Проверяю есть ли указанный магазин в базе
+        store_id = request.data['id']
+        result = is_exists(store_id, Store)
+        if not result:
+            return Response(f'Please create store first', status=status.HTTP_400_BAD_REQUEST)
+        serializer = StoreSerializer(result, data=request.data)
         if serializer.is_valid():
-            serializer.update(store, request.data)
+            serializer.update(result, request.data)
             if serializer.errors == {}:
                 return Response(f'Store updated successfully', status=status.HTTP_202_ACCEPTED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request):
-        result = is_admin(request)
-        if result != 'ok':
-            return result
-        try:
-            store = Store.objects.get(id=request.data['id'])
-        except ObjectDoesNotExist:
-            return Response('Store not found', status=status.HTTP_400_BAD_REQUEST)
-        store.delete()
-        return Response(f'Store deleted successfully', status=status.HTTP_200_OK)
+        # Проверка прав
+        if not is_token_exists(request):
+            return Response(f'Wrong token', status=status.HTTP_404_NOT_FOUND)
+        if not is_role(request, ['admin']):
+            return Response('Admin rights required', status=status.HTTP_400_BAD_REQUEST)
+
+        store_id = request.data['id']
+        result = is_exists(store_id, Store)
+        if result:
+            result.delete()
+            return Response(f'Store deleted successfully', status=status.HTTP_200_OK)
+        return Response('Store not found', status=status.HTTP_400_BAD_REQUEST)
 
 
 # ---------------------------------------------Пользователи-------------------------------------
 class UsersView(APIView):
     def get(self, request):
-        users = User.objects.all()
-        serializer = UserViewSerializer(users, many=True)
+        queryset = User.objects.all()
+        serializer = UserViewSerializer(queryset, many=True)
         return Response(serializer.data)
 
     def post(self, request):
-        result = is_admin(request)
-        if result != 'ok':
-            return result
+        # Проверка прав
+        if not is_token_exists(request):
+            return Response(f'Wrong token', status=status.HTTP_404_NOT_FOUND)
+        if not is_role(request, ['admin']):
+            return Response('Admin rights required', status=status.HTTP_400_BAD_REQUEST)
+
         mutable_request = request.data.copy()
         mutable_request['password'] = encrypt_password(mutable_request['password'])
         mutable_request['token'] = generate_token()
@@ -182,50 +214,59 @@ class UsersView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self, request):
-        result = is_admin(request)
-        if result != 'ok':
-            return result
+        # Проверка прав
+        if not is_token_exists(request):
+            return Response(f'Wrong token', status=status.HTTP_404_NOT_FOUND)
+        if not is_role(request, ['admin']):
+            return Response('Admin rights required', status=status.HTTP_400_BAD_REQUEST)
+
+        user_id = request.data['id']
+        result = is_exists(user_id, User)
+        if not result:
+            return Response('User not found', status=status.HTTP_400_BAD_REQUEST)
         mutable_request = request.data.copy()
         mutable_request['password'] = encrypt_password(mutable_request['password'])
         mutable_request['token'] = generate_token()
-        try:
-            user = User.objects.get(id=mutable_request['owner'])
-        except ObjectDoesNotExist:
-            return Response('User not found', status=status.HTTP_400_BAD_REQUEST)
-        serializer = UserCreateSerializer(user, data=mutable_request)
+        serializer = UserCreateSerializer(result, data=mutable_request)
         if serializer.is_valid():
-            serializer.update(user, mutable_request)
+            serializer.update(result, mutable_request)
             if serializer.errors == {}:
                 return Response(f'User updated successfully', status=status.HTTP_202_ACCEPTED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request):
-        result = is_admin(request)
-        if result != 'ok':
-            return result
-        try:
-            user = User.objects.get(id=request.data['id'])
-        except ObjectDoesNotExist:
+        # Проверка прав
+        if not is_token_exists(request):
+            return Response(f'Wrong token', status=status.HTTP_404_NOT_FOUND)
+        if not is_role(request, ['admin']):
+            return Response('Admin rights required', status=status.HTTP_400_BAD_REQUEST)
+
+        user_id = request.data['id']
+        result = is_exists(user_id, User)
+        if not result:
             return Response('User not found', status=status.HTTP_400_BAD_REQUEST)
-        user.delete()
+        result.delete()
         return Response(f'User deleted successfully', status=status.HTTP_200_OK)
+
 
 # ----------------------------------------------Товары------------------------------------------
 class ProductsView(APIView):
 
-    def get(self, request, *args, **kwargs):
-        products = Product.objects.all()
-        serializer = ViewProductSerializer(products, many=True)
+    def get(self, request):
+        queryset = Product.objects.all()
+        serializer = ViewProductSerializer(queryset, many=True)
         return Response(serializer.data)
 
     def post(self, request):
-        result = is_seller_or_admin(request)
-        if result != 'ok':
-            return result
+        # Проверка прав
+        if not is_token_exists(request):
+            return Response(f'Wrong token', status=status.HTTP_404_NOT_FOUND)
+        if not is_role(request, ['admin', 'seller']):
+            return Response('Admin or seller rights required', status=status.HTTP_400_BAD_REQUEST)
+
         category_id = request.data['category']
-        try:
-            Category.objects.get(id=category_id)
-        except ObjectDoesNotExist:
+        result = is_exists(category_id, Category)
+        if not result:
             return Response('Category not found', status=status.HTTP_400_BAD_REQUEST)
         serializer = ProductSerializer(data=request.data)
         if serializer.is_valid():
@@ -235,182 +276,245 @@ class ProductsView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self, request):
-        result = is_admin(request)
-        if result != 'ok':
-            return result
+        # Проверка прав
+        if not is_token_exists(request):
+            return Response(f'Wrong token', status=status.HTTP_404_NOT_FOUND)
+        if not is_role(request, ['admin']):
+            return Response('Admin rights required', status=status.HTTP_400_BAD_REQUEST)
+
         category_id = request.data['category']
-        try:
-            Category.objects.get(id=category_id)
-        except ObjectDoesNotExist:
+        result = is_exists(category_id, Category)
+        if not result:
             return Response('Category not found', status=status.HTTP_400_BAD_REQUEST)
         product_id = request.data['id']
-        try:
-            product = Product.objects.get(id=product_id)
-        except ObjectDoesNotExist:
+        result = is_exists(product_id, Product)
+        if not result:
             return Response('Product not found', status=status.HTTP_400_BAD_REQUEST)
-        serializer = ProductSerializer(product, data=request.data)
+        serializer = ProductSerializer(result, data=request.data)
         if serializer.is_valid():
             serializer.save()
             if serializer.errors == {}:
                 return Response(f'Product updated successfully', status=status.HTTP_202_ACCEPTED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, *args, **kwargs):
-        result = is_admin(request)
-        if result != 'ok':
-            return result
+    def delete(self, request):
+        # Проверка прав
+        if not is_token_exists(request):
+            return Response(f'Wrong token', status=status.HTTP_404_NOT_FOUND)
+        if not is_role(request, ['admin']):
+            return Response('Admin rights required', status=status.HTTP_400_BAD_REQUEST)
+
         product_id = request.data['id']
-        try:
-            product = Product.objects.get(id=product_id)
-        except ObjectDoesNotExist:
+        result = is_exists(product_id, Product)
+        if not result:
             return Response('Product not found', status=status.HTTP_400_BAD_REQUEST)
-        product.delete()
+        result.delete()
         return Response(f'Product deleted successfully', status=status.HTTP_200_OK)
 
 
 # ----------------------------------------------Товары в магазине------------------------------
 class ProductStoreView(APIView):
-    def get(self, request, *args, **kwargs):
-        queryset = ProductStore.objects.all()
+    def get(self, request):
+        store = request.data['store']
+        product = request.data['product']
+        if not (isinstance(store, str) or isinstance(product, str)):
+            return Response('Wrong request', status=status.HTTP_400_BAD_REQUEST)
+        if store == '' and product == '':
+            queryset = ProductStore.objects.all()
+        elif store == '':
+            product_id = get_id_by_name(product, Product)
+            if not product_id:
+                return Response('Product not found', status=status.HTTP_400_BAD_REQUEST)
+            queryset = ProductStore.objects.filter(product=product_id)
+        elif product == '':
+            store_id = get_id_by_name(store, Store)
+            if not store_id:
+                return Response('Store not found', status=status.HTTP_400_BAD_REQUEST)
+            queryset = ProductStore.objects.filter(store=store_id)
+        else:
+            product_id = get_id_by_name(product, Product)
+            if not product_id:
+                return Response('Product not found', status=status.HTTP_400_BAD_REQUEST)
+            store_id = get_id_by_name(store, Store)
+            if not store_id:
+                return Response('Store not found', status=status.HTTP_400_BAD_REQUEST)
+            queryset = ProductStore.objects.filter(store=store_id, product=product_id)
         serializer = ViewProductStoreSerializer(queryset, many=True)
         return Response(serializer.data)
 
-    def post(self, request, *args, **kwargs):
-        match request.data['method']:
-            case 'delete':
-                result = self.delete(request, *args, **kwargs)
-                return Response(result.data, status=result.status_code)
-            case 'post':
+    def post(self, request):
+        # Проверка прав
+        if not is_token_exists(request):
+            return Response(f'Wrong token', status=status.HTTP_404_NOT_FOUND)
+        if not (is_store_owner(request) or is_role(request, ['admin'])):
+            return Response('You should be an owner or admin', status=status.HTTP_400_BAD_REQUEST)
 
-                # проверяю на наличие товара в базе
-                product_value = request.data['product']
-                try:
-                    product = Product.objects.get(name=product_value)
-                except ObjectDoesNotExist:
-                    return Response('Please create product first', status=status.HTTP_400_BAD_REQUEST)
+        # проверяю на наличие товара в базе
+        product_id = request.data['product']
+        product = is_exists(product_id, Product)
+        if not product:
+            return Response('Please create product first', status=status.HTTP_400_BAD_REQUEST)
 
-                # проверяю на наличие магазина в базе
-                store_value = request.data['store']
-                try:
-                    store = Store.objects.get(name=store_value)
-                except ObjectDoesNotExist:
-                    return Response('Please create store first', status=status.HTTP_400_BAD_REQUEST)
+        # проверяю на наличие магазина в базе
+        store_id = request.data['store']
+        store = is_exists(store_id, Store)
+        if not store:
+            return Response('Please create store first', status=status.HTTP_400_BAD_REQUEST)
 
-                quantity_value = int(request.data['quantity'])
-                price_value = float(request.data['price'])
+        quantity_value = int(request.data['quantity'])
+        price_value = float(request.data['price'])
 
-                # Считываю количество товаров в магазине, если таких товаров в этом магазине нет,
-                # создаю нулевую запись, иначе прибавляю количество к уже имеющимся
-                try:
-                    products_in_store = ProductStore.objects.get(product=product, store=store)
-                    in_stock = products_in_store.quantity
-                    current_price = float(products_in_store.price)
-                except ObjectDoesNotExist:
-                    products_in_store = ProductStore.objects.create(product=product, store=store,
-                                                                    quantity=0, price=0)
-                    products_in_store.save()
-                    in_stock = 0
-                    current_price = 0
-
-                products_in_store.quantity = quantity_value + in_stock
-
-                # Цена на складе усредняется с новой поставкой для упрощения
-                products_in_store.price = ((price_value * quantity_value + current_price * in_stock) /
-                                           (quantity_value + in_stock))
-                products_in_store.save(update_fields=['quantity', 'price'])
-            case _:
-                return Response('Wrong method', status=status.HTTP_400_BAD_REQUEST)
-        return Response(f'Product {product.name} added to store {store.name} successfully',
-                        status=status.HTTP_201_CREATED)
-
-    def delete(self, request, *args, **kwargs):
-        product_name = request.data.get('product', None)
+        # Считываю количество товаров в магазине, если таких товаров в этом магазине нет,
+        # создаю нулевую запись, иначе прибавляю количество к уже имеющимся
         try:
-            product = Product.objects.get(name=product_name)
+            products_in_store = ProductStore.objects.get(product=product, store=store)
+            in_stock = products_in_store.quantity
+            current_price = float(products_in_store.price)
         except ObjectDoesNotExist:
+            products_in_store = ProductStore.objects.create(product=product, store=store,
+                                                            quantity=0, price=0)
+            products_in_store.save()
+            in_stock = 0
+            current_price = 0
+
+        products_in_store.quantity = quantity_value + in_stock
+
+        # Цена на складе усредняется с новой поставкой для упрощения
+        products_in_store.price = ((price_value * quantity_value + current_price * in_stock) /
+                                   (quantity_value + in_stock))
+        products_in_store.save(update_fields=['quantity', 'price'])
+        return Response('Product added to store', status=status.HTTP_201_CREATED)
+
+    def delete(self, request):
+        # Проверка прав
+        if not is_token_exists(request):
+            return Response(f'Wrong token', status=status.HTTP_404_NOT_FOUND)
+        if not (is_store_owner(request) or is_role(request, ['admin'])):
+            return Response('You should be an owner or admin', status=status.HTTP_400_BAD_REQUEST)
+
+        # проверяю на наличие товара в базе
+        product_id = request.data['product']
+        product = is_exists(product_id, Product)
+        if not product:
             return Response('Product not found', status=status.HTTP_400_BAD_REQUEST)
-        store_name = request.data.get('store', None)
-        try:
-            store = Store.objects.get(name=store_name)
-        except ObjectDoesNotExist:
+        # проверяю на наличие магазина в базе
+        store_id = request.data['store']
+        store = is_exists(store_id, Store)
+        if not store:
             return Response('Store not found', status=status.HTTP_400_BAD_REQUEST)
+        # Проверка на наличие товара в магазине
+        try:
+            product_in_store = ProductStore.objects.get(product=product, store=store)
+        except ObjectDoesNotExist:
+            return Response(f'No product in store', status=status.HTTP_400_BAD_REQUEST)
+
+        # Проверка - удалить всю позицию или только несколько товаров
+        if request.data['delete_product'].upper() == 'YES':
+            product_in_store.delete()
+            return Response(f'Product deleted from store successfully',
+                            status=status.HTTP_200_OK)
+        else:
+            quantity = request.data['quantity']
+            in_store = ProductStore.objects.get(product=product_id, store=store_id).quantity
+            if quantity > in_store:
+                return Response(f'Cannot delete {quantity} items as only {in_store} is in store',
+                                status=status.HTTP_400_BAD_REQUEST)
+            else:
+                product_in_store.quantity = in_store - quantity
+                product_in_store.save(update_fields=['quantity'])
+        return Response(f'Product deleted from store successfully', status=status.HTTP_200_OK)
+
+    def patch(self, request):
+        # Проверка прав
+        if not is_token_exists(request):
+            return Response(f'Wrong token', status=status.HTTP_404_NOT_FOUND)
+        if not (is_store_owner(request) or is_role(request, ['admin'])):
+            return Response('You should be an owner or admin', status=status.HTTP_400_BAD_REQUEST)
+
+        # проверяю на наличие товара в базе
+        product_id = request.data['product']
+        product = is_exists(product_id, Product)
+        if not product:
+            return Response('Product not found', status=status.HTTP_400_BAD_REQUEST)
+        # проверяю на наличие магазина в базе
+        store_id = request.data['store']
+        store = is_exists(store_id, Store)
+        if not store:
+            return Response('Store not found', status=status.HTTP_400_BAD_REQUEST)
+        # Проверка на наличие товара в магазине
+        try:
+            product_in_store = ProductStore.objects.get(product=product, store=store)
+        except ObjectDoesNotExist:
+            return Response(f'No product in store', status=status.HTTP_400_BAD_REQUEST)
+
+        product_in_store.quantity = request.data['quantity']
+        product_in_store.price = request.data['price']
+        product_in_store.product = request.data['product']
+        product_in_store.store = request.data['store']
+        product_in_store.save(update_fields=['quantity', 'price', 'product', 'store'])
+        return Response(f'Product updated', status=status.HTTP_202_ACCEPTED)
+
+
+# ---------------------------------------------------Заказы------------------------------------
+class OrderView(APIView):
+    def get(self, request):
+        queryset = Order.objects.all()
+        serializer = ViewOrderSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+
+        # Проверка на корректный ввод количества товаров
+        quantity = int(request.data['quantity'])
+        if quantity < 1:
+            return Response('Quantity must be at least 1', status=status.HTTP_400_BAD)
+
+        # проверяю на наличие пользователя
+        username = request.data['username']
+        try:
+            user = User.objects.get(name=username)
+        except ObjectDoesNotExist:
+            return Response(f'User {username} not exists', status=status.HTTP_400_BAD_REQUEST)
+
+        # проверяю на наличие товара в базе
+        product_value = request.data['product']
+        try:
+            product = Product.objects.get(name=product_value)
+        except ObjectDoesNotExist:
+            return Response('Please create product first', status=status.HTTP_400_BAD_REQUEST)
+
+        # проверяю на наличие магазина в базе
+        store_value = request.data['store']
+        try:
+            store = Store.objects.get(name=store_value)
+        except ObjectDoesNotExist:
+            return Response('Please create store first', status=status.HTTP_400_BAD_REQUEST)
+
+        # Проверяю есть ли такой товар в магазине
         try:
             product_in_store = ProductStore.objects.get(product=product, store=store)
         except ObjectDoesNotExist:
             return Response(f'No product {product.name} in store {store.name}',
                             status=status.HTTP_400_BAD_REQUEST)
-        product_in_store.delete()
-        return Response(f'Product {product.name} deleted from {store.name} successfully',
-                        status=status.HTTP_201_CREATED)
 
-    # def partial_delete(self, request, *args, **kwargs):
+        # Проверяю достаточно ли товара в магазине
+        if quantity > product_in_store.quantity:
+            return Response(f'Not enough {product.name} in store {store.name}',
+                            status=status.HTTP_400_BAD_REQUEST)
+        price = float(product_in_store.price)
 
+        # Проверяю есть ли активный заказ от этого пользователя, если нет, создаю
+        try:
+            order = Order.objects.get(user=user, status='active')
+        except ObjectDoesNotExist:
+            order = Order.objects.create(user=user, status='active')
+            order.save()
 
-# ---------------------------------------------------Заказы------------------------------------
-class OrderView(APIView):
-    def get(self, request, *args, **kwargs):
-        queryset = Order.objects.all()
-        serializer = ViewOrderSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-    def post(self, request, *args, **kwargs):
-        match request.data['method']:
-            case 'delete_order':
-                result = self.delete_order(request, *args, **kwargs)
-                return Response(result.data, status=result.status_code)
-            case 'post':
-                # Проверка на корректный ввод количества товаров
-                quantity = int(request.data['quantity'])
-                if quantity < 1:
-                    return Response('Quantity must be at least 1', status=status.HTTP_400_BAD)
-
-                # проверяю на наличие пользователя
-                username = request.data['username']
-                try:
-                    user = User.objects.get(name=username)
-                except ObjectDoesNotExist:
-                    return Response(f'User {username} not exists', status=status.HTTP_400_BAD_REQUEST)
-
-                # проверяю на наличие товара в базе
-                product_value = request.data['product']
-                try:
-                    product = Product.objects.get(name=product_value)
-                except ObjectDoesNotExist:
-                    return Response('Please create product first', status=status.HTTP_400_BAD_REQUEST)
-
-                # проверяю на наличие магазина в базе
-                store_value = request.data['store']
-                try:
-                    store = Store.objects.get(name=store_value)
-                except ObjectDoesNotExist:
-                    return Response('Please create store first', status=status.HTTP_400_BAD_REQUEST)
-
-                # Проверяю есть ли такой товар в магазине
-                try:
-                    product_in_store = ProductStore.objects.get(product=product, store=store)
-                except ObjectDoesNotExist:
-                    return Response(f'No product {product.name} in store {store.name}',
-                                    status=status.HTTP_400_BAD_REQUEST)
-
-                # Проверяю достаточно ли товара в магазине
-                if quantity > product_in_store.quantity:
-                    return Response(f'Not enough {product.name} in store {store.name}',
-                                    status=status.HTTP_400_BAD_REQUEST)
-                price = float(product_in_store.price)
-
-                # Проверяю есть ли активный заказ от этого пользователя, если нет, создаю
-                try:
-                    order = Order.objects.get(user=user, status='active')
-                except ObjectDoesNotExist:
-                    order = Order.objects.create(user=user, status='active')
-                    order.save()
-
-                # Добавляю выбранный товар в общий заказ
-                ordered_product = OrderProduct.objects.create(order=order, product=product, store=store,
-                                                              quantity=quantity, price=price)
-                ordered_product.save()
-                return Response(f'Product {product.name} in store {store.name} was added to order {order.id}')
-
+        # Добавляю выбранный товар в общий заказ
+        ordered_product = OrderProduct.objects.create(order=order, product=product, store=store,
+                                                      quantity=quantity, price=price)
+        ordered_product.save()
+        return Response(f'Product {product.name} in store {store.name} was added to order {order.id}')
 
     # def delete_order(self, request, *args, **kwargs):
     #     try:

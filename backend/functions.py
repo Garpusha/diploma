@@ -8,7 +8,7 @@ from django.conf import settings
 from rest_framework import status
 from rest_framework.response import Response
 
-from backend.models import User
+from backend.models import User, Store
 
 
 def encrypt_password(password):
@@ -41,40 +41,42 @@ def import_data(data_to_import, import_serializer):
     return 'ok'
 
 
-def is_token_exists(token):
+def is_token_exists(request):
+    token = request.headers['Authorization'][6:]
     try:
         User.objects.get(token=token)
     except ObjectDoesNotExist:
         return False
     return True
 
-
-def is_admin(request):
+def is_role(request, roles):
     token = request.headers['Authorization'][6:]
-    if not is_token_exists(token):
-        return Response('Wrong token', status=status.HTTP_400_BAD_REQUEST)
     user = User.objects.get(token=token)
-    if user.role != 'admin':
-        return Response('Admin rights required', status=status.HTTP_400_BAD_REQUEST)
-    return 'ok'
+    if user.role in roles:
+        return True
+    return False
 
-def is_seller(request):
-    token = request.headers['Authorization'][6:]
-    if not is_token_exists(token):
-        return Response('Wrong token', status=status.HTTP_400_BAD_REQUEST)
-    user = User.objects.get(token=token)
-    if user.role != 'seller':
-        return Response('Owner should have seller role', status=status.HTTP_400_BAD_REQUEST)
-    return 'ok'
+def is_exists(item, instance):
+    try:
+        result = instance.objects.get(id=item)
+    except ObjectDoesNotExist:
+        return False
+    return result
 
-def is_seller_or_admin(request):
+def is_store_owner(request):
     token = request.headers['Authorization'][6:]
-    if not is_token_exists(token):
-        return Response('Wrong token', status=status.HTTP_400_BAD_REQUEST)
     user = User.objects.get(token=token)
-    if user.role == 'seller' or user.role == 'admin':
-        return 'ok'
-    return Response('Admin or seller rights required', status=status.HTTP_400_BAD_REQUEST)
+    store_owner = Store.objects.get(id=request.data['store']).owner
+    if user == store_owner:
+        return True
+    return False
+
+def get_id_by_name(name, instance):
+    try:
+        result = instance.objects.get(name=name).id
+    except ObjectDoesNotExist:
+        return False
+    return result
 
 # def list_users(request):
 #     users = list(User.objects.values())
