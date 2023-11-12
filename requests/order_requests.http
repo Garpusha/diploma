@@ -1,0 +1,7 @@
+# Просмотр заказов --------------------------------------------------------------
+
+
+GET http://localhost:8000/orders/?user=buyer_1&status=active
+
+###
+GET http://localhost:8000/orders/
