@@ -1,0 +1,12 @@
+# Импорт данных--------------------------------------------------------------
+# Импортировать может только admin
+# Токен обычного пользователя: a4d0d70644badae2dae57a737e852c84
+# Токен администратора: c69b72525a6d23bda089af712dd5677c
+
+POST http://localhost:8000/import/
+Content-Type: application/json
+Authorization: Token 1
+
+{
+    "file": "data.yaml"
+}

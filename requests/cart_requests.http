@@ -1,6 +1,6 @@
 # Корзина заказов-------------------------------------------------------------
-# Если указан токен админа, выводятся все заказы. Если пользователи, 
-# то только этого пользователя.
+# Если указан токен админа, выводятся все заказы. Если пользователя, 
+# то только заказ этого пользователя.
 
 # Токен админа: 0dfc217cf96b1a22d637f6b6531ffad2
 GET http://localhost:8000/cart
@@ -18,24 +18,26 @@ Authorization: Token 8df2190d59927eb88856b87ecb75f03c
 
 ###
 
+# Добавление товара в корзину
 POST http://localhost:8000/cart/
 Authorization: Token 8df2190d59927eb88856b87ecb75f03c
 Content-Type: application/json
 
 {
-    "product": 1,
+    "product": 3,
     "store": 1,
-    "quantity": 1
+    "quantity": 10
 }
 
 ###
 
+# Удаление товара из корзины
 DELETE  http://localhost:8000/cart/
 Authorization: Token 8df2190d59927eb88856b87ecb75f03c
 Content-Type: application/json
 
 {   
-    "id": 1,
-    "position": 1,
+    "id": 2,
+    "position": 19,
     "quantity": 1
 }

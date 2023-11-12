@@ -119,8 +119,8 @@ class OrderProductSerializer(serializers.ModelSerializer):
 # Вывод товаров в магазине
 class ProductStoreSerializer(serializers.ModelSerializer):
 
-    product = serializers.CharField(source='product.name')
-    store = serializers.CharField(source='store.name')
+    # product = serializers.CharField(source='product.name')
+    # store = serializers.CharField(source='store.name')
 
     class Meta:
 
@@ -140,7 +140,7 @@ class ViewProductStoreSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    user = serializers.CharField(source='user.name', read_only=True)
+    # user = serializers.CharField(source='user.name', read_only=True)
     class Meta:
         model = Order
         fields = ('id', 'user', 'status')

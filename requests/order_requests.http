@@ -1,7 +1,47 @@
-# Просмотр заказов --------------------------------------------------------------
+# Просмотр, исполнение, отмена заказов-------------------------------------------
+# Наличие заказов в системе видит только админ, 
+# Отменять заказ может заказчик или админ
+# Отправить заказ в работу может только заказчик
+# Токен админа: c69b72525a6d23bda089af712dd5677c
+# Токен заказчика:  
 
-
-GET http://localhost:8000/orders/?user=buyer_1&status=active
+GET http://localhost:8000/orders/?user=buyer_1&status=completed
+Authorization: Token c69b72525a6d23bda089af712dd5677c
 
 ###
 GET http://localhost:8000/orders/
+Authorization: Token c69b72525a6d23bda089af712dd5677c
+
+###
+# Метод post используется для отправки заказа в работу
+POST http://localhost:8000/orders/
+Authorization: Token 8df2190d59927eb88856b87ecb75f03c
+Content-Type: application/json
+
+{
+    "id": 2
+}
+
+###
+
+# Метод patch используется для отмены заказа. 
+# Право только у админа и хозяина заказа
+
+PATCH http://localhost:8000/orders/
+Authorization: Token 8df2190d59927eb88856b87ecb75f03c
+Content-Type: application/json
+
+{
+    "id": 1
+}
+###
+
+DELETE http://localhost:8000/orders/
+# Метод patch используется для полного удаления заказа, невзирая на статус. 
+# Право только у админа и хозяина заказа
+Authorization: Token 8df2190d59927eb88856b87ecb75f03c
+Content-Type: application/json
+
+{
+    "id": 1
+}

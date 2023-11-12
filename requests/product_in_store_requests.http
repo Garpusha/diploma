@@ -8,7 +8,7 @@
 GET http://localhost:8000/product_in_store/
 
 ###
-GET http://localhost:8000/product_in_store/?store=Связной&product=IPhone 14
+GET http://localhost:8000/product_in_store/?store=Связной
 
 ###
 POST http://localhost:8000/product_in_store/
@@ -25,14 +25,14 @@ Authorization: Token 0dfc217cf96b1a22d637f6b6531ffad2
 ###
 DELETE http://localhost:8000/product_in_store/
 Content-Type: application/json
-Authorization: Token 0dfc217cf96b1a22d637f6b6531ffad2
+Authorization: Token c69b72525a6d23bda089af712dd5677c
 
 # Установить delete_product: yes, если необходимо полностью удалить позицию
 {
-    "product": 9,
-    "store": 8,
-    "quantity": 50,
-    "delete_product": "yes"
+    "product": 1,
+    "store": 1,
+    "quantity": 40,
+    "delete_product": "no"
 }
 ###
 PATCH http://localhost:8000/product_in_store/

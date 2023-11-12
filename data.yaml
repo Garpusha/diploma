@@ -1,6 +1,6 @@
 users:
   - user_1:
-      id: 1
+      id: 2
       name: svz_shop
       password: user_1
       role: seller
@@ -12,7 +12,7 @@ users:
       address_5: Svyaznoy address 5
       token:
   - user_2:
-      id: 2
+      id: 3
       name: dns_shop
       password: user_2
       role: seller
@@ -27,7 +27,7 @@ users:
       name: ozn_shop
       password: user_3
       role: seller
-      id: 3
+      id: 4
       email: admin@ozon.ru
       address_1: Ozon address 1
       address_2: Ozon address 2
@@ -36,7 +36,7 @@ users:
       address_5: Ozon address 5
       token:
   - user_4:
-      id: 4
+      id: 5
       name: otd_shop
       password: user_4
       role: seller
@@ -48,7 +48,7 @@ users:
       address_5: Online Trade address 5
       token:
   - user_5:
-      id: 5
+      id: 6
       name: buyer_1
       password: buyer_1
       role: buyer
@@ -56,7 +56,7 @@ users:
       address_1: Buyer's 1 address
       token:
   - user_6:
-      id: 6
+      id: 7
       name: buyer_2
       password: buyer_2
       role: buyer
@@ -67,22 +67,22 @@ stores:
   - shop_1:
       id: 1
       name: Связной
-      owner: 1
+      owner: 2
       delivery_cost: 500
   - shop_2:
       id: 2
       name: DNS
-      owner: 2
+      owner: 3
       delivery_cost: 300
   - shop_3:
       id: 3
       name: Ozon
-      owner: 3
+      owner: 4
       delivery_cost: 0
   - shop_4:
       id: 4
       name: OnlineTrade
-      owner: 4
+      owner: 5
       delivery_cost: 700
 categories:
   - category_1:
@@ -276,7 +276,7 @@ products_in_store:
 orders:
   - order_1:
       id: 1
-      user: 5
+      user: 6
       status: active
 products_in_order:
   - po_1:

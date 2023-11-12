@@ -14,11 +14,13 @@ from backend.models import User, Store, OrderProduct, ProductStore
 def encrypt_password(password):
     return md5(password.encode('utf-8')).hexdigest()
 
+
 def generate_token():
     source_string = string.ascii_letters + string.digits + string.punctuation
     random_string = ''.join(random.choice(source_string) for i in range(20))
     token = encrypt_password(random_string)
     return token
+
 
 def read_yaml(filename):
     fs = FileSystemStorage()
@@ -49,6 +51,7 @@ def is_token_exists(request):
         return False
     return True
 
+
 def is_role(request, roles):
     token = request.headers['Authorization'][6:]
     user = User.objects.get(token=token)
@@ -56,12 +59,14 @@ def is_role(request, roles):
         return True
     return False
 
+
 def is_exists(item, instance):
     try:
         result = instance.objects.get(id=item)
     except ObjectDoesNotExist:
         return False
     return result
+
 
 def is_store_owner(request):
     token = request.headers['Authorization'][6:]
@@ -71,6 +76,7 @@ def is_store_owner(request):
         return True
     return False
 
+
 def get_id_by_name(name, instance):
     try:
         result = instance.objects.get(name=name).id
@@ -78,23 +84,37 @@ def get_id_by_name(name, instance):
         return False
     return result
 
+
 def get_user_by_token(request):
     token = request.headers['Authorization'][6:]
     user = User.objects.get(token=token)
     return user
 
-# Функция проверяет наличие товаров в магазинах перед оформлением заказа. Если всего хватает, возвращает True,
+
+# Функция проверяет наличие товаров в магазинах перед оформлением заказа. Если всего хватает, возвращает False,
 # если нет, сообщение о нехватке.
 def check_balance(order):
     products = OrderProduct.objects.filter(order=order)
     response = []
-    is_enough = True
+    not_enough = False
     for item in products:
-        items_in_store = ProductStore.objects.get(store=item.store, product=item.product).quantity
+        store = item.store
+        items_in_store = ProductStore.objects.get(store=store, product=item.product).quantity
         if item.quantity > items_in_store:
-            is_enough = False
-            response.append(f'In store {item.store} only {items_in_store} of product {item.product}.\
-                            {item.quantity} required')
-    if is_enough:
-        return True
-    return response
+            not_enough = True
+            response.append(f'In store {store.name} only {items_in_store} pcs of product {item.product}. {item.quantity} required\n')
+    if not_enough:
+        return response
+    return False
+
+
+def delete_from_store(order):
+    products = OrderProduct.objects.filter(order=order)
+    for item in products:
+        items_in_store = ProductStore.objects.get(store=item.store, product=item.product)
+        items_in_store.quantity -= item.quantity
+        items_in_store.save()
+
+
+def notify_by_email(order):
+    pass

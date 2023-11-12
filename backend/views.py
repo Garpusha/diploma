@@ -1,7 +1,8 @@
 from django.db.models import Q
 
 from backend.functions import read_yaml, import_data, encrypt_password, generate_token, \
-    is_exists, is_token_exists, is_role, is_store_owner, get_id_by_name, get_user_by_token
+    is_exists, is_token_exists, is_role, is_store_owner, get_id_by_name, get_user_by_token, check_balance, \
+    delete_from_store, notify_by_email
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status, viewsets
 from rest_framework.response import Response
@@ -315,37 +316,8 @@ class ProductsView(APIView):
 
 
 # ----------------------------------------------Товары в магазине------------------------------
-# class ProductStoreViewSet(viewsets.ModelViewSet):
-#     queryset = ProductStore.objects.all()
-#     serializer_class = ProductStoreSerializer
-#
-#     def get_queryset(self, request):
-#         store = request.query_params.get('store')
-#         product = request.query_params.get('product')
-#         if store is not None:
-#             return ProductStore.objects.filter(store=store)
-#         if product is not None:
-#             return ProductStore.objects.filter(product=product)
-#         return super().get_queryset()
 class ProductStoreView(APIView):
     def get(self, request):
-        # store = request.query_params.get('store')
-        # product = request.query_params.get('product')
-        # arg_1, arg_2 = None, None
-        # if store is None and product is None:
-        #     queryset = ProductStore.objects.all()
-        #     serializer = ViewProductStoreSerializer(queryset, many=True)
-        #     return Response(serializer.data)
-        # if store is not None:
-        #     store = get_id_by_name(store, Store)
-        #     arg_1 = str(store)
-        # if product is not None:
-        #     product = get_id_by_name(product, Product)
-        #     arg_2 = str(product)
-        # queryset = ProductStore.objects.filter(Q(store=arg_1) & Q(product=arg_2))
-        # serializer = ViewProductStoreSerializer(queryset, many=True)
-        # return Response(serializer.data)
-
         store = request.query_params.get('store')
         product = request.query_params.get('product')
         if store is None and product is None:
@@ -493,21 +465,27 @@ class ProductStoreView(APIView):
 class OrdersView(APIView):
 
     def get(self, request):
+        # Проверка прав. Только админ видит заказы
+        if not is_token_exists(request):
+            return Response(f'Wrong token', status=status.HTTP_400_BAD_REQUEST)
+        if not is_role(request, ['admin']):
+            return Response(f'Admin rights reqired', status=status.HTTP_400_BAD_REQUEST)
+
         user = request.query_params.get('user')
-        status = request.query_params.get('product')
-        if user is None and status is None:
+        my_status = request.query_params.get('status')
+        if user is None and my_status is None:
             queryset = Order.objects.all()
             serializer = OrderSerializer(queryset, many=True)
             return Response(serializer.data)
 
-        if user is not None and status is not None:
+        if user is not None and my_status is not None:
             user = get_id_by_name(user, User)
-            queryset = Order.objects.filter(user=user, status=status)
+            queryset = Order.objects.filter(user=user, status=my_status)
             serializer = OrderSerializer(queryset, many=True)
             return Response(serializer.data)
 
         if user is None:
-            queryset = Order.objects.filter(status=status)
+            queryset = Order.objects.filter(status=my_status)
             serializer = OrderSerializer(queryset, many=True)
             return Response(serializer.data)
 
@@ -516,6 +494,66 @@ class OrdersView(APIView):
         serializer = OrderSerializer(queryset, many=True)
         return Response(serializer.data)
 
+    def post(self, request):
+        # Проверка прав.
+        if not is_token_exists(request):
+            return Response(f'Wrong token', status=status.HTTP_404_NOT_FOUND)
+        order = is_exists(request.data['id'], Order)
+
+        # Проверка наличия заказа, его статуса, хозяина заказа
+        if not order:
+            return Response(f'Order not found', status=status.HTTP_400_BAD_REQUEST)
+        if order.status != 'active':
+            return Response(f'Active order not found', status=status.HTTP_400_BAD_REQUEST)
+        user = get_user_by_token(request)
+        if user != order.user:
+            return Response(f'This is not your order', status=status.HTTP_400_BAD_REQUEST)
+
+        # Остаток в магазинах мог измениться, проверяю.
+        not_enough = check_balance(order)
+        if not_enough:
+            return Response(not_enough, status=status.HTTP_400_BAD_REQUEST)
+        # Уменьшаю остаток по всем товарам из заказа в магазинах, меняю статус заказа, отправляю уведомление по почте
+        delete_from_store(order)
+        order.status = 'completed'
+        order.save()
+        notify_by_email(order)
+        return Response('Your order complete', status=status.HTTP_200_OK)
+
+
+    def patch(self, request):
+        # Проверка прав.
+        if not is_token_exists(request):
+            return Response(f'Wrong token', status=status.HTTP_404_NOT_FOUND)
+        order = is_exists(request.data['id'], Order)
+
+        # Проверка наличия заказа, его статуса, хозяина заказа
+        if not order:
+            return Response(f'Order not found', status=status.HTTP_400_BAD_REQUEST)
+        if order.status != 'active':
+            return Response(f'Active order not found', status=status.HTTP_400_BAD_REQUEST)
+        user = get_user_by_token(request)
+        if user != order.user and not is_role(request, 'admin'):
+            return Response(f'This is not your order', status=status.HTTP_400_BAD_REQUEST)
+        order.status = 'canceled'
+        order.save()
+        return Response(f'Order {order.id} canceled', status=status.HTTP_200_OK)
+
+
+    def delete(self, request):
+        # Проверка прав.
+        if not is_token_exists(request):
+            return Response(f'Wrong token', status=status.HTTP_404_NOT_FOUND)
+        order = is_exists(request.data['id'], Order)
+
+        # Проверка наличия заказа, его статуса, хозяина заказа
+        if not order:
+            return Response(f'Order not found', status=status.HTTP_400_BAD_REQUEST)
+        user = get_user_by_token(request)
+        if user != order.user and not is_role(request, 'admin'):
+            return Response(f'This is not your order', status=status.HTTP_400_BAD_REQUEST)
+        order.delete()
+        return Response(f'Order {request.data["id"]} deleted', status=status.HTTP_200_OK)
 
 class CartView(APIView):
 
@@ -623,11 +661,16 @@ class CartView(APIView):
             ordered_product.delete()
         else:
             ordered_product.quantity -= quantity
-        ordered_product.save()
+            ordered_product.save()
         return Response(f'Product deleted succesfully', status=status.HTTP_200_OK)
 
 class ImportData(APIView):
     def post(self, request):
+        # Проверка прав.
+        # if not is_token_exists(request):
+        #     return Response(f'Wrong token', status=status.HTTP_404_NOT_FOUND)
+        # if not is_role(request, ['admin']):
+        #     return Response('You should have admin rights to upload data.', status=status.HTTP_400_BAD_REQUEST)
         filename = request.FILES['filename']
         loaded_data = read_yaml(filename)
         # шифрую пароли, создаю токены
