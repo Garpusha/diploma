@@ -5,23 +5,17 @@
 # Токен хозяина тестового магазина: 0dfc217cf96b1a22d637f6b6531ffad2 
 # Токен другого продавца: 0f389d5ceeb069ab472c7f63886788ed
 
-
 GET http://localhost:8000/product_in_store/
-Content-Type: application/json
 
-# в store, product указывется наименование или пустая строка для вывода всех
-{
-    "store": "New Shop",
-    "product": ""
-}
 ###
+GET http://localhost:8000/product_in_store/?store=Связной&product=IPhone 14
 
+###
 POST http://localhost:8000/product_in_store/
 Content-Type: application/json
 Authorization: Token 0dfc217cf96b1a22d637f6b6531ffad2
 
 {
-    "id": 8,
     "product": 9,
     "store": 8,
     "quantity": 5,
@@ -41,13 +35,13 @@ Authorization: Token 0dfc217cf96b1a22d637f6b6531ffad2
     "delete_product": "yes"
 }
 ###
-PATCH http://localhost:8000/products/
+PATCH http://localhost:8000/product_in_store/
 Content-Type: application/json
 Authorization: Token c69b72525a6d23bda089af712dd5677c
 
 {
-    "id": 8,
-    "name": "Test product_2",
-    "category": 3,
-    "description": "New test product"
+    "product": 9,
+    "store": 8,
+    "quantity": 15,
+    "price": 200
 }

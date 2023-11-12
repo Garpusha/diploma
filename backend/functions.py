@@ -8,7 +8,7 @@ from django.conf import settings
 from rest_framework import status
 from rest_framework.response import Response
 
-from backend.models import User, Store
+from backend.models import User, Store, OrderProduct, ProductStore
 
 
 def encrypt_password(password):
@@ -78,9 +78,23 @@ def get_id_by_name(name, instance):
         return False
     return result
 
+def get_user_by_token(request):
+    token = request.headers['Authorization'][6:]
+    user = User.objects.get(token=token)
+    return user
 
-# def list_users(request):
-#     users = list(User.objects.values())
-#     context = {'my_context': users}
-#     return render(request, 'users.html', context)
-#
+# Функция проверяет наличие товаров в магазинах перед оформлением заказа. Если всего хватает, возвращает True,
+# если нет, сообщение о нехватке.
+def check_balance(order):
+    products = OrderProduct.objects.filter(order=order)
+    response = []
+    is_enough = True
+    for item in products:
+        items_in_store = ProductStore.objects.get(store=item.store, product=item.product).quantity
+        if item.quantity > items_in_store:
+            is_enough = False
+            response.append(f'In store {item.store} only {items_in_store} of product {item.product}.\
+                            {item.quantity} required')
+    if is_enough:
+        return True
+    return response

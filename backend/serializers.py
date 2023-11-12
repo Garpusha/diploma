@@ -140,6 +140,7 @@ class ViewProductStoreSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
+    user = serializers.CharField(source='user.name', read_only=True)
     class Meta:
         model = Order
         fields = ('id', 'user', 'status')
@@ -167,7 +168,7 @@ class ViewOrderSerializer(serializers.ModelSerializer):
         for count, item in enumerate(required_data):
             product_id = required_data[count]['product_id']
             store_id = required_data[count]['store_id']
-            [required_data[count].pop(key) for key in ('id', 'order_id', 'product_id', 'store_id')]
+            [required_data[count].pop(key) for key in ('order_id', 'product_id', 'store_id')]
             product = list(Product.objects.filter(id=product_id).values())
             required_data[count]['product_name'] = product[0]['name']
             required_data[count]['store'] = list(Store.objects.filter(id=store_id).values())[0]['name']

@@ -1,7 +1,7 @@
 from django.db.models import Q
 
 from backend.functions import read_yaml, import_data, encrypt_password, generate_token, \
-    is_exists, is_token_exists, is_role, is_store_owner, get_id_by_name
+    is_exists, is_token_exists, is_role, is_store_owner, get_id_by_name, get_user_by_token
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status, viewsets
 from rest_framework.response import Response
@@ -501,7 +501,7 @@ class OrdersView(APIView):
             return Response(serializer.data)
 
         if user is not None and status is not None:
-            store = get_id_by_name(user, User)
+            user = get_id_by_name(user, User)
             queryset = Order.objects.filter(user=user, status=status)
             serializer = OrderSerializer(queryset, many=True)
             return Response(serializer.data)
@@ -515,33 +515,48 @@ class OrdersView(APIView):
         queryset = Order.objects.filter(user=user)
         serializer = OrderSerializer(queryset, many=True)
         return Response(serializer.data)
-#
+
+
+class CartView(APIView):
+
+    def get(self, request):
+        # Проверка прав. Админ видит все заказы, пользователь только свои
+        if not is_token_exists(request):
+            return Response(f'Wrong token', status=status.HTTP_404_NOT_FOUND)
+        if is_role(request, ['admin']):
+            queryset = Order.objects.all()
+            serializer = ViewOrderSerializer(queryset, many=True)
+            return Response(serializer.data)
+        user = get_user_by_token(request)
+        try:
+            order = Order.objects.get(user=user, status='active')
+        except ObjectDoesNotExist:
+            return Response('This user has no orders')
+        serializer = ViewOrderSerializer(order)
+        return Response(serializer.data)
+
     def post(self, request):
+        # Проверка прав. Каждый пользователь создает свой заказ. Активный заказ одновременно только один
+        if not is_token_exists(request):
+            return Response(f'Wrong token', status=status.HTTP_404_NOT_FOUND)
+
+        user = get_user_by_token(request)
 
         # Проверка на корректный ввод количества товаров
         quantity = int(request.data['quantity'])
         if quantity < 1:
             return Response('Quantity must be at least 1', status=status.HTTP_400_BAD)
 
-        # проверяю на наличие пользователя
-        username = request.data['username']
-        try:
-            user = User.objects.get(name=username)
-        except ObjectDoesNotExist:
-            return Response(f'User {username} not exists', status=status.HTTP_400_BAD_REQUEST)
-
         # проверяю на наличие товара в базе
-        product_value = request.data['product']
-        try:
-            product = Product.objects.get(name=product_value)
-        except ObjectDoesNotExist:
+        product_id = request.data['product']
+        product = is_exists(product_id, Product)
+        if not product:
             return Response('Please create product first', status=status.HTTP_400_BAD_REQUEST)
 
         # проверяю на наличие магазина в базе
-        store_value = request.data['store']
-        try:
-            store = Store.objects.get(name=store_value)
-        except ObjectDoesNotExist:
+        store_id = request.data['store']
+        store = is_exists(store_id, Store)
+        if not store:
             return Response('Please create store first', status=status.HTTP_400_BAD_REQUEST)
 
         # Проверяю есть ли такой товар в магазине
@@ -564,26 +579,52 @@ class OrdersView(APIView):
             order = Order.objects.create(user=user, status='active')
             order.save()
 
-        # Добавляю выбранный товар в общий заказ
-        ordered_product = OrderProduct.objects.create(order=order, product=product, store=store,
-                                                      quantity=quantity, price=price)
-        ordered_product.save()
+        # Добавляю выбранный товар в общий заказ. Если такой товар уже есть в заказе из этого магазина,
+        # увеличиваю количество, если нет создаю
+        try:
+            ordered_product = OrderProduct.objects.get(order=order, product=product, store=store)
+            ordered_product.quantity += quantity
+            ordered_product.save()
+        except ObjectDoesNotExist:
+            ordered_product = OrderProduct.objects.create(order=order, product=product, store=store,
+                                                          quantity=quantity, price=price)
+            ordered_product.save()
+
         return Response(f'Product {product.name} in store {store.name} was added to order {order.id}')
 
+    def delete(self, request):
+        # Проверка существует ли заказ
+        order = is_exists(request.data['id'], Order)
+        if not order:
+            return Response(f'Order not found', status=status.HTTP_400_BAD_REQUEST)
 
+        # Проверка прав. Вносить правки в заказ может только админ или хозяин заказа
+        if not is_token_exists(request):
+            return Response(f'Wrong token', status=status.HTTP_404_NOT_FOUND)
+        user = get_user_by_token(request)
+        if not (is_role(request, 'admin') or user == order.user):
+            return Response(f'This is not your order', status=status.HTTP_400_BAD_REQUEST)
 
-class CartView(APIView):
+        # Проверка на корректный ввод количества товаров
+        quantity = int(request.data['quantity'])
+        if quantity < 1:
+            return Response('Quantity must be at least 1', status=status.HTTP_400_BAD)
+        position = int(request.data['position'])
 
-    def get(self, request):
-        user = request.GET.get('user')
-        # status = request.GET.get('status')
+        # Проверка на наличие товара в заказе
         try:
-            active_order = Order.objects.get(user=user, status='active')
+            ordered_product = OrderProduct.objects.get(order=order, id=position)
         except ObjectDoesNotExist:
-            return Response(f'No active orders for user {user}.', status=status.HTTP_400_BAD_REQUEST)
-        serializer = ViewOrderSerializer(active_order)
-        return Response(serializer.data)
-
+            return Response('No such product in this order', status=status.HTTP_400_BAD_REQUEST)
+        if quantity > ordered_product.quantity:
+            return Response(f'Cannot delete {quantity} item, only {ordered_product.quantity} in order',
+                            status=status.HTTP_400_BAD_REQUEST)
+        if quantity == ordered_product.quantity:
+            ordered_product.delete()
+        else:
+            ordered_product.quantity -= quantity
+        ordered_product.save()
+        return Response(f'Product deleted succesfully', status=status.HTTP_200_OK)
 
 class ImportData(APIView):
     def post(self, request):
