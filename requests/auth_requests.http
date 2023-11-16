@@ -1,0 +1,19 @@
+# Прользователи-----------------------------------------------------------------------
+# Удалять, создавать и изменять пользователей может только admin
+# Токен обычного пользователя: a4d0d70644badae2dae57a737e852c84
+# Токен администратора: c69b72525a6d23bda089af712dd5677c
+# Токен продавца: a601a8858a447b7cbaabc29b71927772
+
+
+POST http://localhost:8000/authorization/
+Content-Type: application/json
+
+{
+    "operation": "authorize",
+    "username": "test_user",
+    "password": "12345",
+    "token": ""
+    
+}
+
+###

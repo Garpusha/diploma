@@ -4,7 +4,7 @@
 
 # Токен админа: 0dfc217cf96b1a22d637f6b6531ffad2
 GET http://localhost:8000/cart
-Authorization: Token c69b72525a6d23bda089af712dd5677c
+Authorization: Token 123
 
 ###
 # Токен пользователя: 0dfc217cf96b1a22d637f6b6531ffad2
@@ -20,7 +20,7 @@ Authorization: Token 8df2190d59927eb88856b87ecb75f03c
 
 # Добавление товара в корзину
 POST http://localhost:8000/cart/
-Authorization: Token 8df2190d59927eb88856b87ecb75f03c
+Authorization: Token ab47840f79aff811e0c6d10842933165
 Content-Type: application/json
 
 {

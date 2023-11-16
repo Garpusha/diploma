@@ -1,0 +1,59 @@
+users:
+  - user_1:
+      name: svz_shop
+      password: user_1
+      role: seller
+      email: admin@svyaznoy.ru
+      address_1: Svyaznoy address 1
+      address_2: Svyaznoy address 2
+      address_3: Svyaznoy address 3
+      address_4: Svyaznoy address 4
+      address_5: Svyaznoy address 5
+      token:
+  - user_2:
+      name: dns_shop
+      password: user_2
+      role: seller
+      email: admin@dns.ru
+      address_1: DNS address 1
+      address_2: DNS address 2
+      address_3: DNS address 3
+      address_4: DNS address 4
+      address_5: DNS address 5
+      token:
+  - user_3:
+      name: ozn_shop
+      password: user_3
+      role: seller
+      email: admin@ozon.ru
+      address_1: Ozon address 1
+      address_2: Ozon address 2
+      address_3: Ozon address 3
+      address_4: Ozon address 4
+      address_5: Ozon address 5
+      token:
+  - user_4:
+      name: otd_shop
+      password: user_4
+      role: seller
+      email: admin@onlinetrade.ru
+      address_1: Online Trade address 1
+      address_2: Online Trade address 2
+      address_3: Online Trade address 3
+      address_4: Online Trade address 4
+      address_5: Online Trade address 5
+      token:
+  - user_5:
+      name: buyer_1
+      password: buyer_1
+      role: buyer
+      email: buyer1@mail.ru
+      address_1: Buyer's 1 address
+      token:
+  - user_6:
+      name: buyer_2
+      password: buyer_2
+      role: buyer
+      email: buyer2@mail.ru
+      address_1: Buyer's 2 address
+      token:

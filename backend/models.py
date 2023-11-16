@@ -25,6 +25,7 @@ class Store(models.Model):
     name = models.CharField(max_length=50, unique=True, blank=False)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, blank=False)
     delivery_cost = models.DecimalField(max_digits=11, decimal_places=2, blank=False)
+    active = models.BooleanField(blank=False, default=True)
 
 
 # Товар

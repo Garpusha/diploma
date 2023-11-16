@@ -8,7 +8,7 @@
 GET http://localhost:8000/product_in_store/
 
 ###
-GET http://localhost:8000/product_in_store/?store=Связной
+GET http://localhost:8000/product_in_store/?store=Связной&product=IPhone 14
 
 ###
 POST http://localhost:8000/product_in_store/

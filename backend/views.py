@@ -1,17 +1,14 @@
-from django.db.models import Q
-
 from backend.functions import read_yaml, import_data, encrypt_password, generate_token, \
     is_exists, is_token_exists, is_role, is_store_owner, get_id_by_name, get_user_by_token, check_balance, \
     delete_from_store, notify_by_email
 from django.core.exceptions import ObjectDoesNotExist
-from rest_framework import status, viewsets
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from backend.models import Category, Parameter, Store, User, Product, ProductStore, Order, OrderProduct, \
-    ProductParameter
+from backend.models import Category, Parameter, Store, User, Product, ProductStore, Order, OrderProduct
 from backend.serializers import CategorySerializer, ParameterSerializer, StoreSerializer, UserViewSerializer, \
     UserCreateSerializer, ProductSerializer, ProductStoreSerializer, OrderSerializer, ProductParameterSerializer, \
-    OrderProductSerializer, ViewStoreSerializer, ViewOrderSerializer, ViewProductStoreSerializer, ViewProductSerializer
+    OrderProductSerializer, ViewOrderSerializer, ViewProductStoreSerializer, ViewProductSerializer
 
 
 # --------------------------------------------Авторизация-----------------------------------------
@@ -35,6 +32,7 @@ class AuthorizationView(APIView):
                 return Response(f'Authorization ok, your token is:{user.token}', status=status.HTTP_200_OK)
             return Response('Wrong password', status=status.HTTP_400_BAD_REQUEST)
         return Response('Wrong operation', status=status.HTTP_400_BAD_REQUEST)
+
 
 # --------------------------------------------Категории-----------------------------------------
 class CategoriesView(APIView):
@@ -66,10 +64,12 @@ class CategoriesView(APIView):
         if not is_role(request, ['admin']):
             return Response('Admin rights required', status=status.HTTP_400_BAD_REQUEST)
 
-        category_id = request.data['id']
-        result = is_exists(category_id, Category)
-        if result:
-            result.delete()
+        category_id = get_id_by_name(request.data['id'], Category)
+        if not category_id:
+            return Response('Category not found', status=status.HTTP_400_BAD_REQUEST)
+        category = User.objects.get(id=category_id)
+        if category:
+            category.delete()
             return Response(f'Category deleted successfully', status=status.HTTP_200_OK)
         return Response(f'Category not found', status=status.HTTP_404_NOT_FOUND)
 
@@ -176,25 +176,27 @@ class StoresView(APIView):
 
     def patch(self, request):
         # Проверка прав
-
         if not is_token_exists(request):
             return Response(f'Wrong token', status=status.HTTP_404_NOT_FOUND)
-        if not is_role(request, ['admin']):
-            return Response('Admin rights required', status=status.HTTP_400_BAD_REQUEST)
+        store_id = request.data['id']
+        if not (is_store_owner(request, store_id) or is_role(request, ['admin'])):
+            return Response('You should be an owner or admin', status=status.HTTP_400_BAD_REQUEST)
 
         # Проверяю есть ли в базе пользователь, назначенный хозяином магазина
         owner_id = request.data['owner']
-        result = is_exists(owner_id, User)
-        if not result:
+        owner = is_exists(owner_id, User)
+        if not owner:
             return Response(f'Please create user first', status=status.HTTP_400_BAD_REQUEST)
         # Проверяю есть ли указанный магазин в базе
         store_id = request.data['id']
-        result = is_exists(store_id, Store)
-        if not result:
+        store = is_exists(store_id, Store)
+        request.data['active'] = bool(request.data['active'])
+        request.data['owner'] = owner_id
+        if not store:
             return Response(f'Please create store first', status=status.HTTP_400_BAD_REQUEST)
-        serializer = StoreSerializer(result, data=request.data)
+        serializer = StoreSerializer(store, data=request.data)
         if serializer.is_valid():
-            serializer.update(result, request.data)
+            serializer.update(store, request.data)
             if serializer.errors == {}:
                 return Response(f'Store updated successfully', status=status.HTTP_202_ACCEPTED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -235,11 +237,15 @@ class UsersView(APIView):
         if serializer.is_valid():
             serializer.save()
             if serializer.errors == {}:
-                return Response(f'User created successfully', status=status.HTTP_201_CREATED)
+                return Response(f'User {mutable_request["name"]}created successfully, token is:{mutable_request["token"]}',
+                                status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self, request):
         # Проверка прав
+
+        # Добавить проверку прав от имени пользователя
+
         if not is_token_exists(request):
             return Response(f'Wrong token', status=status.HTTP_404_NOT_FOUND)
         if not is_role(request, ['admin']):
@@ -266,11 +272,14 @@ class UsersView(APIView):
         if not is_role(request, ['admin']):
             return Response('Admin rights required', status=status.HTTP_400_BAD_REQUEST)
 
-        user_id = request.data['id']
-        result = is_exists(user_id, User)
-        if not result:
+        user_id = get_id_by_name(request.data['name'], User)
+        if not user_id:
             return Response('User not found', status=status.HTTP_400_BAD_REQUEST)
-        result.delete()
+        user = User.objects.get(id=user_id)
+        # result = is_exists(user_id, User)
+        # if not result:
+        #     return Response('User not found', status=status.HTTP_400_BAD_REQUEST)
+
         return Response(f'User deleted successfully', status=status.HTTP_200_OK)
 
 
@@ -340,28 +349,29 @@ class ProductsView(APIView):
 # ----------------------------------------------Товары в магазине------------------------------
 class ProductStoreView(APIView):
     def get(self, request):
+        active_stores = Store.objects.filter(active=True)
         store = request.query_params.get('store')
         product = request.query_params.get('product')
         if store is None and product is None:
-            queryset = ProductStore.objects.all()
+            queryset = ProductStore.objects.filter(store__in=active_stores)
             serializer = ViewProductStoreSerializer(queryset, many=True)
             return Response(serializer.data)
 
         if store is not None and product is not None:
             store = get_id_by_name(store, Store)
             product = get_id_by_name(product, Product)
-            queryset = ProductStore.objects.filter(store=store, product=product)
+            queryset = ProductStore.objects.filter(store=store, store__in=active_stores, product=product)
             serializer = ViewProductStoreSerializer(queryset, many=True)
             return Response(serializer.data)
 
         if product is None:
             store = get_id_by_name(store, Store)
-            queryset = ProductStore.objects.filter(store=store)
+            queryset = ProductStore.objects.filter(store=store, store__in=active_stores)
             serializer = ViewProductStoreSerializer(queryset, many=True)
             return Response(serializer.data)
 
         product = get_id_by_name(product, Product)
-        queryset = ProductStore.objects.filter(product=product)
+        queryset = ProductStore.objects.filter(product=product, store__in=active_stores)
         serializer = ViewProductStoreSerializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -369,7 +379,8 @@ class ProductStoreView(APIView):
         # Проверка прав
         if not is_token_exists(request):
             return Response(f'Wrong token', status=status.HTTP_404_NOT_FOUND)
-        if not (is_store_owner(request) or is_role(request, ['admin'])):
+        store_id = request.data['store']
+        if not (is_store_owner(request, store_id) or is_role(request, ['admin'])):
             return Response('You should be an owner or admin', status=status.HTTP_400_BAD_REQUEST)
 
         # проверяю на наличие товара в базе
@@ -412,7 +423,8 @@ class ProductStoreView(APIView):
         # Проверка прав
         if not is_token_exists(request):
             return Response(f'Wrong token', status=status.HTTP_404_NOT_FOUND)
-        if not (is_store_owner(request) or is_role(request, ['admin'])):
+        store_id = request.data['store']
+        if not (is_store_owner(request, store_id) or is_role(request, ['admin'])):
             return Response('You should be an owner or admin', status=status.HTTP_400_BAD_REQUEST)
 
         # проверяю на наличие товара в базе
@@ -451,7 +463,8 @@ class ProductStoreView(APIView):
         # Проверка прав
         if not is_token_exists(request):
             return Response(f'Wrong token', status=status.HTTP_404_NOT_FOUND)
-        if not (is_store_owner(request) or is_role(request, ['admin'])):
+        store_id = request.data['store']
+        if not (is_store_owner(request, store_id) or is_role(request, ['admin'])):
             return Response('You should be an owner or admin', status=status.HTTP_400_BAD_REQUEST)
 
         # проверяю на наличие товара в базе
@@ -605,7 +618,7 @@ class CartView(APIView):
         # Проверка на корректный ввод количества товаров
         quantity = int(request.data['quantity'])
         if quantity < 1:
-            return Response('Quantity must be at least 1', status=status.HTTP_400_BAD)
+            return Response('Quantity must be at least 1', status=status.HTTP_400_BAD_REQUEST)
 
         # проверяю на наличие товара в базе
         product_id = request.data['product']
@@ -618,6 +631,10 @@ class CartView(APIView):
         store = is_exists(store_id, Store)
         if not store:
             return Response('Please create store first', status=status.HTTP_400_BAD_REQUEST)
+
+        # проверяю активен ли магазин
+        if not store.active:
+            return Response('This store is closed', status=status.HTTP_400_BAD_REQUEST)
 
         # Проверяю есть ли такой товар в магазине
         try:
@@ -686,13 +703,14 @@ class CartView(APIView):
             ordered_product.save()
         return Response(f'Product deleted succesfully', status=status.HTTP_200_OK)
 
+
 class ImportData(APIView):
     def post(self, request):
         # Проверка прав.
-        # if not is_token_exists(request):
-        #     return Response(f'Wrong token', status=status.HTTP_404_NOT_FOUND)
-        # if not is_role(request, ['admin']):
-        #     return Response('You should have admin rights to upload data.', status=status.HTTP_400_BAD_REQUEST)
+        if not is_token_exists(request):
+            return Response(f'Wrong token', status=status.HTTP_404_NOT_FOUND)
+        if not is_role(request, ['admin']):
+            return Response('You should have admin rights to upload data.', status=status.HTTP_400_BAD_REQUEST)
         # filename = request.FILES['filename']
         filename = request.data['file']
         loaded_data = read_yaml(filename)
@@ -701,7 +719,7 @@ class ImportData(APIView):
             for user in loaded_data['users']:
                 for key, value in user.items():
                     value['password'] = encrypt_password(value['password'])
-                    value['token'] = 'generate_token()'
+                    value['token'] = generate_token()
 
         dataset = {'users': UserCreateSerializer,
                    'categories': CategorySerializer,

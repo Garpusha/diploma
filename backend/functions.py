@@ -68,10 +68,10 @@ def is_exists(item, instance):
     return result
 
 
-def is_store_owner(request):
+def is_store_owner(request, store_id):
     token = request.headers['Authorization'][6:]
     user = User.objects.get(token=token)
-    store_owner = Store.objects.get(id=request.data['store']).owner
+    store_owner = Store.objects.get(id=store_id).owner
     if user == store_owner:
         return True
     return False

@@ -14,7 +14,6 @@ Content-Type: application/json
 Authorization: Token 0dfc217cf96b1a22d637f6b6531ffad2
 
 {
-    "id": 8,
     "name": "Test product",
     "category": 3,
     "description": "New test product"

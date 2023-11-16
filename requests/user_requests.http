@@ -27,7 +27,7 @@ Content-Type: application/json
 Authorization: Token c69b72525a6d23bda089af712dd5677c
 
 {
-    "id": 8
+    "name": "test_user"
 }
 ###
 PATCH http://localhost:8000/users/

@@ -3,18 +3,22 @@ stores:
       name: Связной
       owner: 2
       delivery_cost: 500
+      active: 1
   - shop_2:
       name: DNS
       owner: 3
       delivery_cost: 300
+      active: 1
   - shop_3:
       name: Ozon
       owner: 4
       delivery_cost: 0
+      active: 1
   - shop_4:
       name: OnlineTrade
       owner: 5
       delivery_cost: 700
+      active: 1
 categories:
   - category_1:
       name: Телефоны

@@ -22,7 +22,7 @@ class ViewStoreSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Store
-        fields = ('id', 'name', 'owner', 'delivery_cost', 'product_field')
+        fields = ('id', 'name', 'owner', 'delivery_cost', 'active', 'product_field')
 
     def get_owner(self, queryset):
         owner_name = User.objects.get(id=queryset.owner_id).name
@@ -44,7 +44,8 @@ class StoreSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance.id = validated_data.get("id", instance.id)
         instance.name = validated_data.get("name", instance.name)
-        instance.owner = instance.owner
+        instance.owner = User.objects.get(id=validated_data['owner'])
+        instance.active = validated_data.get("active", instance.active)
         instance.delivery_cost = validated_data.get("delivery_cost", instance.delivery_cost)
         instance.save()
         return instance

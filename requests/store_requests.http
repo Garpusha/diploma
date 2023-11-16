@@ -9,18 +9,18 @@ GET http://localhost:8000/stores/
 ###
 POST http://localhost:8000/stores/
 Content-Type: application/json
-Authorization: Token c69b72525a6d23bda089af712dd5677c
+Authorization: Token 123
 
-{
-    "id": 7,
-    "name": "New Shop",
+{    
+    "name": "New Shop_7",
     "owner": 1,
-    "delivery_cost": 100
+    "delivery_cost": 100,
+    "active": 1
 }
 ###
 DELETE http://localhost:8000/stores/
 Content-Type: application/json
-Authorization: Token c69b72525a6d23bda089af712dd5677c
+Authorization: Token 123
 
 {
     "id": 7
@@ -28,12 +28,13 @@ Authorization: Token c69b72525a6d23bda089af712dd5677c
 ###
 PATCH http://localhost:8000/stores/
 Content-Type: application/json
-Authorization: Token c69b72525a6d23bda089af712dd5677c
+Authorization: Token 123
 
 {
-    "id": 7,
-    "name": "New shop_2",
-    "owner": 1,
-    "delivery_cost": 200
+    "id": 1,
+    "name": "Связной",
+    "owner": 2,
+    "delivery_cost": 200,
+    "active": 0
 
 }
