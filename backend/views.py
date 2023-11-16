@@ -14,6 +14,28 @@ from backend.serializers import CategorySerializer, ParameterSerializer, StoreSe
     OrderProductSerializer, ViewStoreSerializer, ViewOrderSerializer, ViewProductStoreSerializer, ViewProductSerializer
 
 
+# --------------------------------------------Авторизация-----------------------------------------
+class AuthorizationView(APIView):
+
+    def post(self, request):
+
+        user_id = get_id_by_name(request.data['username'], User)
+        if not user_id:
+            return Response('User not found', status=status.HTTP_404_NOT_FOUND)
+        # по параметру 'operation' выбираю действие - authorize, reset, new_password
+        # в случае необходимости сброса пароля на указанную почту высылается новый токен,
+        # после чего этот токен надо указать в запросе вместе с новым паролем
+
+        if request.data['operation'].lower() == 'authorize':
+            user = User.objects.get(id=user_id)
+            password = encrypt_password(request.data['password'])
+            if password == user.password:
+                user.token = generate_token()
+                user.save(update_fields=['token'])
+                return Response(f'Authorization ok, your token is:{user.token}', status=status.HTTP_200_OK)
+            return Response('Wrong password', status=status.HTTP_400_BAD_REQUEST)
+        return Response('Wrong operation', status=status.HTTP_400_BAD_REQUEST)
+
 # --------------------------------------------Категории-----------------------------------------
 class CategoriesView(APIView):
 
@@ -674,11 +696,12 @@ class ImportData(APIView):
         # filename = request.FILES['filename']
         filename = request.data['file']
         loaded_data = read_yaml(filename)
-        # шифрую пароли, создаю токены
-        for user in loaded_data['users']:
-            for key, value in user.items():
-                value['password'] = encrypt_password(value['password'])
-                value['token'] = generate_token()
+        # если есть раздел с пользователями, шифрую пароли, создаю токены
+        if 'users' in loaded_data.keys():
+            for user in loaded_data['users']:
+                for key, value in user.items():
+                    value['password'] = encrypt_password(value['password'])
+                    value['token'] = 'generate_token()'
 
         dataset = {'users': UserCreateSerializer,
                    'categories': CategorySerializer,

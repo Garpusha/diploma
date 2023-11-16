@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter
 
 # from backend.functions import list_users
 from backend.views import UsersView, ImportData, StoresView, ProductsView, CategoriesView, ParametersView, \
-    CartView, ProductStoreView, OrdersView
+    CartView, ProductStoreView, OrdersView, AuthorizationView
 
 # r = DefaultRouter()
 # r.register('orders_view', OrderViewSet)
@@ -20,5 +20,6 @@ urlpatterns = ([
     path('orders/', OrdersView.as_view()),
     path('import/', ImportData.as_view()),
     path('cart/', CartView.as_view()),
+    path('authorization/', AuthorizationView.as_view())
 ])
                # + r.urls)

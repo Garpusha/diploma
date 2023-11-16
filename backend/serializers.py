@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from backend.functions import get_id_by_name
 from backend.models import Category, Store, User, Product, ProductStore, Parameter, Order, OrderProduct, \
     ProductParameter
 
@@ -36,6 +37,10 @@ class ViewStoreSerializer(serializers.ModelSerializer):
 
 class StoreSerializer(serializers.ModelSerializer):
 
+    class Meta:
+        model = Store
+        fields = '__all__'
+
     def update(self, instance, validated_data):
         instance.id = validated_data.get("id", instance.id)
         instance.name = validated_data.get("name", instance.name)
@@ -44,9 +49,7 @@ class StoreSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-    class Meta:
-        model = Store
-        fields = '__all__'
+
 
 
 

@@ -10,15 +10,14 @@ GET http://localhost:8000/users/
 
 POST http://localhost:8000/users/
 Content-Type: application/json
-Authorization: Token c69b72525a6d23bda089af712dd5677c
+Authorization: Token 123
 
-{
-    "id": 1,
-    "name": "admin",
+{    
+    "name": "test_user",
     "password": "12345",
-    "role": "admin",
-    "email": "test_seller@test.com",
-    "address_1": "address_1_test_seler",
+    "role": "buyer",
+    "email": "test_buyer@test.com",
+    "address_1": "address_1_test_buyer",
     "token": ""
 
 }
