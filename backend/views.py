@@ -671,7 +671,8 @@ class ImportData(APIView):
         #     return Response(f'Wrong token', status=status.HTTP_404_NOT_FOUND)
         # if not is_role(request, ['admin']):
         #     return Response('You should have admin rights to upload data.', status=status.HTTP_400_BAD_REQUEST)
-        filename = request.FILES['filename']
+        # filename = request.FILES['filename']
+        filename = request.data['file']
         loaded_data = read_yaml(filename)
         # шифрую пароли, создаю токены
         for user in loaded_data['users']:

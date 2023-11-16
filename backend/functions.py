@@ -23,13 +23,13 @@ def generate_token():
 
 
 def read_yaml(filename):
-    fs = FileSystemStorage()
-    filename = fs.save(filename.name, filename)
-    basedir = str(settings.BASE_DIR)
-    uploaded_file = (basedir + fs.url(filename))
-    with open(uploaded_file) as yaml_file:
+    # fs = FileSystemStorage()
+    # filename = fs.save(filename.name, filename)
+    # basedir = str(settings.BASE_DIR)
+    # uploaded_file = (basedir + fs.url(filename))
+    with open(filename) as yaml_file:
         loaded_data = yaml.load(yaml_file, Loader=yaml.FullLoader)
-    fs.delete(uploaded_file)
+    # fs.delete(uploaded_file)
     return loaded_data
 
 
