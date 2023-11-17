@@ -57,14 +57,14 @@ def send_email(send_to, subject, message):
 
 
 def generate_msg(user, order):
-    msg_header = f"Dear {user.name}! \n Thank you for your order #{order.id}\n\n You have ordered the following position(s):\n"
+    msg_header = f"Dear {user.name}! \nYour order #{order.id}\n\nYou have ordered the following position(s):\n"
     msg_body = []
     order_items = OrderProduct.objects.filter(order=order)
     for count, item in enumerate(order_items):
         msg_body.append(
-            f"{count + 1}. {item.name} x {item.price} = {item.price * item.quantity} from store {item.store.name}"
+            f"{count + 1}. {item.product.name} x {item.quantity} pcs x {item.price} = {item.price * item.quantity} from store {item.store.name}"
         )
-    msg_basement = f"Total cost is {total_items_cost(order)}, delivery cost is {total_delivery_cost(order)}\n Thank you!\n"
+    msg_basement = f"\n\nTotal cost is {total_items_cost(order)}, delivery cost is {total_delivery_cost(order)}\n\nThank you!\n"
     msg = msg_header + "\n".join(msg_body) + msg_basement
     return msg
 
@@ -157,9 +157,7 @@ def check_balance(order):
     not_enough = False
     for item in products:
         store = item.store
-        items_in_store = ProductStore.objects.get(
-            store=store, product=item.product
-        ).quantity
+        items_in_store = ProductStore.objects.get(store=store, product=item.product).quantity
         if item.quantity > items_in_store:
             not_enough = True
             response.append(

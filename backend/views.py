@@ -639,14 +639,14 @@ class OrdersView(APIView):
         if not_enough:
             return Response(not_enough, status=status.HTTP_400_BAD_REQUEST)
         # Уменьшаю остаток по всем товарам из заказа в магазинах, меняю статус заказа, отправляю уведомление по почте
-        delete_from_store(order)
-        order.status = "completed"
-        order.save()
         msg = generate_msg(user, order)
         print(f'To: {user.email}\n')
         print(f"Your order {order.id} in our marketplace\n")
         print(msg)
 
+        delete_from_store(order)
+        order.status = "completed"
+        order.save()
         # send_email(
         #     send_to=user.email,
         #     subject=f"Your order {order.id} in our marketplace",
