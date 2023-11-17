@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('backend', '0002_remove_parameter_product_remove_parameter_value_and_more'),
+        ("backend", "0002_remove_parameter_product_remove_parameter_value_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='token',
+            model_name="user",
+            name="token",
             field=models.CharField(blank=True, max_length=32),
         ),
     ]

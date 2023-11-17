@@ -5,94 +5,207 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Category',
+            name="Category",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=50, unique=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=50, unique=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Order',
+            name="Order",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('status', models.CharField(blank=True, max_length=10)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("status", models.CharField(blank=True, max_length=10)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Product',
+            name="Product",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=50, unique=True)),
-                ('description', models.TextField()),
-                ('category', models.ForeignKey(blank=True, on_delete=django.db.models.deletion.CASCADE, to='backend.category')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=50, unique=True)),
+                ("description", models.TextField()),
+                (
+                    "category",
+                    models.ForeignKey(
+                        blank=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="backend.category",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='User',
+            name="User",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=50, unique=True)),
-                ('password', models.CharField(max_length=32)),
-                ('role', models.CharField(max_length=10)),
-                ('email', models.CharField(max_length=50, unique=True)),
-                ('address_1', models.CharField(blank=True, max_length=100)),
-                ('address_2', models.CharField(blank=True, max_length=100)),
-                ('address_3', models.CharField(blank=True, max_length=100)),
-                ('address_4', models.CharField(blank=True, max_length=100)),
-                ('address_5', models.CharField(blank=True, max_length=100)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=50, unique=True)),
+                ("password", models.CharField(max_length=32)),
+                ("role", models.CharField(max_length=10)),
+                ("email", models.CharField(max_length=50, unique=True)),
+                ("address_1", models.CharField(blank=True, max_length=100)),
+                ("address_2", models.CharField(blank=True, max_length=100)),
+                ("address_3", models.CharField(blank=True, max_length=100)),
+                ("address_4", models.CharField(blank=True, max_length=100)),
+                ("address_5", models.CharField(blank=True, max_length=100)),
             ],
         ),
         migrations.CreateModel(
-            name='Store',
+            name="Store",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=50, unique=True)),
-                ('delivery_cost', models.DecimalField(decimal_places=2, max_digits=11)),
-                ('owner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='backend.user')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=50, unique=True)),
+                ("delivery_cost", models.DecimalField(decimal_places=2, max_digits=11)),
+                (
+                    "owner",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="backend.user"
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='ProductStore',
+            name="ProductStore",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('quantity', models.PositiveIntegerField()),
-                ('price', models.DecimalField(decimal_places=2, max_digits=11)),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='backend.product')),
-                ('store', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='backend.store')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("quantity", models.PositiveIntegerField()),
+                ("price", models.DecimalField(decimal_places=2, max_digits=11)),
+                (
+                    "product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="backend.product",
+                    ),
+                ),
+                (
+                    "store",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="backend.store"
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Parameter',
+            name="Parameter",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=20)),
-                ('value', models.CharField(max_length=50)),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='parameters', to='backend.product')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=20)),
+                ("value", models.CharField(max_length=50)),
+                (
+                    "product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="parameters",
+                        to="backend.product",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='OrderProduct',
+            name="OrderProduct",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('quantity', models.PositiveIntegerField(default=0)),
-                ('price', models.DecimalField(decimal_places=2, default=0, max_digits=11)),
-                ('order', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='backend.order')),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='backend.product')),
-                ('store', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='backend.store')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("quantity", models.PositiveIntegerField(default=0)),
+                (
+                    "price",
+                    models.DecimalField(decimal_places=2, default=0, max_digits=11),
+                ),
+                (
+                    "order",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="backend.order"
+                    ),
+                ),
+                (
+                    "product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="backend.product",
+                    ),
+                ),
+                (
+                    "store",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="backend.store"
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='order',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='backend.user'),
+            model_name="order",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="backend.user"
+            ),
         ),
     ]

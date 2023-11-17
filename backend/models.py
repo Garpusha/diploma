@@ -70,4 +70,6 @@ class Parameter(models.Model):
 class ProductParameter(models.Model):
     parameter = models.ForeignKey(Parameter, on_delete=models.CASCADE)
     value = models.CharField(max_length=50, unique=False, blank=False)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='parameters')
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="parameters"
+    )

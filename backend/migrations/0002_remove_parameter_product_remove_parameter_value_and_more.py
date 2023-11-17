@@ -5,32 +5,52 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('backend', '0001_initial'),
+        ("backend", "0001_initial"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='parameter',
-            name='product',
+            model_name="parameter",
+            name="product",
         ),
         migrations.RemoveField(
-            model_name='parameter',
-            name='value',
+            model_name="parameter",
+            name="value",
         ),
         migrations.AlterField(
-            model_name='parameter',
-            name='name',
+            model_name="parameter",
+            name="name",
             field=models.CharField(max_length=40, unique=True),
         ),
         migrations.CreateModel(
-            name='ProductParameter',
+            name="ProductParameter",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('value', models.CharField(max_length=50)),
-                ('parameter', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='backend.parameter')),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='parameters', to='backend.product')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("value", models.CharField(max_length=50)),
+                (
+                    "parameter",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="backend.parameter",
+                    ),
+                ),
+                (
+                    "product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="parameters",
+                        to="backend.product",
+                    ),
+                ),
             ],
         ),
     ]

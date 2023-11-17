@@ -1,23 +1,81 @@
+import os
+import random
+import smtplib
+import string
+from email.header import Header
+from email.mime.text import MIMEText
 from hashlib import md5
-import yaml
-import random, string
 
+import yaml
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.files.storage import FileSystemStorage
-from django.conf import settings
 from rest_framework import status
 from rest_framework.response import Response
 
 from backend.models import User, Store, OrderProduct, ProductStore
 
 
+def total_items_cost(queryset):
+    required_data = list(OrderProduct.objects.filter(order=queryset.id).values())
+    total_cost = 0
+    # Считаю общую стоимость товаров, входящих в заказ
+    for product in required_data:
+        total_cost += product["price"] * product["quantity"]
+    return total_cost
+
+
+def total_delivery_cost(queryset):
+    required_data = list(OrderProduct.objects.filter(order=queryset.id).values())
+    delivery_cost = 0
+    stores = set()
+    [stores.add(product["store_id"]) for product in required_data]
+    for store in stores:
+        delivery_cost += Store.objects.get(id=store).delivery_cost
+    return delivery_cost
+
+
+def send_email(send_to, subject, message):
+    # smtp_host = 'smtp.live.com'        # microsoft
+    # smtp_host = 'smtp.gmail.com'       # google
+    # smtp_host = 'smtp.mail.yahoo.com'  # yahoo
+    smtp_host = "smtp.yandex.ru"  # yandex
+    login, password = os.environ["EMAIL_LOGIN"], os.environ["EMAIL_PASSWORD"]
+    recipients_emails = [send_to]
+
+    msg = MIMEText(message, "plain", "utf-8")
+    msg["Subject"] = Header(subject, "utf-8")
+    msg["From"] = "My New Store"
+    msg["To"] = send_to
+
+    s = smtplib.SMTP(smtp_host, 587, timeout=10)
+    # s.set_debuglevel(1)
+    try:
+        s.starttls()
+        s.login(login, password)
+        s.sendmail(msg["From"], recipients_emails, msg.as_string())
+    finally:
+        s.quit()
+
+
+def generate_msg(user, order):
+    msg_header = f"Dear {user.name}! \n Thank you for your order #{order.id}\n\n You have ordered the following position(s):\n"
+    msg_body = []
+    order_items = OrderProduct.objects.filter(order=order)
+    for count, item in enumerate(order_items):
+        msg_body.append(
+            f"{count + 1}. {item.name} x {item.price} = {item.price * item.quantity} from store {item.store.name}"
+        )
+    msg_basement = f"Total cost is {total_items_cost(order)}, delivery cost is {total_delivery_cost(order)}\n Thank you!\n"
+    msg = msg_header + "\n".join(msg_body) + msg_basement
+    return msg
+
+
 def encrypt_password(password):
-    return md5(password.encode('utf-8')).hexdigest()
+    return md5(password.encode("utf-8")).hexdigest()
 
 
 def generate_token():
     source_string = string.ascii_letters + string.digits + string.punctuation
-    random_string = ''.join(random.choice(source_string) for i in range(20))
+    random_string = "".join(random.choice(source_string) for i in range(20))
     token = encrypt_password(random_string)
     return token
 
@@ -40,11 +98,11 @@ def import_data(data_to_import, import_serializer):
             if not serializer.is_valid():
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             serializer.save()
-    return 'ok'
+    return "ok"
 
 
 def is_token_exists(request):
-    token = request.headers['Authorization'][6:]
+    token = request.headers["Authorization"][6:]
     try:
         User.objects.get(token=token)
     except ObjectDoesNotExist:
@@ -53,7 +111,7 @@ def is_token_exists(request):
 
 
 def is_role(request, roles):
-    token = request.headers['Authorization'][6:]
+    token = request.headers["Authorization"][6:]
     user = User.objects.get(token=token)
     if user.role in roles:
         return True
@@ -69,7 +127,7 @@ def is_exists(item, instance):
 
 
 def is_store_owner(request, store_id):
-    token = request.headers['Authorization'][6:]
+    token = request.headers["Authorization"][6:]
     user = User.objects.get(token=token)
     store_owner = Store.objects.get(id=store_id).owner
     if user == store_owner:
@@ -86,7 +144,7 @@ def get_id_by_name(name, instance):
 
 
 def get_user_by_token(request):
-    token = request.headers['Authorization'][6:]
+    token = request.headers["Authorization"][6:]
     user = User.objects.get(token=token)
     return user
 
@@ -99,10 +157,14 @@ def check_balance(order):
     not_enough = False
     for item in products:
         store = item.store
-        items_in_store = ProductStore.objects.get(store=store, product=item.product).quantity
+        items_in_store = ProductStore.objects.get(
+            store=store, product=item.product
+        ).quantity
         if item.quantity > items_in_store:
             not_enough = True
-            response.append(f'In store {store.name} only {items_in_store} pcs of product {item.product}. {item.quantity} required\n')
+            response.append(
+                f"In store {store.name} only {items_in_store} pcs of product {item.product}. {item.quantity} required\n"
+            )
     if not_enough:
         return response
     return False
@@ -111,10 +173,8 @@ def check_balance(order):
 def delete_from_store(order):
     products = OrderProduct.objects.filter(order=order)
     for item in products:
-        items_in_store = ProductStore.objects.get(store=item.store, product=item.product)
+        items_in_store = ProductStore.objects.get(
+            store=item.store, product=item.product
+        )
         items_in_store.quantity -= item.quantity
         items_in_store.save()
-
-
-def notify_by_email(order):
-    pass

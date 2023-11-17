@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('backend', '0003_user_token'),
+        ("backend", "0003_user_token"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='store',
-            name='active',
+            model_name="store",
+            name="active",
             field=models.BooleanField(default=True),
         ),
     ]
