@@ -10,7 +10,9 @@ from backend.functions import (
     get_object_by_name,
     check_balance,
     delete_from_store,
-    generate_msg,
+    generate_order_msg,
+    generate_token_msg,
+    send_email, generate_seller_msg
 )
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
@@ -49,20 +51,40 @@ class AuthorizationView(APIView):
         user = get_object_by_name(request.data["username"], User)
         if not user:
             return Response("User not found", status=status.HTTP_404_NOT_FOUND)
-        # по параметру 'operation' выбираю действие - authorize, reset, new_password
-        # в случае необходимости сброса пароля на указанную почту высылается новый токен,
-        # после чего этот токен надо указать в запросе вместе с новым паролем
 
-        if request.data["operation"].lower() == "authorize":
-            password = encrypt_password(request.data["password"])
-            if password == user.password:
-                user.token = generate_token()
-                user.save(update_fields=["token"])
-                return Response(
-                    f"Authorization ok, your token is:{user.token}",
-                    status=status.HTTP_200_OK,
-                )
-            return Response("Wrong password", status=status.HTTP_400_BAD_REQUEST)
+        # По запросу с "operation": "authorize" можно получить новый токен, указав верный пароль
+        # Если пользователь забыл пароль, по запросу "operation": "reset" ему на почту высылается
+        # новый токен. По запросу "operation": "activate" с новым токеном можно установить новый пароль
+        operation = request.data["operation"].lower()
+        match operation:
+            case "authorize":
+                password = encrypt_password(request.data["password"])
+                if password == user.password:
+                    user.token = generate_token()
+                    user.save(update_fields=["token"])
+                    return Response(
+                        f"Authorization ok, your new token is: {user.token}",
+                        status=status.HTTP_200_OK,
+                    )
+                return Response("Wrong password", status=status.HTTP_400_BAD_REQUEST)
+            case "reset":
+                user.temp_token = generate_token()
+                user.save(update_fields=["temp_token"])
+                msg = generate_token_msg(user)
+                send_email(send_to=user.email,
+                           subject="Password reset",
+                           message=msg
+                           )
+                return Response("New token was sent to your e-mail", status=status.HTTP_200_OK)
+            case "activate":
+                token = request.headers["Authorization"][6:]
+                if user.temp_token != token:
+                    return Response("Wrong token", status=status.HTTP_400_BAD_REQUEST)
+                user.token = user.temp_token
+                user.temp_token = ""
+                user.password = encrypt_password(request.data['password'])
+                user.save(update_fields=["token", "temp_token", "password"])
+                return Response("Password updated successfully", status=status.HTTP_200_OK)
         return Response("Wrong operation", status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -595,14 +617,9 @@ class ProductStoreView(APIView):
 
 
 # ---------------------------------------------------Заказы------------------------------------
-# class OrderViewSet(viewsets.ModelViewSet):
-#     queryset = Order.objects.all()
-#     serializer_class = ViewOrderSerializer
-
-
 class OrdersView(APIView):
     def get(self, request):
-        # Проверка прав. Только админ видит заказы
+        # Проверка прав. Только админ видит все заказы
         if not is_token_exists(request):
             return Response(f"Wrong token", status=status.HTTP_400_BAD_REQUEST)
         if not is_role(request, ["admin"]):
@@ -655,20 +672,28 @@ class OrdersView(APIView):
         if not_enough:
             return Response(not_enough, status=status.HTTP_400_BAD_REQUEST)
         # Уменьшаю остаток по всем товарам из заказа в магазинах, меняю статус заказа, отправляю уведомление по почте
-        msg = generate_msg(user, order)
-        print(f"To: {user.email}\n")
-        print(f"Your order {order.id} in our marketplace\n")
-        print(msg)
+        msg = generate_order_msg(user, order)
+        if not msg:
+            return Response('Order is empty', status=status.HTTP_204_NO_CONTENT)
 
         delete_from_store(order)
         order.status = "completed"
         order.save()
-        # send_email(
-        #     send_to=user.email,
-        #     subject=f"Your order {order.id} in our marketplace",
-        #     message=msg,
-        # )
-
+        send_email(
+            send_to=user.email,
+            subject=f"Your order {order.id} in our marketplace",
+            message=msg,
+        )
+        # Отправляю письма хозяевам магазинов, из которых заказаны товары
+        products_in_order = OrderProduct.objects.filter(order=order)
+        sellers = set()
+        [sellers.add(product.store) for product in products_in_order]
+        for seller in sellers:
+            msg = generate_seller_msg(seller, order)
+            send_email(send_to=user.email,
+                       subject='Products ordered',
+                       message=msg
+                       )
         return Response("Your order complete", status=status.HTTP_200_OK)
 
     def patch(self, request):

@@ -55,12 +55,45 @@ def send_email(send_to, subject, message):
     finally:
         s.quit()
 
+def get_full_address(user):
+    address = user.address_1 + ' ' \
+              + user.address_2 + ' '\
+              + user.address_3 + ' '\
+              + user.address_4 + ' '\
+              + user.address_5
+    return address
 
-def generate_msg(user, order):
+
+def generate_seller_msg(store, order):
+    msg_header = f"Dear {store.owner.name}! \n\nUser {order.user.name} ordered following items from your store:\n\n"
+    ordered_items = OrderProduct.objects.filter(order=order, store=store)
+    msg_body = []
+    total_cost = 0
+    for count, item in enumerate(ordered_items):
+        cost = item.price * item.quantity
+        msg_body.append(
+            f"{count + 1}. {item.product.name} x {item.quantity} pcs x {item.price} = {cost}"
+        )
+        total_cost += cost
+    address = get_full_address(order.user)
+    msg_basement = f"\n\n{order.user.name}'s delivery address is {address}\nTotal cost is {total_cost}, delivery cost is {store.delivery_cost}\n\nThank you!\n"
+    msg = msg_header + "\n".join(msg_body) + msg_basement
+    return msg
+
+def generate_token_msg(user):
+    msg_header = f"Dear {user.name}! \n\n"
+    msg_body = f"Your new token is #{user.temp_token}\nUse it to create new password.\n\n"
+    msg_basement = f"If you did not ask for new token, ignore this mail.\nThank you!"
+    msg = msg_header + msg_body + msg_basement
+    return msg
+
+def generate_order_msg(user, order):
     msg_header = f"Dear {user.name}! \nYour order #{order.id}\n\nYou have ordered the following position(s):\n"
     msg_body = []
-    order_items = OrderProduct.objects.filter(order=order)
-    for count, item in enumerate(order_items):
+    ordered_items = OrderProduct.objects.filter(order=order)
+    if len(ordered_items) == 0:
+        return False
+    for count, item in enumerate(ordered_items):
         msg_body.append(
             f"{count + 1}. {item.product.name} x {item.quantity} pcs x {item.price} = {item.price * item.quantity} from store {item.store.name}"
         )

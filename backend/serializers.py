@@ -204,20 +204,7 @@ class ViewOrderSerializer(serializers.ModelSerializer):
         return result
 
     def get_items_cost(self, queryset):
-        total_cost = total_items_cost(queryset)
-        # required_data = list(OrderProduct.objects.filter(order=queryset.id).values())
-        # total_cost = 0
-        # # Считаю общую стоимость товаров, входящих в заказ
-        # for product in required_data:
-        #     total_cost += product['price'] * product['quantity']
-        return total_cost
+        return total_items_cost(queryset)
 
     def get_delivery_cost(self, queryset):
-        delivery_cost = total_delivery_cost(queryset)
-        # required_data = list(OrderProduct.objects.filter(order=queryset.id).values())
-        # delivery_cost = 0
-        # stores = set()
-        # [stores.add(product['store_id']) for product in required_data]
-        # for store in stores:
-        #     delivery_cost += Store.objects.get(id=store).delivery_cost
-        return delivery_cost
+        return total_delivery_cost(queryset)

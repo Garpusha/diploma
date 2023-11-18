@@ -13,6 +13,7 @@ class User(models.Model):
     address_4 = models.CharField(max_length=100, blank=True)
     address_5 = models.CharField(max_length=100, blank=True)
     token = models.CharField(max_length=32, blank=True)
+    temp_token = models.CharField(max_length=32, blank=True)
 
 
 # Категория товара (телефоны, планшеты и т.п.)
