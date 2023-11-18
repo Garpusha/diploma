@@ -104,10 +104,10 @@ def import_data(data_to_import, import_serializer):
 def is_token_exists(request):
     token = request.headers["Authorization"][6:]
     try:
-        User.objects.get(token=token)
+        user = User.objects.get(token=token)
     except ObjectDoesNotExist:
         return False
-    return True
+    return user
 
 
 def is_role(request, roles):
@@ -135,9 +135,9 @@ def is_store_owner(request, store_id):
     return False
 
 
-def get_id_by_name(name, instance):
+def get_object_by_name(name, instance):
     try:
-        result = instance.objects.get(name=name).id
+        result = instance.objects.get(name=name)
     except ObjectDoesNotExist:
         return False
     return result
@@ -157,7 +157,9 @@ def check_balance(order):
     not_enough = False
     for item in products:
         store = item.store
-        items_in_store = ProductStore.objects.get(store=store, product=item.product).quantity
+        items_in_store = ProductStore.objects.get(
+            store=store, product=item.product
+        ).quantity
         if item.quantity > items_in_store:
             not_enough = True
             response.append(

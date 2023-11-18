@@ -18,7 +18,7 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
 # dotenv_path = ".env"
 # if os.path.exists(dotenv_path):
-load_dotenv('.env')
+load_dotenv(".env")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
