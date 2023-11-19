@@ -3,17 +3,17 @@
 # то только заказ этого пользователя.
 
 GET http://localhost:8000/cart
-Authorization: Token 123
+Authorization: Token ...
 
 ###
 GET http://localhost:8000/cart
-Authorization: Token ab47840f79aff811e0c6d10842933165
+Authorization: Token ...
 
 ###
 
 # Добавление товара в корзину
 POST http://localhost:8000/cart/
-Authorization: Token ab47840f79aff811e0c6d10842933165
+Authorization: Token ...
 Content-Type: application/json
 
 {
@@ -26,7 +26,7 @@ Content-Type: application/json
 
 # Удаление товара из корзины
 DELETE  http://localhost:8000/cart/
-Authorization: Token 8df2190d59927eb88856b87ecb75f03c
+Authorization: Token ...
 Content-Type: application/json
 
 {   

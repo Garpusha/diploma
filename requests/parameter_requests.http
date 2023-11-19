@@ -1,15 +1,12 @@
 # Параметры-----------------------------------------------------------------------
 # Удалять и переименовывать параметры может только пользователь с ролью admin
 # Добавлять параметры может также пользователь с ролью seller
-# Токен обычного пользователя: a4d0d70644badae2dae57a737e852c84
-# Токен администратора: c69b72525a6d23bda089af712dd5677c
-# Токен продавца: 0dfc217cf96b1a22d637f6b6531ffad2
 
 GET http://localhost:8000/parameters/
 ###
 POST http://localhost:8000/parameters/
 Content-Type: application/json
-Authorization: Token 0dfc217cf96b1a22d637f6b6531ffad2
+Authorization: Token ...
 
 {
     "name": "CPU"
@@ -17,7 +14,7 @@ Authorization: Token 0dfc217cf96b1a22d637f6b6531ffad2
 ###
 DELETE http://localhost:8000/parameters/
 Content-Type: application/json
-Authorization: Token c69b72525a6d23bda089af712dd5677c
+Authorization: Token ...
 
 {
     "id": 8
@@ -25,7 +22,7 @@ Authorization: Token c69b72525a6d23bda089af712dd5677c
 ###
 PATCH http://localhost:8000/parameters/
 Content-Type: application/json
-Authorization: Token c69b72525a6d23bda089af712dd5677c
+Authorization: Token ...
 
 {
     "id": 8,

@@ -1,10 +1,9 @@
 # Импорт данных--------------------------------------------------------------
 # Импортировать может только admin
-# Токен администратора: 123
 
 POST http://localhost:8000/import/
 Content-Type: application/json
-Authorization: Token 123
+Authorization: Token ...
 
 {
     "file": "data.yaml"
