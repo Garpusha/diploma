@@ -6,25 +6,25 @@ GET http://localhost:8000/parameters/
 ###
 POST http://localhost:8000/parameters/
 Content-Type: application/json
-Authorization: Token ...
+Authorization: Token 9cfb972127a7f55fc0767137c0cc2e53
 
 {
-    "name": "CPU"
+    "name": "DPI"
 }
 ###
 DELETE http://localhost:8000/parameters/
 Content-Type: application/json
-Authorization: Token ...
+Authorization: Token 123
 
 {
-    "id": 8
+    "id": 4
 }
 ###
 PATCH http://localhost:8000/parameters/
 Content-Type: application/json
-Authorization: Token ...
+Authorization: Token 123
 
 {
-    "id": 8,
-    "name": "CPU"
+    "id": 2,
+    "name": "DPI"
 }

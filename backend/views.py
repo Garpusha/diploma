@@ -26,7 +26,7 @@ from backend.models import (
     Product,
     ProductStore,
     Order,
-    OrderProduct,
+    OrderProduct, ProductParameter,
 )
 from backend.serializers import (
     CategorySerializer,
@@ -119,7 +119,8 @@ class CategoriesView(APIView):
         if not is_role(request, ["admin"]):
             return Response("Admin rights required", status=status.HTTP_400_BAD_REQUEST)
 
-        category = get_object_by_name(request.data["id"], Category)
+        category_name = request.data["name"]
+        category = get_object_by_name(category_name, Category)
         if not category:
             return Response("Category not found", status=status.HTTP_400_BAD_REQUEST)
         if category:
@@ -209,6 +210,81 @@ class ParametersView(APIView):
                     f"Parameter updated successfully", status=status.HTTP_202_ACCEPTED
                 )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# ----------------------------------------------Параметры продуктов----------------------------------------
+class ProductParametersView(APIView):
+    def get(self, request):
+        queryset = ProductParameter.objects.all()
+        serializer = ProductParameterSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        # Проверка прав
+        if not is_token_exists(request):
+            return Response(f"Wrong token", status=status.HTTP_404_NOT_FOUND)
+        if not is_role(request, ["admin", "seller"]):
+            return Response(
+                "Admin or seller rights required", status=status.HTTP_400_BAD_REQUEST
+            )
+
+        serializer = ProductParameterSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            if serializer.errors == {}:
+                return Response(
+                    f'Parameter added successfully',
+                    status=status.HTTP_201_CREATED,
+                )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request):
+        # Проверка прав
+        if not is_token_exists(request):
+            return Response(f"Wrong token", status=status.HTTP_404_NOT_FOUND)
+        if not is_role(request, ["admin"]):
+            return Response("Admin rights required", status=status.HTTP_400_BAD_REQUEST)
+
+        pp_id = request.data["id"]
+        result = is_exists(pp_id, ProductParameter)
+        if result:
+            result.delete()
+            return Response(
+                f"Parameter deleted successfully", status=status.HTTP_200_OK
+            )
+        return Response(f"Parameter not found", status=status.HTTP_404_NOT_FOUND)
+
+    def patch(self, request):
+        # Проверка прав
+        if not is_token_exists(request):
+            return Response(f"Wrong token", status=status.HTTP_404_NOT_FOUND)
+        if not is_role(request, ["admin"]):
+            return Response("Admin rights required", status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = ProductParameterSerializer(data=request.data)
+        pp_id = request.data["id"]
+        pp = is_exists(pp_id, ProductParameter)
+        if not pp:
+            return Response(f"Parameter relation not found", status=status.HTTP_404_NOT_FOUND)
+        parameter_id = request.data['parameter']
+        parameter = is_exists(parameter_id, Parameter)
+        if not parameter:
+            return Response(f"Parameter not found", status=status.HTTP_404_NOT_FOUND)
+        product_id = request.data['product']
+        product =  is_exists(product_id, Product)
+        if not product:
+            return Response(f"Product not found", status=status.HTTP_404_NOT_FOUND)
+        mutable_request = request.data.copy()
+        mutable_request['product'] = product
+        mutable_request['parameter'] = parameter
+        if serializer.is_valid():
+            serializer.update(pp, mutable_request)
+            if serializer.errors == {}:
+                return Response(
+                    f"Product parameter updated successfully", status=status.HTTP_202_ACCEPTED
+                )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 # ----------------------------------------------Магазины----------------------------------------
@@ -676,9 +752,6 @@ class OrdersView(APIView):
         if not msg:
             return Response('Order is empty', status=status.HTTP_204_NO_CONTENT)
 
-        delete_from_store(order)
-        order.status = "completed"
-        order.save()
         send_email(
             send_to=user.email,
             subject=f"Your order {order.id} in our marketplace",
@@ -694,6 +767,9 @@ class OrdersView(APIView):
                        subject='Products ordered',
                        message=msg
                        )
+        delete_from_store(order)
+        order.status = "completed"
+        order.save()
         return Response("Your order complete", status=status.HTTP_200_OK)
 
     def patch(self, request):

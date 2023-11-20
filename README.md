@@ -15,8 +15,7 @@
     DB_PASSWORD=  
     EMAIL_LOGIN=  
     EMAIL_PASSWORD=  
-  
-  
+
 Запросы:
 1. Импорт данных **import_requests.http**  
 	POST http://localhost:8000/import/ - запрос, выполняется с токеном админа. Файл должен лежать в корневой папке проекта
@@ -28,7 +27,7 @@
 2. Работа с пользователями **users_requests.http**  
 	**GET http://localhost:8000/users/** - просмотр всех пользователей, работает без токена  
 	**POST http://localhost:8000/users/** - создание пользователя, нужен токен админа.
-	    "name": "имя пользователя",  
+	"name": "имя пользователя",  
     	"password": "пароль",  
     	"role": "роль (admin, buyer, seller)",  
     	"email": "адрес почты",  
@@ -142,3 +141,19 @@
     "store": 1,  
     "quantity": 40,  
     "delete_product": "no"  
+
+11. Параметры товаров **http://localhost:8000/product_parameters/** - добавлять параметр может проавец и админ. Удалять и менять только админ.  
+**GET http://localhost:8000/product_parameters/** - вывод текущих параметров
+**POST http://localhost:8000/product_parameters/** - создание связи. Токен админа или продавца  
+    "parameter": 5,  
+    "product": 2,  
+    "value": "600"  
+**DELETE http://localhost:8000/product_parameters/** - удаление. Токен админа.  
+    "id": 3  
+**PATCH http://localhost:8000/product_parameters/** - изменение. Токен админа.  
+    "id": 3,  
+    "product": 2,  
+    "parameter": 5,  
+    "value": 1200  
+
+

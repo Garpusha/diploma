@@ -13,7 +13,7 @@ from backend.views import (
     CartView,
     ProductStoreView,
     OrdersView,
-    AuthorizationView,
+    AuthorizationView, ProductParametersView,
 )
 
 # r = DefaultRouter()
@@ -31,5 +31,6 @@ urlpatterns = [
     path("import/", ImportData.as_view()),
     path("cart/", CartView.as_view()),
     path("authorization/", AuthorizationView.as_view()),
+    path("product_parameters/", ProductParametersView.as_view()),
 ]
 # + r.urls)

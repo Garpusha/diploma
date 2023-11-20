@@ -3,34 +3,30 @@
 # то только заказ этого пользователя.
 
 GET http://localhost:8000/cart
-Authorization: Token ...
-
-###
-GET http://localhost:8000/cart
-Authorization: Token ...
+Authorization: Token 123
 
 ###
 
 # Добавление товара в корзину
 POST http://localhost:8000/cart/
-Authorization: Token ...
+Authorization: Token 21ed1a9b79cd10caad734439e29933ff
 Content-Type: application/json
 
 {
-    "product": 3,
-    "store": 1,
-    "quantity": 10
+    "product": 2,
+    "store": 2,
+    "quantity": 2
 }
 
 ###
 
 # Удаление товара из корзины
 DELETE  http://localhost:8000/cart/
-Authorization: Token ...
+Authorization: Token 9a1060251fb76a41e6f4a594be6cfe54
 Content-Type: application/json
 
 {   
-    "id": 2,
-    "position": 19,
+    "id": 1,
+    "position": 1,
     "quantity": 1
 }

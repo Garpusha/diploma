@@ -7,31 +7,30 @@ GET http://localhost:8000/users/
 
 POST http://localhost:8000/users/
 Content-Type: application/json
-Authorization: Token ...
+Authorization: Token 123
 
 {    
-    "name": "test_user",
+    "name": "test_user2",
     "password": "12345",
     "role": "buyer",
-    "email": "test_buyer@test.com",
+    "email": "sbitneыыыv@yandex.ru",
     "address_1": "address_1_test_buyer"
 }
 ###
 DELETE http://localhost:8000/users/
 Content-Type: application/json
-Authorization: Token ...
+Authorization: Token 123
 
 {
-    "name": "test_user"
+    "name": "test_user2"
 }
 ###
 PATCH http://localhost:8000/users/
 Content-Type: application/json
-Authorization: Token ...
+Authorization: Token 123
 
 {
-    "id": 8,
-    "name": "Test seller_2",
+    "name": "test_user2",
     "password": "12345",
     "role": "seller",
     "email": "test2_seller@test.com",

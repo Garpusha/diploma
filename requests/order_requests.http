@@ -8,16 +8,16 @@ Authorization: Token ...
 
 ###
 GET http://localhost:8000/orders/
-Authorization: Token ...
+Authorization: Token 123
 
 ###
 # Метод post используется для отправки заказа в работу
 POST http://localhost:8000/orders/
-Authorization: Token ...
+Authorization: Token 9a1060251fb76a41e6f4a594be6cfe54
 Content-Type: application/json
 
 {
-    "id": 2
+    "id": 1
 }
 
 ###
@@ -26,7 +26,7 @@ Content-Type: application/json
 # Право только у админа и хозяина заказа
 
 PATCH http://localhost:8000/orders/
-Authorization: Token ...
+Authorization: Token 123
 Content-Type: application/json
 
 {
@@ -37,9 +37,9 @@ Content-Type: application/json
 DELETE http://localhost:8000/orders/
 # Метод delete используется для полного удаления заказа невзирая на статус.
 # Право только у админа и хозяина заказа
-Authorization: Token ...
+Authorization: Token 21ed1a9b79cd10caad734439e29933ff
 Content-Type: application/json
 
 {
-    "id": 1
+    "id": 2
 }

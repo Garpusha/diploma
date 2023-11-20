@@ -43,7 +43,7 @@ def send_email(send_to, subject, message):
 
     msg = MIMEText(message, "plain", "utf-8")
     msg["Subject"] = Header(subject, "utf-8")
-    msg["From"] = "My New Store"
+    msg["From"] = "theflash@yandex.ru"
     msg["To"] = send_to
 
     s = smtplib.SMTP(smtp_host, 587, timeout=10)
@@ -83,7 +83,7 @@ def generate_seller_msg(store, order):
 def generate_token_msg(user):
     msg_header = f"Dear {user.name}! \n\n"
     msg_body = f"Your new token is #{user.temp_token}\nUse it to create new password.\n\n"
-    msg_basement = f"If you did not ask for new token, ignore this mail.\nThank you!"
+    msg_basement = f"If you did not ask for the new token, ignore this mail.\nThank you!"
     msg = msg_header + msg_body + msg_basement
     return msg
 

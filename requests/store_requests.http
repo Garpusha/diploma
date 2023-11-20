@@ -7,32 +7,32 @@ GET http://localhost:8000/stores/
 ###
 POST http://localhost:8000/stores/
 Content-Type: application/json
-Authorization: Token ...
+Authorization: Token 123
 
 {    
-    "name": "New Shop_7",
-    "owner": 1,
+    "name": "New Shop_3",
+    "owner": 3,
     "delivery_cost": 100,
     "active": 1
 }
 ###
 DELETE http://localhost:8000/stores/
 Content-Type: application/json
-Authorization: Token ...
+Authorization: Token 123
 
 {
-    "id": 7
+    "id": 3
 }
 ###
 PATCH http://localhost:8000/stores/
 Content-Type: application/json
-Authorization: Token ...
+Authorization: Token 123
 
 {
     "id": 1,
     "name": "Связной",
-    "owner": 2,
+    "owner": 3,
     "delivery_cost": 200,
-    "active": 0
+    "active": 1
 
 }

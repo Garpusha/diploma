@@ -15,7 +15,7 @@ Content-Type: application/json
 ###
 POST http://localhost:8000/authorization/
 Content-Type: application/json
-Authorization: Token ...
+Authorization: Token b30bc95bebc6aa48be8f719a83a0cc8a
 
 {
     "operation": "reset",
@@ -25,7 +25,7 @@ Authorization: Token ...
 
 POST http://localhost:8000/authorization/
 Content-Type: application/json
-Authorization: Token ...
+Authorization: Token e0863cf688d99daa758d4ebda1dd8390
 
 {
     "operation": "activate",
