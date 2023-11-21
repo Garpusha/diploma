@@ -43,7 +43,7 @@ def send_email(send_to, subject, message):
 
     msg = MIMEText(message, "plain", "utf-8")
     msg["Subject"] = Header(subject, "utf-8")
-    msg["From"] = "theflash@yandex.ru"
+    msg["From"] = os.environ["EMAIL_LOGIN"]
     msg["To"] = send_to
 
     s = smtplib.SMTP(smtp_host, 587, timeout=10)
